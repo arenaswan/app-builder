@@ -172,7 +172,7 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
           return result ? true : false
         }
       } catch (error) {
-        message.error(translate(error.message));
+        message.error(translate(error.reason || error.message));
       }
       
     }else{
@@ -185,7 +185,7 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
           return result ? true : false
         }
       } catch (error) {
-        message.error(translate(error.message));
+        message.error(translate(error.reason || error.message));
       }
     } 
   }
