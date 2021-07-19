@@ -414,7 +414,7 @@ export default class SteedosClient {
 
     
         const error = data && data.error ? data.error : data
-        const msg = error.message || '';
+        const msg = error.reason || error.message || '';
 
         if (this.logToConsole) {
             console.error(msg); // eslint-disable-line no-console

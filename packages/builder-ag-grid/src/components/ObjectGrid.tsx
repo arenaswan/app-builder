@@ -494,14 +494,14 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         try {
           await API.updateRecord(objectApiName, id, editedMap[id]);
         } catch (_error) {
-          message.error(translate(_error.message));
+          message.error(translate(_error.reason || _error.message));
         }
       }
       if(onUpdated && isFunction(onUpdated)){
         onUpdated(objectApiName, ids);
       }
     } catch (error) {
-      message.error(translate(error.message));
+      message.error(translate(error.reason || error.message));
     }
     try {
       cancel();
