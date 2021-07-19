@@ -23,7 +23,7 @@ export const ObjectTable = observer((props: ObjectListViewProps<any>) => {
   let listView = listSchema ? listSchema : schema?.list_views[listName];
   if(!columnFields || columnFields.length==0){
     const listViewColumns = listSchema && listSchema.columns ? listSchema.columns : getListviewColumns(schema, listName);
-    columnFields = getListViewColumnFields(listViewColumns, props, schema.NAME_FIELD_KEY);
+    columnFields = getListViewColumnFields(listViewColumns, props, schema.NAME_FIELD_KEY, '_blank');
   }
   if(!filters || filters.length==0){
     filters = listView && getListViewFilters(listView, props);

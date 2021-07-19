@@ -117,13 +117,13 @@ export const getListviewExtraColumns = (objectSchema: any, listName: any) => {
   return listViewColumns;
 }
 
-export const getNameFieldColumnRender = (objectApiName: string)=>{
+export const getNameFieldColumnRender = (objectApiName: string, linkTarget?: string)=>{
   return (dom: any, record: any)=>{
-    return (<Link to={getObjectRecordUrl(objectApiName, record._id)} className="text-blue-600 hover:text-blue-500 hover:underline">{dom}</Link>);
+    return (<Link target={linkTarget} to={getObjectRecordUrl(objectApiName, record._id)} className="text-blue-600 hover:text-blue-500 hover:underline">{dom}</Link>);
   }
 }
 
-export const getListViewColumnFields = (listViewColumns: any, props: any, nameFieldKey: string) => {
+export const getListViewColumnFields = (listViewColumns: any, props: any, nameFieldKey: string, linkTarget?: string) => {
   let { columnFields = [], master } = props;
   if (columnFields.length === 0) {
     forEach(listViewColumns, (column: any) => {
@@ -137,7 +137,7 @@ export const getListViewColumnFields = (listViewColumns: any, props: any, nameFi
       }
       let columnOption: any = { fieldName, width: fieldWidth };
       if(fieldName === nameFieldKey){
-        columnOption.render = getNameFieldColumnRender(props.objectApiName);
+        columnOption.render = getNameFieldColumnRender(props.objectApiName, linkTarget);
       }
       columnFields.push(columnOption)
     })
