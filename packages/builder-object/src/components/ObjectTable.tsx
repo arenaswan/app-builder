@@ -43,6 +43,7 @@ export const ObjectTable = observer((props: ObjectListViewProps<any>) => {
       filters={filters}
       sort={sort}
       tableComponent={TableComponent}
+      linkTarget='_blank'
       // className={["object-listview", rest.className].join(" ")}
       {...rest}
     />

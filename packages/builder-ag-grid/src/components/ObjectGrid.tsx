@@ -37,6 +37,7 @@ export type ObjectGridProps<T extends ObjectGridColumnProps> =
       filters?: [] | string
       sort?: [] | string
       onChange?: ([any]) => void
+      linkTarget?: string
       // filterableFields?: [string]
     } & {
       defaultClassName?: string
@@ -141,6 +142,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     rowKey = '_id',
     objectSchema: defaultObjectSchema,
     rows,
+    linkTarget,
     ...rest
   } = props;
   const table = Tables.loadById(name, objectApiName,rowKey);
@@ -375,7 +377,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         //   }
         // },
         cellRendererParams: {
-          fieldSchema: field,
+          fieldSchema: Object.assign({}, { ...field }, { link_target: linkTarget }),
           valueType: field.type,
           render: fieldRender
         },
