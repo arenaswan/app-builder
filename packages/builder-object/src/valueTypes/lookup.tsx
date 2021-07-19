@@ -7,8 +7,7 @@ import { concatFilters } from '@steedos/builder-sdk';
 import { Objects, API, Settings } from '@steedos/builder-store';
 import { observer } from "mobx-react-lite";
 import FieldSelect from '@ant-design/pro-field/es/components/Select';
-import { Link } from "../components/Link";
-import { getObjectRecordUrl } from "../utils";
+import { getObjectRecordUrl , Link } from "@steedos/builder-form"
 import { SteedosIcon } from '@steedos/builder-lightning';
 import "./lookup.less"
 import { PlusOutlined } from "@ant-design/icons";
