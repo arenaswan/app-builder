@@ -169,12 +169,13 @@ function getRowButtons(objectSchema) {
       } catch (error) {
         console.error(error, action._visible)
       }
+    }else{
+      if (isBoolean(action.visible)) {
+        visible = action.visible
+      }
     }
     if (isBoolean(action._visible)) {
       visible = action._visible
-    }
-    if (isBoolean(action.visible)) {
-      visible = action.visible
     }
     let todo = action._todo || action.todo;
     if (isString(todo) && todo.startsWith("function")) {
