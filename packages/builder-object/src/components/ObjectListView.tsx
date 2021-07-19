@@ -7,8 +7,7 @@ import {
 } from "@ant-design/pro-table"
 import { observer } from "mobx-react-lite"
 import { Objects, API, Settings } from "@steedos/builder-store"
-import { Link } from "./Link";
-import { getObjectRecordUrl } from "../utils"
+import { getNameFieldColumnRender } from "@steedos/builder-form"
 
 export type ObjectListViewColumnProps = {
   fieldName: string
@@ -115,12 +114,6 @@ export const getListviewExtraColumns = (objectSchema: any, listName: any) => {
     }
   }
   return listViewColumns;
-}
-
-export const getNameFieldColumnRender = (objectApiName: string, linkTarget?: string)=>{
-  return (dom: any, record: any)=>{
-    return (<Link target={linkTarget} to={getObjectRecordUrl(objectApiName, record._id)} className="text-blue-600 hover:text-blue-500 hover:underline">{dom}</Link>);
-  }
 }
 
 export const getListViewColumnFields = (listViewColumns: any, props: any, nameFieldKey: string, linkTarget?: string) => {

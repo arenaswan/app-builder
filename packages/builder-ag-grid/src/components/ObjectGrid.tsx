@@ -8,6 +8,7 @@ import { concatFilters } from '@steedos/builder-sdk';
 import {AgGridColumn, AgGridReact} from '@ag-grid-community/react';
 import { AllModules } from '@ag-grid-enterprise/all-modules';
 import { ServerSideStoreType } from '@ag-grid-enterprise/all-modules';
+import { getNameFieldColumnRender } from "@steedos/builder-form"
 import { AgGridCellEditor } from "./CellEditor";
 import { AgGridCellRenderer } from "./CellRender";
 import { AgGridCellFilter } from "./CellFilter";
@@ -287,6 +288,11 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         checkboxSelection: checkboxSelection,
         headerCheckboxSelection: checkboxSelection, //仅rowModelType等于Client-Side时才生效
         suppressMenu: true,
+        // 对象name_field字段为不存在时，列表视图上应该显示序号为name链接
+        cellRenderer: 'AgGridCellRenderer',
+        cellRendererParams: {
+          render: !objectSchema?.NAME_FIELD_KEY && getNameFieldColumnRender(objectApiName)
+        },
       },
       // {
       //   resizable: false,
