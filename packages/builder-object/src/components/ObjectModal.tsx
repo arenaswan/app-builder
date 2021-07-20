@@ -43,7 +43,6 @@ export const ObjectModal = ({
   contentComponent: ContentComponent,
   multiple,
   value,
-  modalClassName,
   tableMode = "ag-grid",//ag-grid, ant-pro-table
   ...rest
 }: ObjectModalProps) => {
@@ -163,7 +162,6 @@ export const ObjectModal = ({
           }}
         >
           <Modal
-            className={modalClassName}
             style={{
               ...modalStyle
             }}

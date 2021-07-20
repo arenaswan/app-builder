@@ -379,7 +379,7 @@ export const LookupField = observer((props:any) => {
                     let ModalComponent = ObjectModal;
                     let modalPorps:any = {
                         title: `选择 ${referenceToObjectSchema.label}`,
-                        modalClassName,
+                        modalProps: { className: modalClassName},
                         objectApiName: referenceTo,
                         multiple,
                         value,
