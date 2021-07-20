@@ -68,7 +68,6 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
   } = props;
   const [proForm] = ProForm.useForm();
   const currentForm = rest.form || proForm;
-  const [undefinedValues, setUndefinedValues] = useState({});
 
   const defaultValues = clone(initialValues);
   const sectionsRef = React.createRef();
@@ -165,7 +164,7 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
     let convertedValues = conversionSubmitValue(values);
     if(!recordId){
       try {
-        result = await API.insertRecord(objectApiName, Object.assign({},undefinedValues,convertedValues));
+        result = await API.insertRecord(objectApiName,convertedValues);
         if(afterInsert){
           return afterInsert(result);
         }else{
@@ -177,7 +176,7 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
       
     }else{
       try {
-        result = await API.updateRecord(objectApiName, recordId, Object.assign({},undefinedValues,convertedValues));
+        result = await API.updateRecord(objectApiName, recordId, convertedValues);
         object.getRecord(recordId, fieldNames).loadRecord();
         if(afterUpdate){
           return afterUpdate(result);  
@@ -212,10 +211,11 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
     })
 
     forEach(changedValues,(value,key)=>{
-      // value = undefined || null 都要保存null 到数据库中。
-      if(isNil(value)){
-        undefinedValues[key] = null;
-        setUndefinedValues(undefinedValues)
+      // 针对 value = undefined 都要保存 value = null 到表单中。
+      if(value === undefined){
+        let undefinedField = {};
+        undefinedField[key] = null;
+        currentForm.setFieldsValue(undefinedField);
       }
     });
     const args = {
