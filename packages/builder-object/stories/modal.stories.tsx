@@ -21,10 +21,31 @@ export const FormModal = () => {
         amount: {
           type: 'currency',
           label: "金额"
-        }
+        },
+        type: {
+          type: 'select',
+          label: "类型",
+          options: [{
+            label: "A",
+            value: "a"
+          },{
+            label: "B",
+            value: "b"
+          },{
+            label: "C",
+            value: "c"
+          }]
+        },
+        important: {
+          type: 'toggle',
+          label: "重要",
+          required: "{{formData.type === 'c'}}",
+          // hidden: "{{formData.type === 'a' ? true : false}}",
+          hidden: "{{formData.type !== 'a' ? true : false}}"
+        },
       }
     },
-    initialValues: {name:"合同", amount: "69000"},
+    initialValues: {name:"合同", amount: "69000", type: "a"},
     onFinish: async (values)=>{
       console.log("values:", values);
       return true;
