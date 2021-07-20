@@ -212,7 +212,8 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
 
     forEach(changedValues,(value,key)=>{
       // 针对 value = undefined 都要保存 value = null 到表单中。
-      if(value === undefined){
+      // value === '' 也一致。 原因：空字符串字段保存到数据库中，数据库会将其删除； 这就会导致下次编辑时 默认值又会出现。
+      if(value === undefined || value === ''){
         let undefinedField = {};
         undefinedField[key] = null;
         currentForm.setFieldsValue(undefinedField);
