@@ -167,6 +167,7 @@ export const TableModal = () => {
   const tableProps1 = {
     title: `选择 任务`,
     objectApiName: "tasks",
+    modalProps: { className: 'tableModalClassName'},
     onFinish: async (values)=>{
       console.log("values:", values);
       return true;
@@ -241,6 +242,12 @@ export const TableModal = () => {
       <ObjectModal
         {...tableProps1}
         trigger={<Button type="primary" >弹出Table 默认使用all视图配置</Button>}
+      />
+      <br />
+      <br />
+      <ObjectModal
+        {...tableProps1}
+        trigger={<Button type="primary" >弹出自定义弹出框className的Table示例</Button>}
       />
       <br />
       <br />
