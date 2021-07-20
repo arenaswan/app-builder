@@ -157,6 +157,14 @@ export default {
       //   return column;
       // },
     },
+    accounts_modalClassName: {
+      group:'lookup测试',
+      reference_to: 'accounts',
+      type: 'lookup',
+      label: 'modalClassName',
+      modalClassName: 'myModal',
+      modal_mode: 'dialog'
+    },
     populationType: {
       group: 'select测试',
       type: 'select',
