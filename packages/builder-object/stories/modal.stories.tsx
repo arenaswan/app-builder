@@ -11,6 +11,7 @@ export const FormModal = () => {
   const schemaFormProps = {
     layout: 'horizontal',
     title: `合同信息`,
+    modalProps: { className: 'showModalClassName'},
     objectSchema: {
       fields:{
         name: {
@@ -61,6 +62,13 @@ export const FormModal = () => {
           ...schemaFormProps
         })
       }}>showModal - 弹出SchemaForm示例</Button>
+      <br />
+      <br />
+      <Button type="primary" onClick={()=>{
+        (window as any).SteedosUI.showModal(ObjectForm,{
+          ...schemaFormProps
+        })
+      }}>showModal - 弹出自定义弹出框className的Form示例</Button>
       <br />
       <br />
       <Button type="primary" onClick={()=>{
