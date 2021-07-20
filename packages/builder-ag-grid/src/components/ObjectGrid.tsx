@@ -324,6 +324,12 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
             fieldSchema: field,
             valueType: field.type
           }
+        }else if(["autonumber"].includes(field.type)){
+          filter = 'AgGridCellTextFilter'
+          filterParams = {
+            fieldSchema: Object.assign({}, field, {type: 'text'}),
+            valueType: "text"
+          }
         }
         else if (["number", "percent", "currency"].includes(field.type)) {
           filter = 'AgGridCellNumberFilter'
