@@ -91,6 +91,7 @@ export const ObjectModal = ({
         rowSelection: rowSelectionType,
         selectedRowKeys: defaultValue,
         rowKey: rest.rowKey,
+        autoClearSelectedRows: false
       });
     }else{
       let rowSelectionType="radio";

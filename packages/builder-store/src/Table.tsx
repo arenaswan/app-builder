@@ -111,6 +111,9 @@ export const TableModel = types.model({
   const setObjectApiName = (id: string) => {
     self.objectApiName = id;
   };
+  const clearSelectedRows = () => {
+    self.selectedRows = []
+  };
   return {
     getRowKey,
     setSelectedRows,
@@ -124,6 +127,7 @@ export const TableModel = types.model({
     removeSelectedRow,
     removeSelectedRowsByKeys,
     removeSelectedRowByKey,
+    clearSelectedRows,
     setObjectApiName
   }
 })

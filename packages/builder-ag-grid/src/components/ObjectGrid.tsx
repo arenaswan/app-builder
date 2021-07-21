@@ -38,7 +38,8 @@ export type ObjectGridProps<T extends ObjectGridColumnProps> =
       filters?: [] | string
       sort?: [] | string
       onChange?: ([any]) => void
-      linkTarget?: string
+      linkTarget?: string //单元格如果是链接，配置其链接的target属性值
+      autoClearSelectedRows?: boolean//当请求列表数据时自动清除选中项
       // filterableFields?: [string]
     } & {
       defaultClassName?: string
@@ -144,6 +145,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     objectSchema: defaultObjectSchema,
     rows,
     linkTarget,
+    autoClearSelectedRows = true,
     ...rest
   } = props;
   const table = Tables.loadById(name, objectApiName,rowKey);
@@ -193,8 +195,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   const setSelectedRows = (params)=>{
       // 当前显示页中store中的初始值自动勾选。
       const selectedRowKeys = table.getSelectedRowKeys();
+      const gridApi = params.api;
       if(selectedRowKeys && selectedRowKeys.length){
-        const gridApi = params.api;
         gridApi.forEachNode(node => {
           if(node.data && node.data[rowKey]){
             if (selectedRowKeys.indexOf(node.data[rowKey])>-1) {
@@ -204,6 +206,9 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
             }
           }
         });
+      }
+      else{
+        gridApi.deselectAll();
       }
   }
 
@@ -251,6 +256,9 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
               options = {
                 sort
               };
+            }
+            if(autoClearSelectedRows){
+              table.clearSelectedRows();
             }
             API.requestRecords(
               objectApiName,
