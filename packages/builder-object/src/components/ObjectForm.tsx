@@ -124,47 +124,14 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
     }
   }
 
-  const conversionSubmitValue = (values:any) => {
-    const fields = mergedSchema.fields;
-    let extendValues = {};
-    forEach(values,(value,key)=>{
-      if(fields[key].type === 'date'){
-        if(!isNil(value)){
-          // 日期字段设置为utc0点
-          if (moment.isMoment(value)) {
-            extendValues[key] = value.utc();
-          } else {
-            let newValue: any = clone(value);
-            if (typeof value === 'number') {
-              newValue = new Date(value)
-            }
-            if (newValue instanceof Date) {
-              // 转换成字符串格式 是因为日期不应该减8小时再清空小时、分钟、秒， 否则可能会有误差（保存上一天的值）：例如  2021:07:06  ==>  2021:07:05 . 
-              newValue = newValue.getFullYear() + '-' + (newValue.getMonth() + 1) + '-' + newValue.getDate();
-            }
-            if (typeof newValue === 'string') {
-              extendValues[key] = moment.utc(newValue);
-            }
-          }
-          extendValues[key].utcOffset(0);
-          extendValues[key].hour(0);
-          extendValues[key].minute(0);
-          extendValues[key].second(0);
-          extendValues[key].millisecond(0);
-        }
-      }
-    });
-    return Object.assign({}, values, extendValues);
-  }
   const onFinish = async(values:any) =>{
     if (!object) 
       return
     
     let result; 
-    let convertedValues = conversionSubmitValue(values);
     if(!recordId){
       try {
-        result = await API.insertRecord(objectApiName,convertedValues);
+        result = await API.insertRecord(objectApiName,values);
         if(afterInsert){
           return afterInsert(result);
         }else{
@@ -176,7 +143,7 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
       
     }else{
       try {
-        result = await API.updateRecord(objectApiName, recordId, convertedValues);
+        result = await API.updateRecord(objectApiName, recordId, values);
         object.getRecord(recordId, fieldNames).loadRecord();
         if(afterUpdate){
           return afterUpdate(result);  
