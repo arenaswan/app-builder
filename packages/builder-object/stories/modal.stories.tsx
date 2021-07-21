@@ -252,6 +252,16 @@ export const TableModal = () => {
       return true;
     }
   };
+  const tableProps6 = {
+    title: `选择 任务`,
+    selectedRowKeys: ["yzQitW7dmpLdR8t9J"],
+    objectApiName: "tasks",
+    listSchema: "my_open_tasks",
+    onFinish: async (values)=>{
+      console.log("values:", values);
+      return true;
+    }
+  };
   return (
     <React.Fragment>
       <ObjectModal
@@ -269,6 +279,12 @@ export const TableModal = () => {
       <ObjectModal
         {...tableProps1}
         trigger={<Button type="primary" >弹出自定义弹出框className的Table示例</Button>}
+      />
+      <br />
+      <br />
+      <ObjectModal
+        {...tableProps6}
+        trigger={<Button type="primary" >弹出自动勾选当前已选中项的Table示例</Button>}
       />
       <br />
       <br />
