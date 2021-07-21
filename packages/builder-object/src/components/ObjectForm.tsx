@@ -200,8 +200,14 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
   }
 
   const onValuesChange = async (changedValues, values)=>{
+    if(isEmpty(values)){
+      // 当第二个参数values为空对象时，表示不是用户在界面上操作造成的值变更，而是代码中手动执行了字段的onChange函数造成的，目前字段默认值功能会调用字段的onChange函数
+      // 如果需要values为空的情况下执行相关逻辑请写到该判断上面，不要写到下面，下面的代码都不应该执行
+      return;
+    }
 
     forEach(changedValues,(value,key)=>{
+      // 字段上可以配置depend_on属性，当值变更时应该计算哪些字段依赖了该字段，把依赖的字段值都清空
       const dependOnFields = getFieldsByDependOn(key);
       let fieldsForClear = {};
       forEach(dependOnFields,(fieldItem:any,fieldKey)=>{
@@ -211,6 +217,7 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
     })
 
     forEach(changedValues,(value,key)=>{
+      // 字段值清空时应该保存为null，否则数据库不会记录该字段值，目前只有lookup/select/master-detail的单选字段，以及文本字段类型有这个问题
       // 针对 value = undefined 都要保存 value = null 到表单中。
       // value === '' 也一致。 原因：空字符串字段保存到数据库中，数据库会将其删除； 这就会导致下次编辑时 默认值又会出现。
       if(value === undefined || value === ''){
@@ -219,6 +226,8 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
         currentForm.setFieldsValue(undefinedField);
       }
     });
+
+    // 支持运行自定义valuesChange函数
     const args = {
       changedValues,
       values,
@@ -234,9 +243,8 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
     catch(ex){
       console.error(ex);
     }
-    if(!isEmpty(values)){
-      (sectionsRef.current as any)?.reCalcSchema(changedValues, values)
-    }
+    // 注意values为空对象时不可以执行reCalcSchema函数
+    (sectionsRef.current as any)?.reCalcSchema(changedValues, values);
   }
 
   // 从详细页面第一次进入另一个相关详细页面是正常，第二次initialValues={initialValues} 这个属性不生效。
