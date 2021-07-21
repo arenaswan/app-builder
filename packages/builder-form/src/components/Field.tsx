@@ -114,7 +114,10 @@ export const Field = observer((props: any) => {
       }
       if (fieldProps.value === undefined && !isNil(defaultValue)) {
         let formValue = defaultValue;
-        proFieldProps.fieldProps.onChange(formValue);
+        setTimeout(()=>{
+          // 不加setTimeout的话，onChange函数触发的表单的onValuesChange事件中第二个参数为空对象，会造成reCalcSchema函数执行公式表达式有问题
+          proFieldProps.fieldProps.onChange(formValue);
+        }, 100);
         proFieldProps.fieldProps.defaultValue = formValue;
       }
       return <ProField mode='edit' {...proFieldProps} />
