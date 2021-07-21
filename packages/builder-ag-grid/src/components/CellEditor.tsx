@@ -67,7 +67,7 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
   });
 
   useOnClickOutside(refEditor, (e) => {
-    setTimeout(() => props.api.stopEditing(false), 100);
+    setTimeout(() => props.api.stopEditing(false), 300);
   });
 
   // const IntervalID = setInterval(()=>{

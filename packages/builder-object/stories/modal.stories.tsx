@@ -11,6 +11,7 @@ export const FormModal = () => {
   const schemaFormProps = {
     layout: 'horizontal',
     title: `合同信息`,
+    modalProps: { className: 'showModalClassName'},
     objectSchema: {
       fields:{
         name: {
@@ -20,10 +21,31 @@ export const FormModal = () => {
         amount: {
           type: 'currency',
           label: "金额"
-        }
+        },
+        type: {
+          type: 'select',
+          label: "类型",
+          options: [{
+            label: "A",
+            value: "a"
+          },{
+            label: "B",
+            value: "b"
+          },{
+            label: "C",
+            value: "c"
+          }]
+        },
+        important: {
+          type: 'toggle',
+          label: "重要",
+          required: "{{formData.type === 'c'}}",
+          // hidden: "{{formData.type === 'a' ? true : false}}",
+          hidden: "{{formData.type !== 'a' ? true : false}}"
+        },
       }
     },
-    initialValues: {name:"合同", amount: "69000"},
+    initialValues: {name:"合同", amount: "69000", type: "a"},
     onFinish: async (values)=>{
       console.log("values:", values);
       return true;
@@ -61,6 +83,13 @@ export const FormModal = () => {
           ...schemaFormProps
         })
       }}>showModal - 弹出SchemaForm示例</Button>
+      <br />
+      <br />
+      <Button type="primary" onClick={()=>{
+        (window as any).SteedosUI.showModal(ObjectForm,{
+          ...schemaFormProps
+        })
+      }}>showModal - 弹出自定义弹出框className的Form示例</Button>
       <br />
       <br />
       <Button type="primary" onClick={()=>{
@@ -159,6 +188,7 @@ export const TableModal = () => {
   const tableProps1 = {
     title: `选择 任务`,
     objectApiName: "tasks",
+    modalProps: { className: 'tableModalClassName'},
     onFinish: async (values)=>{
       console.log("values:", values);
       return true;
@@ -233,6 +263,12 @@ export const TableModal = () => {
       <ObjectModal
         {...tableProps1}
         trigger={<Button type="primary" >弹出Table 默认使用all视图配置</Button>}
+      />
+      <br />
+      <br />
+      <ObjectModal
+        {...tableProps1}
+        trigger={<Button type="primary" >弹出自定义弹出框className的Table示例</Button>}
       />
       <br />
       <br />

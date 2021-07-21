@@ -7,8 +7,7 @@ import {
 } from "@ant-design/pro-table"
 import { observer } from "mobx-react-lite"
 import { Objects, API, Settings } from "@steedos/builder-store"
-import { Link } from "./Link";
-import { getObjectRecordUrl } from "../utils"
+import { getNameFieldColumnRender } from "@steedos/builder-form"
 
 export type ObjectListViewColumnProps = {
   fieldName: string
@@ -117,13 +116,7 @@ export const getListviewExtraColumns = (objectSchema: any, listName: any) => {
   return listViewColumns;
 }
 
-export const getNameFieldColumnRender = (objectApiName: string)=>{
-  return (dom: any, record: any)=>{
-    return (<Link to={getObjectRecordUrl(objectApiName, record._id)} className="text-blue-600 hover:text-blue-500 hover:underline">{dom}</Link>);
-  }
-}
-
-export const getListViewColumnFields = (listViewColumns: any, props: any, nameFieldKey: string) => {
+export const getListViewColumnFields = (listViewColumns: any, props: any, nameFieldKey: string, linkTarget?: string) => {
   let { columnFields = [], master } = props;
   if (columnFields.length === 0) {
     forEach(listViewColumns, (column: any) => {
@@ -137,7 +130,7 @@ export const getListViewColumnFields = (listViewColumns: any, props: any, nameFi
       }
       let columnOption: any = { fieldName, width: fieldWidth };
       if(fieldName === nameFieldKey){
-        columnOption.render = getNameFieldColumnRender(props.objectApiName);
+        columnOption.render = getNameFieldColumnRender(props.objectApiName, linkTarget);
       }
       columnFields.push(columnOption)
     })
@@ -169,12 +162,13 @@ function getRowButtons(objectSchema) {
       } catch (error) {
         console.error(error, action._visible)
       }
+    }else{
+      if (isBoolean(action.visible)) {
+        visible = action.visible
+      }
     }
     if (isBoolean(action._visible)) {
       visible = action._visible
-    }
-    if (isBoolean(action.visible)) {
-      visible = action.visible
     }
     let todo = action._todo || action.todo;
     if (isString(todo) && todo.startsWith("function")) {

@@ -8,6 +8,7 @@ import { concatFilters } from '@steedos/builder-sdk';
 import {AgGridColumn, AgGridReact} from '@ag-grid-community/react';
 import { AllModules } from '@ag-grid-enterprise/all-modules';
 import { ServerSideStoreType } from '@ag-grid-enterprise/all-modules';
+import { getNameFieldColumnRender } from "@steedos/builder-form"
 import { AgGridCellEditor } from "./CellEditor";
 import { AgGridCellRenderer } from "./CellRender";
 import { AgGridCellFilter } from "./CellFilter";
@@ -37,6 +38,7 @@ export type ObjectGridProps<T extends ObjectGridColumnProps> =
       filters?: [] | string
       sort?: [] | string
       onChange?: ([any]) => void
+      linkTarget?: string
       // filterableFields?: [string]
     } & {
       defaultClassName?: string
@@ -141,6 +143,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     rowKey = '_id',
     objectSchema: defaultObjectSchema,
     rows,
+    linkTarget,
     ...rest
   } = props;
   const table = Tables.loadById(name, objectApiName,rowKey);
@@ -285,6 +288,11 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         checkboxSelection: checkboxSelection,
         headerCheckboxSelection: checkboxSelection, //仅rowModelType等于Client-Side时才生效
         suppressMenu: true,
+        // 对象name_field字段为不存在时，列表视图上应该显示序号为name链接
+        cellRenderer: 'AgGridCellRenderer',
+        cellRendererParams: {
+          render: !objectSchema?.NAME_FIELD_KEY && getNameFieldColumnRender(objectApiName)
+        },
       },
       // {
       //   resizable: false,
@@ -315,6 +323,12 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
           filterParams = {
             fieldSchema: field,
             valueType: field.type
+          }
+        }else if(["autonumber"].includes(field.type)){
+          filter = 'AgGridCellTextFilter'
+          filterParams = {
+            fieldSchema: Object.assign({}, field, {type: 'text'}),
+            valueType: "text"
           }
         }
         else if (["number", "percent", "currency"].includes(field.type)) {
@@ -375,7 +389,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         //   }
         // },
         cellRendererParams: {
-          fieldSchema: field,
+          fieldSchema: Object.assign({}, { ...field }, { link_target: linkTarget }),
           valueType: field.type,
           render: fieldRender
         },
@@ -492,14 +506,14 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         try {
           await API.updateRecord(objectApiName, id, editedMap[id]);
         } catch (_error) {
-          message.error(translate(_error.message));
+          message.error(translate(_error.reason || _error.message));
         }
       }
       if(onUpdated && isFunction(onUpdated)){
         onUpdated(objectApiName, ids);
       }
     } catch (error) {
-      message.error(translate(error.message));
+      message.error(translate(error.reason || error.message));
     }
     try {
       cancel();

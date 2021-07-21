@@ -7,8 +7,7 @@ import { concatFilters } from '@steedos/builder-sdk';
 import { Objects, API, Settings } from '@steedos/builder-store';
 import { observer } from "mobx-react-lite";
 import FieldSelect from '@ant-design/pro-field/es/components/Select';
-import { Link } from "../components/Link";
-import { getObjectRecordUrl } from "../utils";
+import { getObjectRecordUrl , Link } from "@steedos/builder-form"
 import { SteedosIcon } from '@steedos/builder-lightning';
 import "./lookup.less"
 import { PlusOutlined } from "@ant-design/icons";
@@ -26,7 +25,7 @@ export const LookupField = observer((props:any) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { valueType, mode, fieldProps, request, form, ...rest } = props;
     const { field_schema: fieldSchema = {},onChange, _grid_row_id, depend_field_values: dependFieldValues={} } = fieldProps;
-    const { reference_to, reference_sort,reference_limit, showIcon, multiple, reference_to_field = "_id", filters: fieldFilters = [],filtersFunction, create = true, modal_mode, table_schema } = fieldSchema;
+    const { reference_to, reference_sort,reference_limit, showIcon, multiple, reference_to_field = "_id", filters: fieldFilters = [],filtersFunction, create = true, modal_mode, table_schema, link_target, modalClassName } = fieldSchema;
     // TODO: 添加 fieldProps.defaultValue 修复lookup字段默认值显示value 而不显示label的bug。 select字段一直是正常了，lookup字段一开始是正常的，后面就出问题了。
     let value = fieldProps.defaultValue || fieldProps.value || props.text;//ProTable那边fieldProps.value没有值，只能用text
     let [ fieldsValue ,setFieldsValue ] = useState({});
@@ -130,7 +129,7 @@ export const LookupField = observer((props:any) => {
         return (<React.Fragment>{tags.map((tagItem, index)=>{return (
             <React.Fragment key={tagItem.value}>
                 {index > 0 && ', '}
-                { referenceTo ? (<Link to={getObjectRecordUrl(referenceTo, tagItem.value)} className="text-blue-600 hover:text-blue-500 hover:underline">{tagItem.label}</Link>) : (tagItem.label) }
+                { referenceTo ? (<Link target={link_target} to={getObjectRecordUrl(referenceTo, tagItem.value)} className="text-blue-600 hover:text-blue-500 hover:underline">{tagItem.label}</Link>) : (tagItem.label) }
             </React.Fragment>
         )})}</React.Fragment>)
     }else{
@@ -380,6 +379,7 @@ export const LookupField = observer((props:any) => {
                     let ModalComponent = ObjectModal;
                     let modalPorps:any = {
                         title: `选择 ${referenceToObjectSchema.label}`,
+                        modalProps: { className: modalClassName},
                         objectApiName: referenceTo,
                         multiple,
                         value,

@@ -59,11 +59,13 @@ export const AgGridCellDateFilter = forwardRef((props:any, ref) => {
 
   const startFieldProps = {
     field_schema: fieldSchema,
-    placeholder: '开始'
+    placeholder: '开始',
+    dropdownClassName: "ag-custom-component-popup"
   }
   const endFieldProps = {
     field_schema: fieldSchema,
-    placeholder: '结束'
+    placeholder: '结束',
+    dropdownClassName: "ag-custom-component-popup"
   }
 
   const options = [
@@ -176,6 +178,7 @@ export const AgGridCellDateFilter = forwardRef((props:any, ref) => {
   return (
     <div style={{padding:5}}>
       <ProField 
+        dropdownClassName="ag-custom-component-popup"
         mode='edit'
         valueType="select"
         fieldProps={{field_schema: {
@@ -190,6 +193,7 @@ export const AgGridCellDateFilter = forwardRef((props:any, ref) => {
       {betweenValue == 'inRange' && 
       <>
         <ProField
+          dropdownClassName="ag-custom-component-popup"
           mode='edit'
           valueType={valueType}
           fieldProps={startFieldProps}
@@ -200,6 +204,7 @@ export const AgGridCellDateFilter = forwardRef((props:any, ref) => {
           emptyText=''
         />
         <ProField
+          dropdownClassName="ag-custom-component-popup"
           mode='edit'
           valueType={valueType}
           fieldProps={endFieldProps}

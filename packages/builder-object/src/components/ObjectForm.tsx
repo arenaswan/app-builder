@@ -1,7 +1,7 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import * as PropTypes from 'prop-types';
-import { forEach, defaults, groupBy, filter, map, defaultsDeep, isObject, isBoolean, clone, isNil, compact, uniq} from 'lodash';
+import { forEach, defaults, groupBy, filter, map, defaultsDeep, isObject, isEmpty, clone, isNil, compact, uniq} from 'lodash';
 import { useQuery } from 'react-query'
 // import { FooterToolbar } from '@ant-design/pro-layout';
 import { Form } from '@steedos/builder-form';
@@ -68,7 +68,6 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
   } = props;
   const [proForm] = ProForm.useForm();
   const currentForm = rest.form || proForm;
-  const [undefinedValues, setUndefinedValues] = useState({});
 
   const defaultValues = clone(initialValues);
   const sectionsRef = React.createRef();
@@ -165,19 +164,19 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
     let convertedValues = conversionSubmitValue(values);
     if(!recordId){
       try {
-        result = await API.insertRecord(objectApiName, Object.assign({},undefinedValues,convertedValues));
+        result = await API.insertRecord(objectApiName,convertedValues);
         if(afterInsert){
           return afterInsert(result);
         }else{
           return result ? true : false
         }
       } catch (error) {
-        message.error(translate(error.message));
+        message.error(translate(error.reason || error.message));
       }
       
     }else{
       try {
-        result = await API.updateRecord(objectApiName, recordId, Object.assign({},undefinedValues,convertedValues));
+        result = await API.updateRecord(objectApiName, recordId, convertedValues);
         object.getRecord(recordId, fieldNames).loadRecord();
         if(afterUpdate){
           return afterUpdate(result);  
@@ -185,7 +184,7 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
           return result ? true : false
         }
       } catch (error) {
-        message.error(translate(error.message));
+        message.error(translate(error.reason || error.message));
       }
     } 
   }
@@ -212,10 +211,12 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
     })
 
     forEach(changedValues,(value,key)=>{
-      // value = undefined || null 都要保存null 到数据库中。
-      if(isNil(value)){
-        undefinedValues[key] = null;
-        setUndefinedValues(undefinedValues)
+      // 针对 value = undefined 都要保存 value = null 到表单中。
+      // value === '' 也一致。 原因：空字符串字段保存到数据库中，数据库会将其删除； 这就会导致下次编辑时 默认值又会出现。
+      if(value === undefined || value === ''){
+        let undefinedField = {};
+        undefinedField[key] = null;
+        currentForm.setFieldsValue(undefinedField);
       }
     });
     const args = {
@@ -233,7 +234,9 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
     catch(ex){
       console.error(ex);
     }
-    (sectionsRef.current as any)?.reCalcSchema(changedValues, values)
+    if(!isEmpty(values)){
+      (sectionsRef.current as any)?.reCalcSchema(changedValues, values)
+    }
   }
 
   // 从详细页面第一次进入另一个相关详细页面是正常，第二次initialValues={initialValues} 这个属性不生效。
