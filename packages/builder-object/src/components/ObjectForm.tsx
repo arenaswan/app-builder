@@ -200,6 +200,23 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
   }
 
   const onValuesChange = async (changedValues, values)=>{
+    // 支持运行自定义valuesChange函数
+    const args = {
+      changedValues,
+      values,
+      form: currentForm
+    }
+    try{
+      let valuesChangeFun = defaultOnValuesChange;
+      if(!valuesChangeFun){
+        valuesChangeFun = mergedSchema?.form?.onValuesChange
+      }
+      await valuesChangeFun?.call({}, args);
+    }
+    catch(ex){
+      console.error(ex);
+    }
+
     if(isEmpty(values)){
       // 当第二个参数values为空对象时，表示不是用户在界面上操作造成的值变更，而是代码中手动执行了字段的onChange函数造成的，目前字段默认值功能会调用字段的onChange函数
       // 如果需要values为空的情况下执行相关逻辑请写到该判断上面，不要写到下面，下面的代码都不应该执行
@@ -226,23 +243,6 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
         currentForm.setFieldsValue(undefinedField);
       }
     });
-
-    // 支持运行自定义valuesChange函数
-    const args = {
-      changedValues,
-      values,
-      form: currentForm
-    }
-    try{
-      let valuesChangeFun = defaultOnValuesChange;
-      if(!valuesChangeFun){
-        valuesChangeFun = mergedSchema?.form?.onValuesChange
-      }
-      await valuesChangeFun?.call({}, args);
-    }
-    catch(ex){
-      console.error(ex);
-    }
     // 注意values为空对象时不可以执行reCalcSchema函数
     (sectionsRef.current as any)?.reCalcSchema(changedValues, values);
   }
