@@ -44,4 +44,38 @@
   .ag-body-viewport {
     min-height: 10px;
   }
+
+  // date、datetime(表格头部)过滤时样式调整
+  .ag-tabs{
+    .ag-tabs-body{
+      .ag-filter{
+        .ant-picker{
+          // 一行两列
+          width: 50%;
+          // 两行
+          // display: block;
+        }
+      }
+    }
+  }
+  // date、datetime(右测过滤面板)过滤时样式调整
+  .ag-side-bar{
+    .ag-tool-panel-wrapper{
+      .ag-filter-toolpanel{
+        .ag-filter-list-panel{
+          .ag-filter-toolpanel-group-wrapper{
+            .ag-filter-toolpanel-group{
+              .ag-group-container{
+                .ag-filter{
+                  .ant-picker{
+                    width: 100%;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
