@@ -1,6 +1,7 @@
 
 import React, { useContext, useRef, useEffect, useState, useImperativeHandle, forwardRef } from "react"
 import ProField from "@ant-design/pro-field";
+import moment from 'moment';
 
 import './CellFilter.less';
 
@@ -209,7 +210,11 @@ export const AgGridCellDateFilter = forwardRef((props:any, ref) => {
           valueType={valueType}
           fieldProps={startFieldProps}
           onChange={(event, value) => {
-            setDateFrom(value)
+            let dateValue = event;
+            if (moment.isMoment(event)) {
+              dateValue = event.toDate()
+            }
+            setDateFrom(dateValue === null ? undefined : dateValue)
           }}
           text={initialValue}
           emptyText=''
@@ -220,7 +225,11 @@ export const AgGridCellDateFilter = forwardRef((props:any, ref) => {
           valueType={valueType}
           fieldProps={endFieldProps}
           onChange={(event, value) => {
-            setDateTo(value)
+            let dateValue = event;
+            if (moment.isMoment(event)) {
+              dateValue = event.toDate()
+            }
+            setDateTo(dateValue === null ? undefined : dateValue)
           }}
           text={initialValue}
           emptyText=''
