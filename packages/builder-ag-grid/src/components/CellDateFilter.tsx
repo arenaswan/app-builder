@@ -193,6 +193,10 @@ export const AgGridCellDateFilter = forwardRef((props:any, ref) => {
           options: options
         }}}
         onChange={(value)=>{
+          if(!value){
+            setDateFrom(null);
+            setDateTo(null)
+          }
           setBetweenValue(value)
         }}
         emptyText=''
