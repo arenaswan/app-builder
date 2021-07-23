@@ -5026,10 +5026,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@steedos/filters@^2.0.33":
-  version "2.0.33"
-  resolved "https://registry.yarnpkg.com/@steedos/filters/-/filters-2.0.33.tgz#1a347355ca28bf6bba44b50f6e6a8f9fed9b8726"
-  integrity sha512-ISgVlV9st7CJbvPkJOiDKq/T235MfI+OIPZKEgwID9y1c5iFFkQmZKe8IzSb118djd1irF1o7mUMRphAIaMmCw==
+"@steedos/filters@^2.0.46":
+  version "2.0.46"
+  resolved "https://registry.yarnpkg.com/@steedos/filters/-/filters-2.0.46.tgz#3515518b98fec611a59784fb00da4c705df6baa5"
+  integrity sha512-DxpxYpX9KG2ahdpm0MHljr3V8wqjGaYU3/r8QEWGMjoYkyBteq8rVB1PWlwypLdiy00mz35Dp1gH+fFS4yBhaQ==
   dependencies:
     "@babel/runtime" "^7.5.4"
     moment "^2.24.0"
