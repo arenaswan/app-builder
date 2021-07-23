@@ -214,6 +214,7 @@ export const AgGridCellDateFilter = forwardRef((props:any, ref) => {
             if (moment.isMoment(event)) {
               dateValue = event.toDate()
             }
+            // dateValue为null是要传入undefined是因为上面useEffect判断了null值不重新请求数据，不转换为undefined的话，开始结束时间同时清空就会有不触发重新请求数据的bug
             setDateFrom(dateValue === null ? undefined : dateValue)
           }}
           text={initialValue}
@@ -229,6 +230,7 @@ export const AgGridCellDateFilter = forwardRef((props:any, ref) => {
             if (moment.isMoment(event)) {
               dateValue = event.toDate()
             }
+            // dateValue为null是要传入undefined是因为上面useEffect判断了null值不重新请求数据，不转换为undefined的话，开始结束时间同时清空就会有不触发重新请求数据的bug
             setDateTo(dateValue === null ? undefined : dateValue)
           }}
           text={initialValue}
