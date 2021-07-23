@@ -1,8 +1,6 @@
 
 import React, { useContext, useRef, useEffect, useState, useImperativeHandle, forwardRef } from "react"
-import { isEmpty } from "lodash"
 import ProField from "@ant-design/pro-field";
-import { getBetweenTimeBuiltinValueItem } from "@steedos/filters";
 
 import './CellFilter.less';
 
@@ -23,27 +21,36 @@ export const AgGridCellDateFilter = forwardRef((props:any, ref) => {
           // },
 
           isFilterActive() {
-            return !!dateTo || !!dateFrom
+            if(betweenValue){
+              if(betweenValue != 'inRange'){
+                return true
+              }else{
+                return !!dateTo || !!dateFrom
+              }
+            }
           },
 
           // this example isn't using getModel() and setModel(),
           // so safe to just leave these empty. don't do this in your code!!!
           getModel() {
-            if ((!!dateTo || !!dateFrom) || betweenValue != 'inRange')
-              if(betweenValue == 'inRange'){
-                return {
-                  filterType: "date",
-                  type: 'between',
-                  dateFrom: dateFrom,
-                  dateTo: dateTo
-                }
-              }else{
-                return {
-                  filterType: "date",
-                  type: 'between',
-                  filter: betweenValue
+            if(betweenValue){
+              if ((!!dateTo || !!dateFrom) || betweenValue != 'inRange'){
+                if(betweenValue == 'inRange'){
+                  return {
+                    filterType: "date",
+                    type: 'between',
+                    dateFrom: dateFrom,
+                    dateTo: dateTo
+                  }
+                }else{
+                  return {
+                    filterType: "date",
+                    type: 'between',
+                    filter: betweenValue
+                  }
                 }
               }
+            }
           },
 
           setModel() {
