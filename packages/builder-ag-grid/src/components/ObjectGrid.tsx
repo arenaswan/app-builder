@@ -280,6 +280,28 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     };
   }
 
+  const getFieldCellFilterComponent = (field: any)=>{
+    let filter: any;
+    if (["textarea", "text", "code"].includes(field.type)) {
+      filter = 'AgGridCellTextFilter'
+    }else if(["autonumber"].includes(field.type)){
+      filter = 'AgGridCellTextFilter'
+    }
+    else if (["number", "percent", "currency"].includes(field.type)) {
+      filter = 'AgGridCellNumberFilter'
+    }
+    else if (["date", "datetime"].includes(field.type)) {
+      filter = 'AgGridCellDateFilter'
+    }
+    else if(["formula", "summary"].includes(field.type)){
+      return getFieldCellFilterComponent({type: field.data_type});
+    }
+    else {
+      filter = 'AgGridCellFilter'
+    }
+    return filter;
+  }
+
   const getColumns = (rowButtons)=>{
     const width = checkboxSelection ? 80 : 50;
     const columns:any[] = [
@@ -326,38 +348,17 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         filter = false;
       }
       else{
-        if (["textarea", "text", "code"].includes(field.type)) {
-          filter = 'AgGridCellTextFilter'
-          filterParams = {
-            fieldSchema: field,
-            valueType: field.type
-          }
-        }else if(["autonumber"].includes(field.type)){
-          filter = 'AgGridCellTextFilter'
+        filter = getFieldCellFilterComponent(field);
+        if(["autonumber"].includes(field.type)){
           filterParams = {
             fieldSchema: Object.assign({}, field, {type: 'text'}),
             valueType: "text"
           }
         }
-        else if (["number", "percent", "currency"].includes(field.type)) {
-          filter = 'AgGridCellNumberFilter'
+        else{
           filterParams = {
             fieldSchema: field,
-            valueType: field.type
-          }
-        }
-        else if (["date", "datetime"].includes(field.type)) {
-          filter = 'AgGridCellDateFilter'
-          filterParams = {
-            fieldSchema: field,
-            valueType: field.type
-          }
-        }
-        else {
-          filter = 'AgGridCellFilter',
-          filterParams = {
-            fieldSchema: field,
-            valueType: field.type,
+            valueType: field.data_type ? field.data_type : field.type,
             objectApiName: objectApiName
           }
         }
