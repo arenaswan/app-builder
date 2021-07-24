@@ -15,6 +15,7 @@ import { AgGridCellFilter } from "./CellFilter";
 import { AgGridCellDateFilter } from './CellDateFilter';
 import { AgGridCellTextFilter } from './CellTextFilter';
 import { AgGridCellNumberFilter } from './CellNumberFilter';
+import { AgGridCellBooleanFilter } from './CellBooleanFilter';
 import { AgGridRowActions } from './RowActions';
 import { Modal, Drawer, Button, Space } from 'antd';
 import { AG_GRID_LOCALE_ZH_CN } from '../locales/locale.zh-CN'
@@ -81,7 +82,7 @@ const filterModelToOdataFilters = (filterModel)=>{
       }
       
     }else{
-      if(!isEmpty(value.filter)){
+      if(!isEmpty(value.filter) || ["boolean", "toggle"].indexOf(value.filterType)){
         const filter = [key, FilterTypesMap[value.type], value.filter];
         filters.push(filter);
       }else if(value.operator){
@@ -292,6 +293,9 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     }
     else if (["date", "datetime"].includes(field.type)) {
       filter = 'AgGridCellDateFilter'
+    }
+    else if(["boolean", "toggle"].includes(field.type)){
+      filter = 'AgGridCellBooleanFilter'
     }
     else if(["formula", "summary"].includes(field.type)){
       return getFieldCellFilterComponent({type: field.data_type});
@@ -597,6 +601,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
           AgGridCellDateFilter: AgGridCellDateFilter,
           AgGridCellTextFilter: AgGridCellTextFilter,
           AgGridCellNumberFilter: AgGridCellNumberFilter,
+          AgGridCellBooleanFilter: AgGridCellBooleanFilter,
           rowActions: AgGridRowActions,
         }}
         ref={gridRef}
