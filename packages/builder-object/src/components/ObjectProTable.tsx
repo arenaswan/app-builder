@@ -101,7 +101,7 @@ function getDefaultSortOrder(fieldName: any, sort:any){
       let arr = [];
       arr = sort.split(',');
       sortValue = map(arr, (value, key) => {
-        if (value.indexOf(' ')) {
+        if (value.indexOf(' ') > -1) {
           return arr[key] = value.split(' ');
         } else {
           return arr[key] = [value]
