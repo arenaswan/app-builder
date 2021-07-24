@@ -107,7 +107,8 @@ export const Field = observer((props: any) => {
       ...rest
     }
 
-    if (!readonly && mode === 'edit') {
+    // "formula", "summary"为readonly，强行进入编辑状态，以显示额外提示文字
+    if ((!readonly || ["formula", "summary"].indexOf(fieldSchema.type) > -1) && mode === 'edit') {
       let defaultValue = fieldSchema?.defaultValue;
       if(isFunction(defaultValue)){
         defaultValue = safeRunFunction(defaultValue,[], null, {name:fieldSchema.name});

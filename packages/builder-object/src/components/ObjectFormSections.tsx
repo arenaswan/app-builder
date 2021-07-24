@@ -59,7 +59,7 @@ const getFieldSchemaArray = (mergedSchema, fields, isModalForm, mode)=>{
       只读界面中=>显示
       编辑界面中=>不显示, 不render
       关于特殊字段类型:
-      "autonumber", "formula", "summary"这三个字段类型按readonly处理，与上述hidden或omit属性无关。
+      "autonumber", "formula", "summary"这三个字段类型按readonly处理，同样适用上述hidden或omit属性。
      */
     let isValid = !fields || !fields.length || fields.indexOf(fieldName) > -1
     // hidden的字段如果push到变量fieldSchemaArray中表示这个字段会render但是不显示，如果不push到里面表示不显示也不render
