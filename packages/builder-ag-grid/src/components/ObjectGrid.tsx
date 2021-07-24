@@ -248,6 +248,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
             const modelFilters:any = filterModelToOdataFilters(params.request.filterModel);
             const filters = concatFilters(defaultFilters, modelFilters)
             // TODO 此处需要叠加处理 params.request.fieldModel
+            // console.log("===params.request.startRow===", params.request.startRow);
             let options: any = {
               sort,
               $top: pageSize,
@@ -505,10 +506,20 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
 
   const onSortChanged = async (event)=>{
     cancel();
+    if(event.api.paginationGetCurrentPage() > 0){
+      // 过滤条件变更时，如果不在第一页，需要先切换过去
+      // TODO:paginationGoToFirstPage函数会额外发一次请求，应该想办法避免
+      event.api.paginationGoToFirstPage();
+    }
   }
 
   const onFilterChanged = async (event)=>{
     cancel();
+    if(event.api.paginationGetCurrentPage() > 0){
+      // 过滤条件变更时，如果不在第一页，需要先切换过去
+      // TODO:paginationGoToFirstPage函数会额外发一次请求，应该想办法避免
+      event.api.paginationGoToFirstPage();
+    }
   }
 
   const updateMany = async ()=>{
