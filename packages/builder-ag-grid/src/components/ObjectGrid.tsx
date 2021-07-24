@@ -259,7 +259,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
                 sort
               };
             }
-            if(autoClearSelectedRows){
+            if(autoClearSelectedRows && params.api.paginationGetCurrentPage() === 0){
+              // 只有在第一页才自动清除选中项，这样翻页时就可以保持之前选中项不被清除
               table.clearSelectedRows();
             }
             API.requestRecords(
