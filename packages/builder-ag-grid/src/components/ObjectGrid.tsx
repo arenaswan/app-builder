@@ -82,7 +82,7 @@ const filterModelToOdataFilters = (filterModel)=>{
       }
       
     }else{
-      if(!isEmpty(value.filter) || ["boolean", "toggle"].indexOf(value.filterType)){
+      if(!isEmpty(value.filter) || ["boolean", "toggle"].indexOf(value.filterType) > -1){
         const filter = [key, FilterTypesMap[value.type], value.filter];
         filters.push(filter);
       }else if(value.operator){
