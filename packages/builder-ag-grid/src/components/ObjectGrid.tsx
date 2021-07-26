@@ -135,7 +135,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     rowButtons,
     rowSelection = 'multiple',
     sideBar: defaultSideBar,
-    pageSize = 20,
+    pageSize = 50,
     gridRef,
     onModelUpdated,
     onUpdated,
