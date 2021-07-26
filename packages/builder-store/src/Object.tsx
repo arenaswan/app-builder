@@ -27,7 +27,7 @@ export const RecordCache = types.model({
       // const dataResult = yield API.requestRecords(self.objectApiName, filters, self.fields, {expand})
       // lookup组件reference_to是否是数组 的初始化值 的转换。
       // self.data = convertRecordsForLookup(dataResult, objectSchema.fields)
-      self.data = yield API.requestRecords(self.objectApiName, filters, self.fields)
+      self.data = yield API.requestRecord(self.objectApiName, self.id, self.fields)
 
       self.permissions = yield API.requestRecordPermissions(self.objectApiName, self.id);
       self.isLoading = false

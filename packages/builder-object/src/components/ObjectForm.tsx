@@ -110,9 +110,8 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
     const recordCache = object.getRecord(recordId, fieldsForFetch)
     if (recordCache.isLoading)
       return (<div><Spin/></div>)
-
-    if(recordCache.data && recordCache.data.value && recordCache.data.value.length > 0){
-      record = recordCache.data.value[0];
+    if(recordCache.data){
+      record = recordCache.data;
       forEach(fieldNames, (fieldName:any)=>{
         let filedValue = record[fieldName];
         // 字段值为null等也传过去, null表示往数据库存空值。

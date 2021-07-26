@@ -46,6 +46,11 @@ const requestRecords = async (objectApiName: string, filters: any, fields: any, 
   return records;
 }
 
+const requestRecord = async (objectApiName: string, id: any, fields: any) => {
+  const record = await client.sobject(objectApiName).record(id, fields);
+  return record;
+}
+
 const updateRecord = async (objectApiName: string, objectRecordId: string, data: any) => {
   const result = await client.sobject(objectApiName).update(objectRecordId, data);
 
@@ -68,6 +73,7 @@ export const API = {
   requestObject,
   requestRecordPermissions,
   requestRecords,
+  requestRecord,
   updateRecord,
   insertRecord,
   deleteRecord,

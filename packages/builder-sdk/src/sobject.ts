@@ -123,7 +123,14 @@ export default class SObject {
      * @param fields 
      */
     async record(id: string, fields: Fields){
-        
+        let params: ODataQuery = {};
+        const $select = this.getSelect(fields);
+        if($select){
+            params.$select = $select
+        }
+        let url = this.client.getBaseRoute() + "/api/v4/".concat(this.objectName.replace(/\./g, "_")) + `/${id}` + buildQueryString(params);
+        let result = await this.client.doFetch(url, {method: 'get'});
+        return result;
     }
 
     /**
