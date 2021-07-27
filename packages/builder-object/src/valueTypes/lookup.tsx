@@ -351,7 +351,9 @@ export const LookupField = observer((props:any) => {
                 rest.onBlur && rest.onBlur(e);
             },
             onSelect: (value: any, option: any)=>{
-                setIsDropdownOpen(false);
+                if(!multiple){
+                    setIsDropdownOpen(false);
+                }
                 rest.onSelect && rest.onSelect(value, option);
             }
         };
