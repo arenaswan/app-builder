@@ -353,13 +353,18 @@ export const LookupField = observer((props:any) => {
             }
         };
         if(isLookupTree){
+            // organizations 对象： 下拉框展开时显示name， 关闭时显示fullname.
+            let treeReferenceToLableField = referenceToLableField;
+            if(referenceTo === 'organizations' && isDropdownOpen){
+                treeReferenceToLableField = 'name';
+            }
             //主要用到了newFieldProps中的onChange和value属性
             proFieldProps = Object.assign({}, {...newFieldProps}, {
                 objectApiName: referenceTo,
                 multiple,
                 filters: fieldFilters,
                 filtersFunction,
-                nameField: referenceToLableField,
+                nameField: treeReferenceToLableField,
                 parentField: referenceParentField,
                 ...proFieldPropsForDropdown
             })
