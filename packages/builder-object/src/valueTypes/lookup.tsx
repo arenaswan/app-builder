@@ -116,6 +116,9 @@ export const LookupField = observer((props:any) => {
                     selectItem = recordListData.value.map((recordItem: any) => { 
                         return { value: recordItem[tagsValueField], label: recordItem[referenceToLableField] } 
                     });
+                    if (multiple && value && value.length > 1) {
+                        selectItem.sort((m,n)=>{return value.indexOf(m.value) - value.indexOf(n.value)})
+                    }
                 }
                 tags = selectItem;
             }else{

@@ -39,6 +39,9 @@ export const SelectField = observer((props: any) => {
     tags = filter(options, (optionItem: any) => {
       return multiple ? value.indexOf(optionItem.value) > -1 : optionItem.value === value;
     })
+    if (multiple && value && value.length > 1) {
+      tags.sort((m,n)=>{return value.indexOf(m.value) - value.indexOf(n.value)})
+    }
     const tagsDom = tags.map((tagItem, index) => {
       let colorStyle: any = {
         borderRadius: '10px',
