@@ -60,7 +60,7 @@ export const ObjectTree = observer((props: ObjectTreeProps) => {
   //下边才是去请求数据
 
   const [treeData, setTreeData] = useState([])
-  const [expandedKeys, setExpandedKeys] = useState([])
+  const [expandedKeys, setExpandedKeys] = useState(defaultSelectedKeys ? defaultSelectedKeys : [])
 
   const schema = !object.isLoading && object.schema; 
   if(schema){
@@ -115,6 +115,12 @@ export const ObjectTree = observer((props: ObjectTreeProps) => {
           return treeItem.value;
         });
         setExpandedKeys(rootNodeValues)
+        /* if(defaultSelectedKeys && defaultSelectedKeys.length){
+          //TODO: antd官网中不需要带上完整的parents节点ID就能正常展开选项； 项目中只包含选中节点（除了父节点）ID不能正常展开选项。
+          setExpandedKeys(defaultSelectedKeys)
+        }else{
+          setExpandedKeys(rootNodeValues)
+        } */
       }
     }
   }, [records])
