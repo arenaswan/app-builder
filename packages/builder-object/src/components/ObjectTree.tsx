@@ -116,7 +116,7 @@ export const ObjectTree = observer((props: ObjectTreeProps) => {
         });
         setExpandedKeys(rootNodeValues)
         /* if(defaultSelectedKeys && defaultSelectedKeys.length){
-          //TODO: antd官网中不需要带上完整的parents节点ID就能正常展开选项； 项目中只包含选中节点（除了父节点）ID不能正常展开选项。
+          //TODO: antd官网中不需要带上完整的parents节点ID就能正常展开选项； 项目中只包含选中节点（除了根节点）ID不能正常展开选项。
           setExpandedKeys(defaultSelectedKeys)
         }else{
           setExpandedKeys(rootNodeValues)
