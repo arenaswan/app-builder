@@ -7,11 +7,91 @@ export default {
 export const Grid = () => {
   return (
     <div style={{height:'500px'}}>
-      <ObjectGrid objectApiName='accounts' 
-        selectedRowKeys={["6k5svcTmfopo3dXWr"]}
-        pagination={true}
+      <ObjectGrid 
+        // objectApiName='accounts' 
+        // selectedRowKeys={["6k5svcTmfopo3dXWr"]}
+        objectApiName='contracts' 
+        selectedRowKeys={["C25heacKZD9uy2EAj"]}
         sort="created desc,name desc"
         // rowSelection="single"
+        columnFields={
+          [
+            {
+              fieldName: 'name',
+              width: '200'
+            },
+            // {
+            //   fieldName: 'description'
+            // },
+            // {
+            //   fieldName: 'parent_id'
+            // },
+            // {
+            //   fieldName: 'rating'
+            // },
+            // {
+            //   fieldName: 'type'
+            // },
+            {
+              fieldName: 'created'
+            },
+            {
+              fieldName: 'created_by'
+            },
+          ]
+        }
+      >
+      </ObjectGrid>
+    </div>
+  )
+}
+
+export const NotInfiniteGrid = () => {
+  return (
+    <div style={{height:'500px'}}>
+      <ObjectGrid objectApiName='accounts' 
+        selectedRowKeys={["6k5svcTmfopo3dXWr"]}
+        isInfinite={false}
+        sort="created desc,name desc"
+        columnFields={
+          [
+            {
+              fieldName: 'name',
+              width: '200'
+            },
+            {
+              fieldName: 'description'
+            },
+            {
+              fieldName: 'parent_id'
+            },
+            {
+              fieldName: 'rating'
+            },
+            {
+              fieldName: 'type'
+            },
+            {
+              fieldName: 'created'
+            },
+            {
+              fieldName: 'created_by'
+            },
+          ]
+        }
+      >
+      </ObjectGrid>
+    </div>
+  )
+}
+
+export const NoPaginationGrid = () => {
+  return (
+    <div style={{height:'500px'}}>
+      <ObjectGrid objectApiName='accounts' 
+        selectedRowKeys={["6k5svcTmfopo3dXWr"]}
+        pagination={false}
+        sort="created desc,name desc"
         columnFields={
           [
             {
@@ -92,6 +172,20 @@ export const SchemaGrid = () => {
   },{
     _id:"3", 
     name:"C", 
+    tags:["1", "2"], 
+  },{
+    _id:"4", 
+    name:"D", 
+    tags:["1"], 
+    contract:"C25heacKZD9uy2EAj"
+  },{
+    _id:"5", 
+    name:"E", 
+    tags:["2"], 
+    contract:"C25heacKZD9uy2EAj"
+  },{
+    _id:"6", 
+    name:"F", 
     tags:["1", "2"], 
   }];
   return (

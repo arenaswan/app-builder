@@ -12,6 +12,9 @@ export const AgGridCellRenderer = (props: any) => {
     data,
     context,
   } = props;
+  if(!props.data){
+    return "";
+  }
   const editedMap: any= context?.editedMap
   if(editedMap){
     const recordEdited = editedMap[data._id];

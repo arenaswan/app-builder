@@ -140,7 +140,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     onModelUpdated,
     onUpdated,
     checkboxSelection = true,
-    pagination = true,
+    pagination: defaultPagination = true,
+    isInfinite: defaultIsInfinite = true,
     selectedRowKeys,
     rowKey = '_id',
     objectSchema: defaultObjectSchema,
@@ -149,6 +150,24 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     autoClearSelectedRows = true,
     ...rest
   } = props;
+  // const [gridApi, setGridApi] = useState({});
+  let pagination = defaultPagination;
+  let isInfinite = defaultIsInfinite;
+  // const isInfinite = rowModelType === "infinite";
+  let rowModelType = "serverSide"; //serverSide、infinite
+  if(rows){
+    // 传入rows静态数据时不支持翻页，以后有需求再说
+    pagination = false;
+    isInfinite = false;
+  }
+  if(pagination === false){
+    // 传入defaultIsInfinite为false表示一次性加载所有数据，不需要按isInfinite来滚动翻页请求数据
+    isInfinite = false;
+  }
+  if(isInfinite){
+    rowModelType = "infinite";
+    pagination = false;
+  }
   const table = Tables.loadById(name, objectApiName,rowKey);
   const [editedMap, setEditedMap] = useState({});
   let sort = defaultSort;
@@ -169,7 +188,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   // const isMobile = (colSize === 'sm' || colSize === 'xs') && !props.disableMobile;
   let sideBar = defaultSideBar;
   let _pageSize = pageSize;
-  if(!pagination){
+  if(!pagination && !isInfinite){
     _pageSize = 0;
   }
   if(isEmpty(sideBar) && sideBar !== false ){
@@ -193,12 +212,12 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
 
   const objectSchema = defaultObjectSchema ? defaultObjectSchema : object.schema;
 
-  const setSelectedRows = (params)=>{
+  const setSelectedRows = (params, gridApi?)=>{
       // 当前显示页中store中的初始值自动勾选。
       const selectedRowKeys = table.getSelectedRowKeys();
-      const gridApi = params.api;
+      const currentGridApi = params.api || gridApi;
       if(selectedRowKeys && selectedRowKeys.length){
-        gridApi.forEachNode(node => {
+        currentGridApi.forEachNode(node => {
           if(node.data && node.data[rowKey]){
             if (selectedRowKeys.indexOf(node.data[rowKey])>-1) {
               node.setSelected(true);
@@ -209,16 +228,22 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         });
       }
       else{
-        gridApi.deselectAll();
+        currentGridApi.deselectAll();
       }
   }
 
-  const getDataSource = () => {
+  const getDataSource = (gridApi?: any) => {
     return {
         getRows: params => {
+          // console.log("===getRows=params==", params);
+          // console.log("===getRows=isInfinite==", isInfinite);
+          const currentGridApi = isInfinite ? gridApi : params.api;
+          const sortModel = isInfinite ? params.sortModel : params.request.sortModel;
+          const filterModel = isInfinite ? params.filterModel : params.request.filterModel;
+          const startRow = isInfinite ? params.startRow : params.request.startRow;
           if(rows){
             const sort = []
-            forEach(params.request.sortModel, (sortField)=>{
+            forEach(sortModel, (sortField)=>{
               sort.push([sortField.colId, sortField.sort])
             })
             let sortedRows = clone(rows);
@@ -228,11 +253,17 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
                 sortedRows = reverse(sortedRows)
               }
             }
-            params.success({
-              rowData: sortedRows,
-              rowCount: rows.length
-            });
-            setSelectedRows(params);
+            if(isInfinite){
+              let lastRow = sortedRows.length;
+              params.successCallback(sortedRows, lastRow);
+            }
+            else{
+              params.success({
+                rowData: sortedRows,
+                rowCount: rows.length
+              });
+            }
+            setSelectedRows(params, currentGridApi);
           }
           else{
             let fields = ['name'];
@@ -241,25 +272,26 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
             });
             fields = uniq(compact(fields.concat(extraColumnFields).concat(["owner", "company_id", "company_ids", "locked"])));
             const sort = []
-            forEach(params.request.sortModel, (sortField)=>{
+            forEach(sortModel, (sortField)=>{
               sort.push([sortField.colId, sortField.sort])
             })
-            // const filters = compact([].concat([defaultFilters]).concat(filterModelToOdataFilters(params.request.filterModel)));
-            const modelFilters:any = filterModelToOdataFilters(params.request.filterModel);
+            // const filters = compact([].concat([defaultFilters]).concat(filterModelToOdataFilters(filterModel)));
+            const modelFilters:any = filterModelToOdataFilters(filterModel);
             const filters = concatFilters(defaultFilters, modelFilters)
             // TODO 此处需要叠加处理 params.request.fieldModel
             // console.log("===params.request.startRow===", params.request.startRow);
             let options: any = {
               sort,
               $top: pageSize,
-              $skip: params.request.startRow
+              $skip: startRow
             };
-            if(!pagination){
+            if(!pagination && !isInfinite){
               options = {
                 sort
               };
             }
-            if(autoClearSelectedRows && params.api.paginationGetCurrentPage() === 0){
+            let isFirstPage = isInfinite ? startRow === 0 : params.api.paginationGetCurrentPage() === 0
+            if(autoClearSelectedRows && isFirstPage){
               // 只有在第一页才自动清除选中项，这样翻页时就可以保持之前选中项不被清除
               table.clearSelectedRows();
             }
@@ -267,16 +299,23 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
               objectApiName,
               filters,
               fields,options).then((data)=>{
-                params.success({
-                  rowData: data.value,
-                  rowCount: data['@odata.count']
-                });
-                if(!modelFilters.length && !data['@odata.count']){
-                  params.api.setSideBarVisible(false)
-                }else if(sideBar !== false){
-                  params.api.setSideBarVisible(true)
+                if(isInfinite){
+                  let lastRow = data["@odata.count"];
+                  params.successCallback(data.value, lastRow);
                 }
-                setSelectedRows(params);
+                else{
+                  params.success({
+                    rowData: data.value,
+                    rowCount: data['@odata.count']
+                  });
+                }
+
+                if(!modelFilters.length && !data['@odata.count']){
+                  currentGridApi.setSideBarVisible(false)
+                }else if(sideBar !== false){
+                  currentGridApi.setSideBarVisible(true)
+                }
+                setSelectedRows(params, currentGridApi);
             })
           }
         }
@@ -307,6 +346,13 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     }
     return filter;
   }
+
+  const onGridReady = (params) => {
+    // setGridApi(params.api);
+    if(isInfinite){
+      params.api.setDatasource(getDataSource(params.api));
+    }
+  };
 
   const getColumns = (rowButtons)=>{
     const width = checkboxSelection ? 80 : 50;
@@ -578,7 +624,9 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         columnDefs={getColumns(rowButtons)}
         paginationAutoPageSize={false}
         localeText={AG_GRID_LOCALE_ZH_CN}
-        rowModelType='serverSide'
+        rowModelType={rowModelType}
+        rowBuffer={0}//该参数默认值为10，ag-grid infinite-scrolling官网示例中该参数为0
+        onGridReady={onGridReady}
         pagination={pagination}
         onSortChanged={onSortChanged}
         onFilterChanged={onFilterChanged}
@@ -595,7 +643,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         modules={AllModules}
         stopEditingWhenGridLosesFocus={false}
         stopEditingWhenCellsLoseFocus={false}
-        serverSideDatasource={getDataSource()}
+        serverSideDatasource={isInfinite ? null : getDataSource()}
         onModelUpdated={onModelUpdated}
         serverSideStoreType={ServerSideStoreType.Partial}
         sideBar={sideBar}
