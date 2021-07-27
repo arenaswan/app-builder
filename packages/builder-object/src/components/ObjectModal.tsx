@@ -46,8 +46,8 @@ export const ObjectModal = ({
   tableMode = "ag-grid",//ag-grid, ant-pro-table
   ...rest
 }: ObjectModalProps) => {
-  const defaultValue = (value && value.length && (isArray(value) ? value : [value])) || []
-  const [selectedRowKeys, setSelectedRowKeys] = useState(defaultValue)
+  const selectedValue = (value && value.length && (isArray(value) ? value : [value])) || []
+  const [selectedRowKeys, setSelectedRowKeys] = useState(selectedValue)
   const [selectedRows, setSelectedRows] = useState([])
   const gridRef = useRef(null);
   const [visible, setVisible] = useState<boolean>(!!rest.visible);
@@ -89,7 +89,7 @@ export const ObjectModal = ({
       }
       Object.assign(contentComponentProps, {
         rowSelection: rowSelectionType,
-        selectedRowKeys: defaultValue,
+        selectedRowKeys: selectedValue,
         rowKey: rest.rowKey,
         autoClearSelectedRows: false
       });
@@ -103,7 +103,7 @@ export const ObjectModal = ({
           type: rowSelectionType ,
           // 在proTable中defaultSelectedRowKeys目前无效。只能用selectedRowKeys实现相关功能。
           // 如果proTable后续版本defaultSelectedRowKeys能生效的话可以考虑直接换成defaultSelectedRowKeys。
-          selectedRowKeys: defaultValue
+          selectedRowKeys: selectedValue
         }
       });
     }
@@ -112,7 +112,7 @@ export const ObjectModal = ({
     // 底层使用的是ObjectTree时multiple及value属性实现逻辑
     Object.assign(contentComponentProps, {
       multiple,
-      defaultSelectedKeys: defaultValue
+      selectedKeys: selectedValue
     });
   }
   
