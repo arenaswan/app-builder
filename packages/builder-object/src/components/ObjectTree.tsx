@@ -48,7 +48,7 @@ export const ObjectTree = observer((props: ObjectTreeProps) => {
     filters,
     checkable,
     onChange,
-    defaultSelectedKeys,
+    selectedKeys: defaultSelectedKeys,
     ...rest
   } = props
   const [selectedKeys, setselectedKeys] = useState(defaultSelectedKeys ? defaultSelectedKeys : [] )
