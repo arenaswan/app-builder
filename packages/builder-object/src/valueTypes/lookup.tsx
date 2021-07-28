@@ -2,7 +2,7 @@ import React, { useState , useRef, useEffect} from "react";
 import { formatFiltersToODataQuery } from '@steedos/filters';
 import { Select, Spin } from 'antd';
 import "antd/es/tree-select/style/index.css";
-import { isFunction, isArray, isObject, uniq, filter, map, forEach, isString, isEmpty} from 'lodash';
+import { isFunction, isArray, isObject, uniq, filter, map, forEach, isString, isEmpty, concat } from 'lodash';
 import { concatFilters } from '@steedos/builder-sdk';
 import { Objects, API, Settings } from '@steedos/builder-store';
 import { observer } from "mobx-react-lite";
@@ -27,7 +27,7 @@ export const LookupField = observer((props:any) => {
     const { field_schema: fieldSchema = {},onChange, _grid_row_id, depend_field_values: dependFieldValues={} } = fieldProps;
     const { reference_to, reference_sort,reference_limit, showIcon, multiple, reference_to_field = "_id", filters: fieldFilters = [],filtersFunction, create = true, modal_mode, table_schema, link_target, modalClassName } = fieldSchema;
     // TODO: 添加 fieldProps.defaultValue 修复lookup字段默认值显示value 而不显示label的bug。 select字段一直是正常了，lookup字段一开始是正常的，后面就出问题了。
-    let value = fieldProps.defaultValue || fieldProps.value || props.text;//ProTable那边fieldProps.value没有值，只能用text
+    let fieldValue = fieldProps.defaultValue || fieldProps.value || props.text;//ProTable那边fieldProps.value没有值，只能用text
     let [ fieldsValue ,setFieldsValue ] = useState({});
     // 按原来lookup控件的设计，this.template.data._value为原来数据库中返回的选项值，this.template.data.value为当前用户选中的选项
     const optionsFunctionThis = {
@@ -35,8 +35,8 @@ export const LookupField = observer((props:any) => {
         form: form,
         template: {
             data: {
-                value: value,
-                _value: value
+                value: fieldValue,
+                _value: fieldValue
             }
         }
     };
@@ -56,8 +56,8 @@ export const LookupField = observer((props:any) => {
     let referenceTos = isFunction(reference_to) ? reference_to() : reference_to;
     let defaultReferenceTo:any;
     if(isArray(referenceTos)){
-        if(value && value.o){
-            defaultReferenceTo = value.o;
+        if(fieldValue && fieldValue.o){
+            defaultReferenceTo = fieldValue.o;
         }else{
             defaultReferenceTo = referenceTos[0];
         }
@@ -68,8 +68,8 @@ export const LookupField = observer((props:any) => {
     // optionsFunction优先options
     let options = fieldSchema.optionsFunction ? fieldSchema.optionsFunction : fieldSchema.options ;
     // if(isArray(referenceTos) && value ){
-        if(isObject(value) && !isArray(value)){
-            value=value['ids'];
+        if(isObject(fieldValue) && !isArray(fieldValue)){
+            fieldValue=fieldValue['ids'];
         }
     //}
     let referenceToObject,referenceToObjectSchema,referenceToLableField, referenceToObjectIcon, referenceParentField;
@@ -85,12 +85,12 @@ export const LookupField = observer((props:any) => {
         }
     }
     let selectItem = [], recordListData: any, referenceTofilters: any[] | string, fields: any;
-    if(referenceToObject && value){
-        referenceTofilters = [[reference_to_field, '=', value]];
+    if(referenceToObject && fieldValue){
+        referenceTofilters = [[reference_to_field, '=', fieldValue]];
         fields = uniq([reference_to_field, referenceToLableField, "_id"]);
     }
     if(mode==='read'){
-        if(value){
+        if(fieldValue){
             // if (referenceTo && !options) {
             if (referenceTo) {
                 // 只读情况下指定referenceTo时，直接根据id查数据就行，如果执行optionsFunction会造成列表性能差
@@ -116,8 +116,8 @@ export const LookupField = observer((props:any) => {
                     selectItem = recordListData.value.map((recordItem: any) => { 
                         return { value: recordItem[tagsValueField], label: recordItem[referenceToLableField] } 
                     });
-                    if (multiple && value && value.length > 1) {
-                        selectItem.sort((m,n)=>{return value.indexOf(m.value) - value.indexOf(n.value)})
+                    if (multiple && fieldValue && fieldValue.length > 1) {
+                        selectItem.sort((m,n)=>{return fieldValue.indexOf(m.value) - fieldValue.indexOf(n.value)})
                     }
                 }
                 tags = selectItem;
@@ -125,7 +125,7 @@ export const LookupField = observer((props:any) => {
                 // TODO:options({}) 里的对象后期需要存放value进入
                 options = isFunction(options) ? safeRunFunction(options,[optionsFunctionValues],[], optionsFunctionThis) : options;
                 tags = filter(options,(optionItem: any)=>{
-                    return multiple ? value.indexOf(optionItem.value) > -1 : optionItem.value === value;
+                    return multiple ? fieldValue.indexOf(optionItem.value) > -1 : optionItem.value === fieldValue;
                 })
             }
         }
@@ -168,8 +168,8 @@ export const LookupField = observer((props:any) => {
                     if (reference_limit) {
                         option.pageSize = reference_limit
                     }
-                    if (value){
-                        textFilters = [reference_to_field, '=', value];
+                    if (fieldValue){
+                        textFilters = [reference_to_field, '=', fieldValue];
                     }
                     if (params.keyWords){
                         keyFilters = [referenceToLableField, 'contains', params.keyWords];
@@ -253,7 +253,7 @@ export const LookupField = observer((props:any) => {
         if(isArray(referenceTos)){
             labelInValue=true;
             let defaultReferenceToValue:any = [];
-            if(value){
+            if(fieldValue){
                 const recordList = referenceToObject.getRecordList(referenceTofilters, fields);
                 // 下拉框选中某个选项，获取其对应的lable。因为如果加下面的isloading判断，就会在重新选择其它选项时会有isLoading状态的效果， 所以不需要下面这行isloading判断。
                 // if (recordList.isLoading) return (<div><Spin/></div>);
@@ -392,7 +392,7 @@ export const LookupField = observer((props:any) => {
                         modalProps: { className: modalClassName},
                         objectApiName: referenceTo,
                         multiple,
-                        value,
+                        value: fieldValue,
                         // 弹出框会返回rowKey对应的字段值，默认为_id，比如space_users要求返回user字段值
                         rowKey: reference_to_field,
                         // filtersFunction执行后可能返回空，如果返回空表示加载所有数据
