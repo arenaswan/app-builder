@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { forEach, compact, filter, includes, keys, map, isEmpty, isFunction, isObject, uniq, find, sortBy, reverse, clone, isArray, isString } from 'lodash';
 import useAntdMediaQuery from 'use-media-antd-query';
 import { observer } from "mobx-react-lite"
@@ -150,7 +150,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     autoClearSelectedRows = true,
     ...rest
   } = props;
-  // const [gridApi, setGridApi] = useState({});
+  const [objectGridApi, setObjectGridApi] = useState({} as any);
+  const [isGridReady, setIsGridReady] = useState(false);
   let pagination = defaultPagination;
   let isInfinite = defaultIsInfinite;
   // const isInfinite = rowModelType === "infinite";
@@ -168,7 +169,23 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     rowModelType = "infinite";
     pagination = false;
   }
+
+  let getDataSource: Function;
+  useEffect(() => {
+    if(isGridReady && isInfinite){
+      objectGridApi.setDatasource(getDataSource(objectGridApi));
+    }
+  }, [defaultFilters, isGridReady]);
   const table = Tables.loadById(name, objectApiName,rowKey);
+  // 将初始值存放到 store 中。
+  useEffect(() => {
+    // 只需要触发一次selectedRowKeys即可
+    // 用!isGridReady判断可以避免每次过滤条件变更后重新触发addSelectedRowsByKeys，进而带来多余的network请求
+    if(!isGridReady && selectedRowKeys && selectedRowKeys.length){
+      table.addSelectedRowsByKeys(selectedRowKeys, columnFields, rows, defaultFilters);
+    }
+  }, [selectedRowKeys, defaultFilters, isGridReady]);
+
   const [editedMap, setEditedMap] = useState({});
   let sort = defaultSort;
   if(sort && sort.length){
@@ -177,10 +194,6 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         return {field_name: item[0], order: item[1]} ;
       });
     }
-  }
-  // 将初始值存放到 stroe 中。
-  if(selectedRowKeys && selectedRowKeys.length){
-    table.addSelectedRowsByKeys(selectedRowKeys, columnFields, rows, defaultFilters)
   }
   // const [drawerVisible, setDrawerVisible] = useState(false);
   // const [modal] = Modal.useModal();
@@ -232,7 +245,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
       }
   }
 
-  const getDataSource = (gridApi?: any) => {
+  getDataSource = (gridApi?: any) => {
     return {
         getRows: params => {
           // console.log("===getRows=params==", params);
@@ -348,9 +361,10 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   }
 
   const onGridReady = (params) => {
-    // setGridApi(params.api);
     if(isInfinite){
-      params.api.setDatasource(getDataSource(params.api));
+      // 如果在非isInfinite模式下执行下面两个state变更，会造成多次执行serverSideDatasource语句进而产生多余的network请求
+      setObjectGridApi(params.api);
+      setIsGridReady(true);
     }
   };
 
