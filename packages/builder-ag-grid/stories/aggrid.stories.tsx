@@ -46,6 +46,36 @@ export const Grid = () => {
   )
 }
 
+export const GridWithFilters = () => {
+  return (
+    <div style={{height:'500px'}}>
+      <ObjectGrid 
+        // objectApiName='accounts' 
+        // selectedRowKeys={["6k5svcTmfopo3dXWr"]}
+        objectApiName='contracts' 
+        selectedRowKeys={["C25heacKZD9uy2EAj"]}
+        sort="created desc,name desc"
+        filters={["name", "contains", "1"]}
+        columnFields={
+          [
+            {
+              fieldName: 'name',
+              width: '200'
+            },
+            {
+              fieldName: 'created'
+            },
+            {
+              fieldName: 'created_by'
+            },
+          ]
+        }
+      >
+      </ObjectGrid>
+    </div>
+  )
+}
+
 export const NotInfiniteGrid = () => {
   return (
     <div style={{height:'500px'}}>
@@ -53,6 +83,7 @@ export const NotInfiniteGrid = () => {
         selectedRowKeys={["6k5svcTmfopo3dXWr"]}
         isInfinite={false}
         sort="created desc,name desc"
+        pageSize={20}
         columnFields={
           [
             {
