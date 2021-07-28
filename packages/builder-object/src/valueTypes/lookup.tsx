@@ -324,6 +324,23 @@ export const LookupField = observer((props:any) => {
                                 <PlusOutlined /> 新建 {createObjectName}
                             </a>
                         } 
+                        // 新建的 createObjectName 自动被选中
+                        afterInsert={async (values)=>{
+                            let insertedId = values[0] && values[0]._id;
+                            if (insertedId) {
+                                let createdFieldValue: any = [];
+                                // fieldValue 是多选字段当前选中的值。只有多选字段才会将已选中id 和 新建id 合并返回。
+                                createdFieldValue = (multiple && isArray(fieldValue)) ? concat(fieldValue, insertedId) : [insertedId];
+                                let value:any = multiple ? createdFieldValue : createdFieldValue[0];
+                                if(isArray(referenceTos)){
+                                    value = {o: referenceTo, ids: createdFieldValue };
+                                }
+                                onChange(value);
+                                // 利用setParams执行request函数返回[{value:xx, label:xx}], 显示label。
+                                setParams({ open: false, openTag: new Date() });
+                            }
+                            return true;
+                        }}
                     />
                 </React.Fragment>
             )
