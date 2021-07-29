@@ -387,7 +387,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         // 对象name_field字段为不存在时，列表视图上应该显示序号为name链接
         cellRenderer: 'AgGridCellRenderer',
         cellRendererParams: {
-          render: !objectSchema?.NAME_FIELD_KEY && getNameFieldColumnRender(objectApiName)
+          // rows静态数据传入不应该显示为链接
+          render: !objectSchema?.NAME_FIELD_KEY && !rows && getNameFieldColumnRender(objectApiName)
         },
       },
       // {
