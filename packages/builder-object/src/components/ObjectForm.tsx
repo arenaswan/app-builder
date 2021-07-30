@@ -69,7 +69,7 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
   const [proForm] = ProForm.useForm();
   const currentForm = rest.form || proForm;
 
-  const defaultValues = clone(initialValues);
+  const defaultValues = clone(initialValues || {});
   const sectionsRef = React.createRef();
   const form = Forms.loadById(formId)
   form.setMode(mode);
