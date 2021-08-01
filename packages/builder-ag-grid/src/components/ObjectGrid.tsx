@@ -46,7 +46,7 @@ export type ObjectGridProps<T extends ObjectGridColumnProps> =
       rowKey?: string//选中项的key，即字段名
       selectedRowKeys?: [string]//选中项值集合
       isInfinite?: boolean//是否使用滚动翻页模式，即rowModelType是否为infinite
-      autoFixGridHeight?: boolean//当isInfinite且记录总数量大于pageSize时，自动把Grid高度设置为pageSize行的总高度，即rowHeight*pageSize
+      autoFixHeight?: boolean//当isInfinite且记录总数量大于pageSize时，自动把Grid高度设置为pageSize行的总高度，即rowHeight*pageSize
       autoHideForEmptyData: boolean//当数据为空时自动隐藏整个Grid记录详细界面子表需要该属性
       // filterableFields?: [string]
     } & {
@@ -161,7 +161,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     rows,
     linkTarget,
     autoClearSelectedRows = true,
-    autoFixGridHeight = false,
+    autoFixHeight = false,
     autoHideForEmptyData = false,
     ...rest
   } = props;
@@ -331,7 +331,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
               fields,options).then((data)=>{
                 const dataLength = data["@odata.count"];
                 if(isInfinite){
-                  if(autoFixGridHeight && pageSize && pageSize < dataLength){
+                  if(autoFixHeight && pageSize && pageSize < dataLength){
                     // const rowItemHeight = currentGridApi.getRowNode().rowHeight;
                     setGridHeight(pageSize * (rowHeight || DEFAULT_ROW_HEIGHT) + (headerHeight || DEFAULT_HEADER_HEIGHT));
                   }

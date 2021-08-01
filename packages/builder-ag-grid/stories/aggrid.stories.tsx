@@ -134,7 +134,7 @@ export const GridAutoHideEmpty = () => {
   )
 }
 
-export const GridFixHeight = () => {
+export const GridAutoFixHeight = () => {
   return (
     <div>
       <ObjectGrid 
@@ -147,7 +147,7 @@ export const GridFixHeight = () => {
         pageSize={5}
         rowHeight={28}
         headerHeight={33}
-        autoFixGridHeight={true}
+        autoFixHeight={true}
         columnFields={
           [
             {
