@@ -90,6 +90,50 @@ export const GridWithFilters = () => {
   )
 }
 
+export const GridAutoHideEmpty = () => {
+  const [textFilters, setTextFilters] = useState<any>(null)
+  return (
+    <div style={{height:'500px'}}>
+      <Input
+        onChange={(e) => {
+          let text = e.target.value;
+          console.log("changed text:", text);
+          if(text){
+            setTextFilters(["name", "contains", text]);
+          }
+          else{
+            setTextFilters(null);
+          }
+        }}
+      ></Input>
+      <ObjectGrid 
+        // objectApiName='accounts' 
+        // selectedRowKeys={["6k5svcTmfopo3dXWr"]}
+        objectApiName='contracts' 
+        selectedRowKeys={["C25heacKZD9uy2EAj"]}
+        sort="created desc,name desc"
+        autoHideGridForEmptyData={true}
+        filters={textFilters}
+        columnFields={
+          [
+            {
+              fieldName: 'name',
+              width: '200'
+            },
+            {
+              fieldName: 'created'
+            },
+            {
+              fieldName: 'created_by'
+            },
+          ]
+        }
+      >
+      </ObjectGrid>
+    </div>
+  )
+}
+
 export const GridFixHeight = () => {
   return (
     <div>
