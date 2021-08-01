@@ -90,6 +90,40 @@ export const GridWithFilters = () => {
   )
 }
 
+export const GridFixHeight = () => {
+  return (
+    <div>
+      <ObjectGrid 
+        // objectApiName='accounts' 
+        // selectedRowKeys={["6k5svcTmfopo3dXWr"]}
+        objectApiName='contracts' 
+        selectedRowKeys={["C25heacKZD9uy2EAj"]}
+        sort="created desc,name desc"
+        // rowSelection="single"
+        pageSize={5}
+        rowHeight={28}
+        headerHeight={33}
+        autoFixGridHeight={true}
+        columnFields={
+          [
+            {
+              fieldName: 'name',
+              width: '200'
+            },
+            {
+              fieldName: 'created'
+            },
+            {
+              fieldName: 'created_by'
+            },
+          ]
+        }
+      >
+      </ObjectGrid>
+    </div>
+  )
+}
+
 export const NotInfiniteGrid = () => {
   return (
     <div style={{height:'500px'}}>

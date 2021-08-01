@@ -41,6 +41,12 @@ export type ObjectGridProps<T extends ObjectGridColumnProps> =
       onChange?: ([any]) => void
       linkTarget?: string //单元格如果是链接，配置其链接的target属性值
       autoClearSelectedRows?: boolean//当请求列表数据时自动清除选中项
+      rows?: any[]//静态数据配合objectSchema使用
+      objectSchema?: any//不传入objectApiName时，使用静态objectSchema
+      rowKey?: string//选中项的key，即字段名
+      selectedRowKeys?: [string]//选中项值集合
+      isInfinite?: boolean//是否使用滚动翻页模式，即rowModelType是否为infinite
+      autoFixGridHeight?: boolean//当isInfinite且记录总数量大于pageSize时，自动把Grid高度设置为pageSize行的总高度，即rowHeight*pageSize
       // filterableFields?: [string]
     } & {
       defaultClassName?: string
@@ -60,6 +66,10 @@ const FilterTypesMap = {
   'greaterThanOrEqual': '>=',
   'empty': 'empty' //TODO 不支持
 }
+
+const DEFAULT_ROW_HEIGHT = 28;
+const DEFAULT_HEADER_HEIGHT = 33;
+const DEFAULT_GRID_HEIGHT = "100%";
 
 /**
  * 
@@ -142,16 +152,20 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     checkboxSelection = true,
     pagination: defaultPagination = true,
     isInfinite: defaultIsInfinite = true,
+    rowHeight,
+    headerHeight,
     selectedRowKeys,
     rowKey = '_id',
     objectSchema: defaultObjectSchema,
     rows,
     linkTarget,
     autoClearSelectedRows = true,
+    autoFixGridHeight = false,
     ...rest
   } = props;
   const [objectGridApi, setObjectGridApi] = useState({} as any);
   const [isGridReady, setIsGridReady] = useState(false);
+  const [gridHeight, setGridHeight] = useState(DEFAULT_GRID_HEIGHT as string | number);
   let pagination = defaultPagination;
   let isInfinite = defaultIsInfinite;
   // const isInfinite = rowModelType === "infinite";
@@ -312,18 +326,26 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
               objectApiName,
               filters,
               fields,options).then((data)=>{
+                const dataLength = data["@odata.count"];
                 if(isInfinite){
-                  let lastRow = data["@odata.count"];
-                  params.successCallback(data.value, lastRow);
+                  if(autoFixGridHeight && pageSize && pageSize < dataLength){
+                    // const rowItemHeight = currentGridApi.getRowNode().rowHeight;
+                    setGridHeight(pageSize * (rowHeight || DEFAULT_ROW_HEIGHT) + (headerHeight || DEFAULT_HEADER_HEIGHT) + 2);
+                  }
+                  else{
+                    // 这里故意不再重置为DEFAULT_GRID_HEIGHT，因为会重新渲染整个grid，比如正在过滤数据，会把打开的右侧过滤器自动隐藏了体验不好
+                    // setGridHeight(DEFAULT_GRID_HEIGHT);
+                  }
+                  params.successCallback(data.value, dataLength);
                 }
                 else{
                   params.success({
                     rowData: data.value,
-                    rowCount: data['@odata.count']
+                    rowCount: dataLength
                   });
                 }
 
-                if(!modelFilters.length && !data['@odata.count']){
+                if(!modelFilters.length && !dataLength){
                   currentGridApi.setSideBarVisible(false)
                 }else if(sideBar !== false){
                   currentGridApi.setSideBarVisible(true)
@@ -634,7 +656,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
 
   return (
 
-    <div className="ag-theme-balham" style={{height: "100%", flex: "1 1 auto",overflow:"hidden"}}>
+    <div className="ag-theme-balham" style={{height: gridHeight, flex: "1 1 auto",overflow:"hidden"}}>
       <AgGridReact
         columnDefs={getColumns(rowButtons)}
         paginationAutoPageSize={false}
@@ -650,6 +672,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         suppressExcelExport={true}
         cacheBlockSize={_pageSize}
         rowSelection={rowSelection}
+        rowHeight={rowHeight}
+        headerHeight={headerHeight}
         suppressRowClickSelection={true}
         // suppressCellSelection={true}
         // rowMultiSelectWithClick={true}
