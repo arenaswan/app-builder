@@ -47,7 +47,7 @@ export type ObjectGridProps<T extends ObjectGridColumnProps> =
       selectedRowKeys?: [string]//选中项值集合
       isInfinite?: boolean//是否使用滚动翻页模式，即rowModelType是否为infinite
       autoFixGridHeight?: boolean//当isInfinite且记录总数量大于pageSize时，自动把Grid高度设置为pageSize行的总高度，即rowHeight*pageSize
-      autoHideGridForEmptyData: boolean//当数据为空时自动隐藏整个Grid记录详细界面子表需要该属性
+      autoHideForEmptyData: boolean//当数据为空时自动隐藏整个Grid记录详细界面子表需要该属性
       // filterableFields?: [string]
     } & {
       defaultClassName?: string
@@ -162,7 +162,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     linkTarget,
     autoClearSelectedRows = true,
     autoFixGridHeight = false,
-    autoHideGridForEmptyData = false,
+    autoHideForEmptyData = false,
     ...rest
   } = props;
   const [objectGridApi, setObjectGridApi] = useState({} as any);
@@ -663,7 +663,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
 
   return (
 
-    <div className={`ag-theme-balham ${autoHideGridForEmptyData && isDataEmpty ? 'hidden' : ''}`}  style={{height: gridHeight, flex: "1 1 auto",overflow:"hidden"}}>
+    <div className={`ag-theme-balham ${autoHideForEmptyData && isDataEmpty ? 'hidden' : ''}`}  style={{height: gridHeight, flex: "1 1 auto",overflow:"hidden"}}>
       <AgGridReact
         columnDefs={getColumns(rowButtons)}
         paginationAutoPageSize={false}

@@ -112,7 +112,7 @@ export const GridAutoHideEmpty = () => {
         objectApiName='contracts' 
         selectedRowKeys={["C25heacKZD9uy2EAj"]}
         sort="created desc,name desc"
-        autoHideGridForEmptyData={true}
+        autoHideForEmptyData={true}
         filters={textFilters}
         columnFields={
           [
