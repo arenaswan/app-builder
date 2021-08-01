@@ -1,5 +1,5 @@
 import { ObjectGrid, ObjectTreeGrid } from "@steedos/builder-ag-grid";
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, Input } from "antd"
 export default {
   title: "Object Table AG Grid",
@@ -33,6 +33,45 @@ export const Grid = () => {
             // {
             //   fieldName: 'type'
             // },
+            {
+              fieldName: 'created'
+            },
+            {
+              fieldName: 'created_by'
+            },
+          ]
+        }
+      >
+      </ObjectGrid>
+    </div>
+  )
+}
+
+export const GridWithRefreshButton = () => {
+	const gridRef = useRef(null as any);
+  return (
+    <div style={{height:'500px'}}>
+      <Button
+        onClick={(e) => {
+          gridRef.current.api.ensureIndexVisible(0);
+          gridRef.current.api.purgeInfiniteCache()
+          // gridRef.current.api.refreshInfiniteCache()
+        }}
+      >刷新</Button>
+      <ObjectGrid 
+        gridRef={gridRef}
+        // objectApiName='accounts' 
+        // selectedRowKeys={["6k5svcTmfopo3dXWr"]}
+        objectApiName='contracts' 
+        selectedRowKeys={["C25heacKZD9uy2EAj"]}
+        sort="created desc,name desc"
+        // rowSelection="single"
+        columnFields={
+          [
+            {
+              fieldName: 'name',
+              width: '200'
+            },
             {
               fieldName: 'created'
             },
@@ -207,6 +246,46 @@ export const NotInfiniteGrid = () => {
     </div>
   )
 }
+
+export const NotInfiniteGridWithRefreshButton = () => {
+	const gridRef = useRef(null as any);
+  return (
+    <div style={{height:'500px'}}>
+      <Button
+        onClick={(e) => {
+          // gridRef.current.api.paginationGoToFirstPage()
+          gridRef.current.api.refreshServerSideStore()
+        }}
+      >刷新</Button>
+      <ObjectGrid 
+        isInfinite={false}
+        gridRef={gridRef}
+        // objectApiName='accounts' 
+        // selectedRowKeys={["6k5svcTmfopo3dXWr"]}
+        objectApiName='contracts' 
+        selectedRowKeys={["C25heacKZD9uy2EAj"]}
+        sort="created desc,name desc"
+        // rowSelection="single"
+        columnFields={
+          [
+            {
+              fieldName: 'name',
+              width: '200'
+            },
+            {
+              fieldName: 'created'
+            },
+            {
+              fieldName: 'created_by'
+            },
+          ]
+        }
+      >
+      </ObjectGrid>
+    </div>
+  )
+}
+
 
 export const NoPaginationGrid = () => {
   return (
