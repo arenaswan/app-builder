@@ -330,7 +330,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
                 if(isInfinite){
                   if(autoFixGridHeight && pageSize && pageSize < dataLength){
                     // const rowItemHeight = currentGridApi.getRowNode().rowHeight;
-                    setGridHeight(pageSize * (rowHeight || DEFAULT_ROW_HEIGHT) + (headerHeight || DEFAULT_HEADER_HEIGHT) + 2);
+                    setGridHeight(pageSize * (rowHeight || DEFAULT_ROW_HEIGHT) + (headerHeight || DEFAULT_HEADER_HEIGHT));
                   }
                   else{
                     // 这里故意不再重置为DEFAULT_GRID_HEIGHT，因为会重新渲染整个grid，比如正在过滤数据，会把打开的右侧过滤器自动隐藏了体验不好
