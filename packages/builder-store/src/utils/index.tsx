@@ -108,6 +108,10 @@ const getFieldSchema = (fieldName: any, objectConfig: any)=>{
       let optionsFunction = safeEval(`(${field._optionsFunction})`);
       fieldSchema = Object.assign({}, fieldSchema, {optionsFunction});
     }
+    if(field._options){
+      let options = safeEval(`(${field._options})`);
+      fieldSchema = Object.assign({}, fieldSchema, {options});
+    }
   }
   else if(fieldType === 'select'){
     if(field._optionsFunction){
@@ -115,6 +119,10 @@ const getFieldSchema = (fieldName: any, objectConfig: any)=>{
       fieldSchema = Object.assign({}, field, {optionsFunction});
     }else{
       fieldSchema = field;
+    }
+    if(field._options){
+      let options = safeEval(`(${field._options})`);
+      fieldSchema = Object.assign({}, fieldSchema, {options});
     }
   }
   else if(fieldType === 'currency'){

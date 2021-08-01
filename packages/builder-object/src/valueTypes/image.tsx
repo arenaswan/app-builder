@@ -95,6 +95,7 @@ export const ImageField = observer((props: any) => {
             listType: 'picture-card',
             fileList,
             onPreview,
+            multiple,
             type: 'file',
             method: 'post',
             accept: 'image/png, image/jpeg, image/jpg, image/gif',

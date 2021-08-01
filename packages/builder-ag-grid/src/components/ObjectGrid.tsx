@@ -147,6 +147,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     rowSelection = 'multiple',
     sideBar: defaultSideBar,
     pageSize = 50,
+    suppressClickEdit = false,
     gridRef,
     onModelUpdated,
     onUpdated,
@@ -698,6 +699,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         onRowValueChanged={onRowValueChanged}
         onRowSelected={onRowSelected}
         context={{editedMap: editedMap}}
+        suppressClickEdit={suppressClickEdit}
         processCellForClipboard={processCellForClipboard}
         processCellFromClipboard={processCellFromClipboard}
         frameworkComponents = {{

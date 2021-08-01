@@ -496,6 +496,9 @@ export const LookupField = observer((props:any) => {
                 selectedRowKeys = map(selectedRowKeys,reference_to_field)
             }
             let changedValue = multiple ? selectedRowKeys : selectedRowKeys[0];
+            if(isArray(referenceTos)){
+                changedValue = {o: referenceTo, ids: selectedRowKeys };
+            }
             onChange(changedValue);
             setParams({ open:false, openTag: new Date() });
         }
