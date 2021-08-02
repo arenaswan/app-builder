@@ -291,7 +291,6 @@ export const ObjectProTable = observer((props: ObjectProTableProps<any>) => {
     selectedRowKeys,
     onChange: (keys, rows) => {
       if (onChange) {
-        console.log('===props===',props,keys,rows)
         onChange(keys, rows);
       }
       // 赋初始值 和 重新选择时勾上
