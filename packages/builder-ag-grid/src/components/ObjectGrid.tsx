@@ -700,6 +700,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         onRowSelected={onRowSelected}
         context={{editedMap: editedMap}}
         suppressClickEdit={suppressClickEdit}
+        suppressClipboardPaste={suppressClickEdit}
         processCellForClipboard={processCellForClipboard}
         processCellFromClipboard={processCellFromClipboard}
         frameworkComponents = {{
