@@ -197,6 +197,7 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
   const object = Objects.getObject(objectApiName);
   if (object.isLoading) return (<div>Loading object ...</div>)
   const schema = object.schema;
+  const suppressClickEdit = schema.enable_inline_edit === false ? true : false;
   let TableComponent = ObjectGrid;
   if(schema.enable_tree){
     TableComponent = ObjectTreeGrid;
@@ -262,6 +263,7 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
       sort={_sort}
       rowButtons={rowButtons}
       pagination={pagination}
+      suppressClickEdit={suppressClickEdit}
       // className={["object-listview", rest.className].join(" ")}
       {...rest}
     />
