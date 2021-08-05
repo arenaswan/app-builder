@@ -5,6 +5,7 @@ import { ObjectTable, ObjectProTable,
     Organizations, OrganizationsModal,
     ObjectTree, ObjectExpandTable, ObjectModal
 } from '@steedos/builder-object';
+import { isExpression, parseSingleExpression } from '@steedos/builder-object';
 
 Object.assign(ComponentRegistry.components,{ 
     ObjectTable, ObjectProTable,
@@ -17,3 +18,9 @@ Object.assign(ComponentRegistry.components,{
 export { ObjectTable, ObjectForm, API, SteedosProvider, SteedosRouter, Forms, ObjectListView} from '@steedos/builder-object';
 export { ObjectGrid } from '@steedos/builder-ag-grid';
 export { ComponentRegistry }
+
+let Utils = {}
+Object.assign(Utils,{
+    isExpression, parseSingleExpression 
+});
+export { Utils }

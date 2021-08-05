@@ -77,3 +77,5 @@ export const getTreeDataFromRecords = (records: [] = [], nameField: string = "na
 
 
 export const BAD_FILTERS = ["_id", "=", "__BAD_FILTERS"];
+
+export { isExpression, parseSingleExpression } from './utils';
