@@ -1,7 +1,7 @@
 import { each, isArray, forEach, isObject, isString, keys, isFunction, isNil} from 'lodash';
 export function safeEval(js: string){
 	try{
-		return eval(js.replaceAll("_.", "window._."))
+    return eval(js.replaceAll("_.", "window._.").replaceAll(/\bt\(/g, "window.t("))
 	}catch (e){
 		console.error(e, js);
 	}
