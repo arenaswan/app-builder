@@ -16,8 +16,8 @@ export const Chart = observer((props: ChartProps) => {
     const recordCache = object.getRecord(chartId, [])
     if (recordCache.isLoading) return (<div>Loading record ...</div>)
     let record: any = null;
-    if(recordCache.data && recordCache.data.value && recordCache.data.value.length > 0){
-        record = recordCache.data.value[0];
+    if(recordCache.data){
+        record = recordCache.data;
     }
     if(!record){
         return (<div>Loading record ...</div>)
