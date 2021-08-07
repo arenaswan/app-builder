@@ -11,7 +11,8 @@ import { TagsControl } from './tags-control/TagsControl';
 import notification from './notification';
 import dashboardGridOptions from '../config/dashboard-grid-options';
 import { registeredVisualizations } from '../config/visualizations';
-import AddWidgetDialog from './AddWidgetDialog';
+import PropTypes from "prop-types";
+import TextboxDialog from './TextboxDialog';
 import './dashboard.less';
 import '../assets/less/main.less';
 
@@ -210,6 +211,35 @@ function synchronizeWidgetTitles(sourceMappings, widgets) {
     return affectedWidgets;
 }
 
+
+function AddWidgetContainer({ showAddTextboxDialog, showAddWidgetDialog, ...props }) {
+    return (
+      <div className="add-widget-container" {...props}>
+        <h2>
+          <i className="zmdi zmdi-widgets" aria-hidden="true" />
+          <span className="hidden-xs hidden-sm">
+            Widgets are individual query visualizations or text boxes you can place on your dashboard in various
+            arrangements.
+          </span>
+        </h2>
+        <div>
+          <Button className="m-r-15" onClick={showAddTextboxDialog} data-test="AddTextboxButton">
+            Add Textbox
+          </Button>
+          <Button type="primary" onClick={showAddWidgetDialog} data-test="AddWidgetButton">
+            Add Widget
+          </Button>
+        </div>
+      </div>
+    );
+  }
+  
+  AddWidgetContainer.propTypes = {
+    showAddWidgetDialog: PropTypes.func.isRequired,
+    showAddTextboxDialog: PropTypes.func.isRequired,
+    className: PropTypes.string,
+  };
+
 export const Dashboard = observer((props: any) => {
     // const { id } = props;
     // const recordCache = Pages.getPage(id);
@@ -340,20 +370,15 @@ export const Dashboard = observer((props: any) => {
                 }
             }
         })
-
-        // AddWidgetDialog.showModal({
-        //   dashboard: props,
-        //   onConfirm: (visualization, parameterMappings) => props.addWidget(visualization, {
-        //     parameterMappings: function(parameterMappings){},
-        //   }).then((widget) => {
-        //     const widgetsToSave = [
-        //       widget,
-        //       ...synchronizeWidgetTitles(widget.options.parameterMappings, props.widgets),
-        //     ];
-        //     return Promise.all(widgetsToSave.map(w => w.save())).then(onWidgetAdded);
-        //   }),
-        // });
     };
+
+    const showAddTextboxDialog = ()=>{
+        TextboxDialog.showModal({
+            isNew: true,
+          }).onClose(text =>
+            addWidget(widgets, pageId, 'charts', text || '')
+          );
+    }
 
     function handleMenuClick(e) {
         if (e.key === 'edit') {
@@ -499,18 +524,9 @@ export const Dashboard = observer((props: any) => {
                     <DashboardGrid widgets={widgets} isEditing={layoutEditing} onLayoutChange={onLayoutChange} />
                 </div>
 
-                {layoutEditing &&
-                    <div className="add-widget-container" ng-if="$ctrl.layoutEditing">
-                        <h2>
-                            <i className="zmdi zmdi-widgets"></i>
-                            <span className="hidden-xs hidden-sm">Widgets are individual query visualizations or text boxes you can place on your dashboard in various arrangements.</span>
-                        </h2>
-                        <div>
-                            <a className="btn btn-default" ng-click="$ctrl.showAddTextboxDialog()">Add Textbox</a>
-                            <a className="btn btn-primary m-l-10" onClick={showAddWidgetDialog}>Add Widget</a>
-                        </div>
-                    </div>
-                }
+                {layoutEditing && (
+                    <AddWidgetContainer showAddWidgetDialog={showAddWidgetDialog} showAddTextboxDialog={showAddTextboxDialog} />
+                )}
             </div>
         </div>
     );

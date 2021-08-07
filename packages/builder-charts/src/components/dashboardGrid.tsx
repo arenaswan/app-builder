@@ -7,6 +7,7 @@ import { Widget } from './widget';
 // import { FiltersType } from './Filters';
 import cfg from '../config/dashboard-grid-options';
 import AutoHeightController from './AutoHeightController';
+import TextboxWidget from './TextboxWidget'
 
 import 'react-grid-layout/css/styles.css';
 import './dashboard-grid.less';
@@ -204,13 +205,18 @@ export class DashboardGrid extends React.Component {
               data-test={`WidgetId${widget._id}`}
               className={cx('dashboard-widget-wrapper', { 'widget-auto-height-enabled': this.autoHeightCtrl.exists(widget._id) })}
             >
-              <Widget
+              {widget.visualization && <Widget
                 widget={widget}
                 // dashboard={dashboard}
                 filters={(this.props as any).filters}
                 deleted={() => onRemoveWidget(widget._id)}
                 public={(this.props as any).isPublic}
               />
+              }
+
+              {!widget.visualization && 
+              <TextboxWidget widget={widget} canEdit={true} />
+              }
             </div>
           ))}
         </ResponsiveGridLayout>
