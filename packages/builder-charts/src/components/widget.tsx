@@ -22,13 +22,13 @@ export const Widget = observer((props: any) => {
                             </div>
                         </div>
                         <div className="dropdown pull-right widget-menu-regular" ng-if="!$ctrl.public"
-                            uib-dropdown dropdown-append-to-body="true"
+                            uib-dropdown-append-to-body="true"
                         >
                             <div className="actions">
-                                <a data-toggle="dropdown" uib-dropdown-toggle className="p-l-15 p-r-15"><i className="zmdi zmdi-more-vert"></i></a>
+                                <a data-toggle="dropdown" className="p-l-15 p-r-15"><i className="zmdi zmdi-more-vert"></i></a>
                             </div>
 
-                            <ul className="dropdown-menu dropdown-menu-right" uib-dropdown-menu>
+                            <ul className="dropdown-menu dropdown-menu-right">
                                 <li ng-class="{'disabled': $ctrl.widget.getQueryResult().isEmpty()}"><a ng-href="{{$ctrl.widget.getQueryResult().getLink($ctrl.widget.getQuery().id, 'csv')}}" download="{{$ctrl.widget.getQueryResult().getName($ctrl.widget.getQuery().name, 'csv')}}" target="_self">Download as CSV File</a></li>
                                 <li ng-class="{'disabled': $ctrl.widget.getQueryResult().isEmpty()}"><a ng-href="{{$ctrl.widget.getQueryResult().getLink($ctrl.widget.getQuery().id, 'xlsx')}}" download="{{$ctrl.widget.getQueryResult().getName($ctrl.widget.getQuery().name, 'xlsx')}}" target="_self">Download as Excel File</a></li>
 
@@ -49,12 +49,10 @@ export const Widget = observer((props: any) => {
                             {/* <rd-timer from="$ctrl.widget.refreshStartedAt"></rd-timer> */}
                         </div>
                         <div className="th-title">
-                            <p>
-                                <a className="query-link">
-                                    <VisualizationName visualization={visualization}></VisualizationName>
-                                    <span>{visualization.query.name}</span>
-                                </a>
-                            </p>
+                            <a className="query-link">
+                                <VisualizationName visualization={visualization}></VisualizationName>
+                                <span>{visualization.query.name}</span>
+                            </a>
                             <div className="text-muted query--description" ng-bind-html="$ctrl.widget.getQuery().description | markdown"></div>
                         </div>
                     </div>
@@ -72,7 +70,7 @@ export const Widget = observer((props: any) => {
                         <Chart chartId="610a4aef57bf2463c0af445b"></Chart>
                     </div>
                 </div>
-                <div ng-switch-default className="body-row-auto spinner-container" style={{display:'none'}}>
+                <div className="body-row-auto spinner-container" style={{display:'none'}}>
                     <div className="spinner">
                         <i className="zmdi zmdi-refresh zmdi-hc-spin zmdi-hc-5x"></i>
                     </div>
@@ -121,9 +119,9 @@ export const Widget = observer((props: any) => {
                         </div>
                     </div>
                     <div className="dropdown pull-right widget-menu-regular" ng-if="!$ctrl.public && $ctrl.dashboard.canEdit()"
-                        uib-dropdown dropdown-append-to-body="true">
+                        dropdown-append-to-body="true">
                         <div className="dropdown-header">
-                            <a data-toggle="dropdown" uib-dropdown-toggle className="actions p-l-15 p-r-15"><i className="zmdi zmdi-more-vert"></i></a>
+                            <a data-toggle="dropdown" className="actions p-l-15 p-r-15"><i className="zmdi zmdi-more-vert"></i></a>
                         </div>
 
                         <ul className="dropdown-menu dropdown-menu-right" style={{zIndex: 1000000}}>

@@ -11,7 +11,7 @@ static propTypes = {
     if (config) {
         if (visualization.name !== config.name) {
           return (
-                <div className="visualization-name">{visualization.name}</div>
+                <span className="visualization-name">{visualization.name}</span>
           );
         }
     }

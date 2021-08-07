@@ -426,19 +426,19 @@ export const Dashboard = observer((props: any) => {
                                 }
 
                                 {!layoutEditing &&
-                                    <div className="btn-group" uib-dropdown ng-if="!$ctrl.layoutEditing">
+                                    <div className="btn-group" ng-if="!$ctrl.layoutEditing">
                                         <button id="split-button" type="button"
                                             ng-class="{'btn-default btn-sm': $ctrl.refreshRate === null,'btn-primary btn-sm':$ctrl.refreshRate !== null}"
                                             className="btn btn-sm btn-default btn-sm" ng-click="$ctrl.refreshDashboard()">
                                             <i className="zmdi zmdi-refresh" ng-class="{'zmdi-hc-spin': $ctrl.refreshInProgress}"></i> Refresh
                                             {/* {{$ctrl.refreshRate === null ? 'Refresh' : $ctrl.refreshRate.name}} */}
                                         </button>
-                                        <button type="button" className="btn hidden-xs btn-default btn-sm" uib-dropdown-toggle
+                                        <button type="button" className="btn hidden-xs btn-default btn-sm"
                                             ng-class="{'btn-default btn-sm': $ctrl.refreshRate === null,'btn-primary btn-sm':$ctrl.refreshRate !== null}">
                                             <span className="caret"></span>
                                             <span className="sr-only">Split button!</span>
                                         </button>
-                                        <ul className="dropdown-menu pull-right" ng-model="$ctrl.refreshRate" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                                        <ul className="dropdown-menu pull-right" ng-model="$ctrl.refreshRate" role="menu" aria-labelledby="split-button">
                                             <li role="menuitem" ng-repeat="refreshRate in $ctrl.refreshRates" ng-class="{disabled: !refreshRate.enabled}">
                                                 <a ng-click="$ctrl.setRefreshRate(refreshRate)">refreshRate.name</a>
                                             </li>

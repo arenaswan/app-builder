@@ -14,7 +14,7 @@ import './dashboard-grid.less';
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const WidgetType = PropTypes.shape({
-  id: PropTypes.number.isRequired,
+  _id: PropTypes.string.isRequired,
   options: PropTypes.shape({
     position: PropTypes.shape({
       col: PropTypes.number.isRequired,
@@ -47,7 +47,7 @@ export class DashboardGrid extends React.Component {
   static propTypes = {
     isEditing: PropTypes.bool.isRequired,
     isPublic: PropTypes.bool,
-    dashboard: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    // dashboard: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     widgets: PropTypes.arrayOf(WidgetType).isRequired,
     onBreakpointChange: PropTypes.func,
     onRemoveWidget: PropTypes.func,
@@ -206,7 +206,7 @@ export class DashboardGrid extends React.Component {
             >
               <Widget
                 widget={widget}
-                dashboard={dashboard}
+                // dashboard={dashboard}
                 filters={(this.props as any).filters}
                 deleted={() => onRemoveWidget(widget._id)}
                 public={(this.props as any).isPublic}
