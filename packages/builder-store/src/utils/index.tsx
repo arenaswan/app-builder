@@ -100,12 +100,12 @@ const getFieldSchema = (fieldName: any, objectConfig: any)=>{
     else{
       fieldSchema = field;
     }
-    if(field._filtersFunction){
-      let filtersFunction = safeEval(`(${field._filtersFunction})`);
+    if(field._filtersFunction || isString(field.filtersFunction) ){
+      let filtersFunction = safeEval(`(${field._filtersFunction || field.filtersFunction})`);
       fieldSchema = Object.assign({}, fieldSchema, {filtersFunction});
     }
-    if(field._optionsFunction){
-      let optionsFunction = safeEval(`(${field._optionsFunction})`);
+    if(field._optionsFunction || isString(field.optionsFunction)){
+      let optionsFunction = safeEval(`(${field._optionsFunction || field.optionsFunction})`);
       fieldSchema = Object.assign({}, fieldSchema, {optionsFunction});
     }
     if(field._options){
