@@ -3,6 +3,8 @@ import { isFunction, filter } from 'lodash';
 import FieldSelect from '@ant-design/pro-field/es/components/Select';
 import { safeRunFunction } from '@steedos/builder-sdk';
 import { observer } from "mobx-react-lite";
+import { SteedosIcon } from '@steedos/builder-lightning';
+import "./select.less"
 
 export const SelectField = observer((props: any) => {
   const { valueType, mode, fieldProps = {}, form, ...rest } = props;
@@ -81,10 +83,22 @@ export const SelectField = observer((props: any) => {
           setParams({ open, openTag: new Date() });
         }
       }
+      let optionItemRender;
+      optionItemRender = (item: any) => {
+        return (
+          item.icon ? (
+            <React.Fragment>
+              <span role="img" aria-label="smile" className="anticon anticon-smile"><SteedosIcon name={item.icon} size="x-small" /></span>
+              <span>{item.label}</span>
+            </React.Fragment>
+          ) : item.label
+        )
+      }
       proFieldProps = {
         request,
         params,
         onDropdownVisibleChange,
+        optionItemRender
       }
     } else if (options) {
       //options为空时不能直接覆盖fieldProps.options中的值，因为要允许直接给控件fieldProps.options赋值
