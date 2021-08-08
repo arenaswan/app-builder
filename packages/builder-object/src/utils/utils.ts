@@ -412,10 +412,14 @@ export function parseSingleExpression(func, formData = {}, dataPath, global?) {
   const parent = getValueByPath(formData, parentPath) || {};
   if (typeof func === 'string') {
     const funcBody = func.substring(2, func.length - 2);
+    // 以下增加globalTag逻辑是因为formData的字段值中可能会正好有global字眼，
+    // 这会造成把formData中的global字符替换成global变量值了，这样的话，会造成所有字段上的公式表达式都失效
+    const globalTag = "__G_L_O_B_A_L__";
     const str = `
     return ${funcBody
-      .replace(/formData/g, JSON.stringify(formData))
-      .replace(/global/g, JSON.stringify(global))
+      .replace(/\bformData\b/g, JSON.stringify(formData).replace(/\bglobal\b/g, globalTag))
+      .replace(/\bglobal\b/g, JSON.stringify(global))
+      .replace(new RegExp(`\\b${globalTag}\\b`,"g"), "global")
       .replace(/rootValue/g, JSON.stringify(parent))}`;
 
     try {
