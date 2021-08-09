@@ -16,6 +16,7 @@ import useFullscreenHandler from "../../../lib/hooks/useFullscreenHandler";
 import useRefreshRateHandler from "./useRefreshRateHandler";
 import useEditModeHandler from "./useEditModeHandler";
 import { policy } from "../../../services/policy";
+import { ObjectTable } from '@steedos/builder-object';
 
 export { DashboardStatusEnum } from "./useEditModeHandler";
 //TODO 处理当前用户信息
@@ -181,23 +182,46 @@ function useDashboard(dashboardData) {
   }, [dashboard]);
 
   const showAddWidgetDialog = useCallback(() => {
-    AddWidgetDialog.showModal({
-      dashboard,
-    }).onClose(({ visualization, parameterMappings }) =>
-      dashboard
-        .addWidget(visualization, {
-          parameterMappings: editableMappingsToParameterMappings(parameterMappings),
-        })
-        .then(widget => {
-          const widgetsToSave = [
-            widget,
-            ...synchronizeWidgetTitles(widget.options.parameterMappings, dashboard.widgets),
-          ];
-          return Promise.all(widgetsToSave.map(w => w.save())).then(() =>
-            setDashboard(currentDashboard => extend({}, currentDashboard))
-          );
-        })
-    );
+    (window as any).SteedosUI.showModal(ObjectTable, {
+      title: `Add Widget`,
+      objectApiName: 'charts',
+      rowSelection: 'single',
+      onFinish: async (values, rows) => {
+          if(values && values.length > 0){
+              // return addWidget(widgets, pageId, 'charts', rows[0])
+            const parameterMappings = {};
+            dashboard.addWidget(rows[0], {
+              parameterMappings: editableMappingsToParameterMappings(parameterMappings),
+            })
+              .then(widget => {
+                const widgetsToSave = [
+                  widget,
+                  ...synchronizeWidgetTitles(widget.options.parameterMappings, dashboard.widgets),
+                ];
+                return Promise.all(widgetsToSave.map(w => w.save())).then(() =>
+                  setDashboard(currentDashboard => extend({}, currentDashboard))
+                );
+              })
+          }
+      }
+  })
+    // AddWidgetDialog.showModal({
+    //   dashboard,
+    // }).onClose(({ visualization, parameterMappings }) =>
+    //   dashboard
+    //     .addWidget(visualization, {
+    //       parameterMappings: editableMappingsToParameterMappings(parameterMappings),
+    //     })
+    //     .then(widget => {
+    //       const widgetsToSave = [
+    //         widget,
+    //         ...synchronizeWidgetTitles(widget.options.parameterMappings, dashboard.widgets),
+    //       ];
+    //       return Promise.all(widgetsToSave.map(w => w.save())).then(() =>
+    //         setDashboard(currentDashboard => extend({}, currentDashboard))
+    //       );
+    //     })
+    // );
   }, [dashboard]);
 
   const [refreshRate, setRefreshRate, disableRefreshRate] = useRefreshRateHandler(refreshDashboard);

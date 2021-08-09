@@ -48,12 +48,12 @@ const DashboardWidget = React.memo<any>(
       isLoading,
       filters,
     } = props as any
-    const { type } = widget;
+    const { redash_w_type } = widget;
     const onLoad = () => onLoadWidget(widget);
     const onRefresh = () => onRefreshWidget(widget);
     const onDelete = () => onRemoveWidget(widget._id);
 
-    if (type === WidgetTypeEnum.VISUALIZATION) {
+    if (redash_w_type === WidgetTypeEnum.VISUALIZATION) {
       return (
         <VisualizationWidget
           widget={widget}
@@ -70,7 +70,7 @@ const DashboardWidget = React.memo<any>(
         />
       );
     }
-    if (type === WidgetTypeEnum.TEXTBOX) {
+    if (redash_w_type === WidgetTypeEnum.TEXTBOX) {
       return <TextboxWidget widget={widget} canEdit={canEdit} isPublic={isPublic} onDelete={onDelete} />;
     }
     return <RestrictedWidget widget={widget} />;
@@ -176,7 +176,7 @@ class DashboardGrid extends React.Component {
     // remove next line when fix lands
     this.mode = document.body.offsetWidth <= cfg.mobileBreakPoint ? SINGLE : MULTI;
     // end workaround
-
+    console.log(`this.mode`, this.mode, SINGLE)
     // don't save single column mode layout
     if (this.mode === SINGLE) {
       return;

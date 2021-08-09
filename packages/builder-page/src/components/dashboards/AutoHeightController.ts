@@ -26,7 +26,7 @@ export default class AutoHeightController {
   update(widgets) {
     const newWidgetIds = widgets
       .filter(widget => widget.options.position.autoHeight)
-      .map(widget => widget.id.toString());
+      .map(widget => widget._id);
 
     // added
     newWidgetIds.filter(id => !includes(Object.keys(this.widgets), id)).forEach(this.add);
@@ -80,7 +80,7 @@ export default class AutoHeightController {
     }
   };
 
-  exists = id => !!this.widgets[id.toString()];
+  exists = id => !!this.widgets[id];
 
   isEmpty = () => !some(this.widgets);
 

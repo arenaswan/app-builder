@@ -21,7 +21,7 @@ import { cloneParameter } from "./parameters";
 import dashboardGridOptions from "../config/dashboard-grid-options";
 import { registeredVisualizations } from "@redash/viz/lib";
 import { Query } from "./query";
-
+import { API } from '@steedos/builder-store';
 const axios: any = {};
 
 export const WidgetTypeEnum = {
@@ -106,6 +106,8 @@ class Widget {
   refreshStartedAt: any;
   id: any;
   _id: any;
+  page: any;
+  type: any;
 
   constructor(data) {
     // Copy properties
@@ -129,7 +131,7 @@ class Widget {
     }
   }
 
-  get type() {
+  get redash_w_type() {
     if (this.visualization) {
       return WidgetTypeEnum.VISUALIZATION;
     } else if (this.restricted) {
@@ -203,9 +205,15 @@ class Widget {
   }
 
   save(key?, value?) {
-    const data = pick(this, "options", "text", "id", "width", "dashboard_id", "visualization_id");
+    const data = pick(this, "options", "text", "id", "width", "visualization_id", 'page', 'type');
     if (key && value) {
       data[key] = merge({}, data[key], value); // done like this so `this.options` doesn't get updated by side-effect
+    }
+
+    const visualization_id = (data as any).visualization_id
+    if(visualization_id && !data.visualization){
+      data.visualization = visualization_id
+      delete data['visualization_id']
     }
 
     let url = "api/widgets";
@@ -213,18 +221,37 @@ class Widget {
       url = `${url}/${this.id}`;
     }
 
-    return axios.post(url, data).then(data => {
-      each(data, (v, k) => {
-        this[k] = v;
+    if(this._id){
+      return API.updateRecord(`widgets`, this._id, data).then(data => {
+        each(data[0], (v, k) => {
+          this[k] = v;
+        });
+  
+        return this;
       });
+    }else{
+      return API.insertRecord(`widgets`, data).then(data => {
+        each(data[0], (v, k) => {
+          this[k] = v;
+        });
+  
+        return this;
+      });
+    }
 
-      return this;
-    });
+    // return axios.post(url, data).then(data => {
+    //   each(data, (v, k) => {
+    //     this[k] = v;
+    //   });
+
+    //   return this;
+    // });
   }
 
   delete() {
-    const url = `api/widgets/${this.id}`;
-    return axios.delete(url);
+    // const url = `api/widgets/${this.id}`;
+    // return axios.delete(url);
+    return API.deleteRecord(`widgets`, this._id)
   }
 
   isStaticParam(param) {

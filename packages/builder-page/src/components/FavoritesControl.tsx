@@ -5,7 +5,7 @@ import PlainButton from "./PlainButton";
 export default class FavoritesControl extends React.Component {
   static propTypes = {
     item: PropTypes.shape({
-      is_favorite: PropTypes.bool.isRequired,
+      is_favorite: PropTypes.bool,
     }).isRequired,
     onChange: PropTypes.func,
   };

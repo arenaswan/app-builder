@@ -164,7 +164,8 @@ const DashboardService = {
     }
     return axios.get(`/service/api/~packages-@steedos/service-pages/page/${id}`, { params }).then(transformResponse);
   },
-  getByToken: ({ token }) => axios.get(`api/dashboards/public/${token}`).then(transformResponse),
+  // getByToken: ({ token }) => axios.get(`api/dashboards/public/${token}`).then(transformResponse),
+  getByToken: ({ token }) => axios.get(`/service/api/~packages-@steedos/service-pages/page/${token}`).then(transformResponse),
   save: data => axios.post(saveOrCreateUrl(data), data).then(transformResponse),
   delete: ({ id }) => axios.delete(`api/dashboards/${id}`).then(transformResponse),
   query: params => axios.get("api/dashboards", { params }).then(transformResponse),
@@ -227,26 +228,29 @@ Dashboard.prototype.getParametersDefs = function getParametersDefs() {
 
 Dashboard.prototype.addWidget = function addWidget(textOrVisualization, options = {}) {
   const props = {
-    dashboard_id: this.id,
+    page: this._id,
     options: {
       ...options,
       isHidden: false,
       position: {},
     },
     text: "",
+    type: '',
     visualization_id: null,
     visualization: null,
   };
 
   if (_.isString(textOrVisualization)) {
     props.text = textOrVisualization;
+    props.type = 'textbox';
   } else if (_.isObject(textOrVisualization)) {
-    props.visualization_id = (textOrVisualization as any).id;
+    props.visualization_id = (textOrVisualization as any)._id;
     props.visualization = textOrVisualization;
+    props.type = 'charts';
   } else {
     // TODO: Throw an error?
   }
-
+  debugger;
   const widget = new Widget(props);
 
   const position = calculateNewWidgetPosition(this.widgets, widget);

@@ -47,7 +47,7 @@ export default function useEditModeHandler(canEditDashboard, widgets) {
       setRecentPositions(positions);
       const saveChangedWidgets = map(changedPositions, (position, id) => {
         // find widget
-        const widget = find(widgets, { _id: widgetId });
+        const widget = find(widgets, { _id: id });
 
         // skip already deleted widget
         if (!widget) {
@@ -68,9 +68,9 @@ export default function useEditModeHandler(canEditDashboard, widgets) {
   );
 
   const saveDashboardLayoutDebounced = useCallback(
-    (...args) => {
+    (args) => {
       setDashboardStatus(DashboardStatusEnum.SAVING);
-      // return debounce(() => saveDashboardLayout(...args), 2000)();
+      return debounce(() => saveDashboardLayout(args), 2000)();
     },
     [saveDashboardLayout]
   );
