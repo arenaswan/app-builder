@@ -1,9 +1,10 @@
 import * as modal from './modal'
 import { Tables, Objects } from '@steedos/builder-store';
-
+import * as render from './render'
 export * from './modal'
+export * from './render'
 
-const SteedosUI = Object.assign({}, modal, {
+const SteedosUI = Object.assign({}, modal, render, {
   getTableSelectedRows(id: string = "default"){
     return Tables.loadById(id).getSelectedRows();
   },
