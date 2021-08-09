@@ -22,14 +22,14 @@ function useOnClickOutside(ref, handler) {
         }
         const target = event.target;
         const modelDom = target.closest('.ant-modal-root');
-        if(modelDom && !target.closest('.ant-btn')){
-          return; // 表单 / 表单&&弹出框
+        if(modelDom && !modelDom.contains(ref.current) && !target.closest('.ant-btn')){
+          return; // 表单（弹出框）：包含一个浮动的下拉框（时间框等）点击外部就退出编辑； 表单（弹出框）中 有的字段选项也是弹出框，在其字段的弹出框中点击不退出编辑。
         }
         if(target.closest('.ant-select-dropdown')){
           return; // 下拉框
         }
-        if(target.closest('.ant-picker-dropdown') && !target.closest('.ant-btn') && !target.closest('.ant-picker-now-btn')){
-          return; // 日期时间字段
+        if(target.closest('.ant-picker-dropdown') && !target.closest('.ant-btn') && !target.closest('.ant-picker-now-btn') && !target.closest('.ant-picker-today-btn') ){
+          return; // 日期时间字段、 日期字段： 点击 此刻/今天 后退出编辑
         }
         handler(event);
       };
