@@ -20,9 +20,16 @@ function useOnClickOutside(ref, handler) {
         if (!ref.current || ref.current.contains(event.target)) {
           return;
         }
-        const parentsClassName = getParentsClassName(event.target) 
-        if((parentsClassName.toString().indexOf('ant-modal-root') > -1 && parentsClassName.toString().indexOf('ant-btn') < 0) || parentsClassName.toString().indexOf('ant-select-dropdown') > -1 || (parentsClassName.toString().indexOf('ant-picker-dropdown') > -1 && (parentsClassName.toString().indexOf('ant-btn') < 0 && parentsClassName.toString().indexOf('ant-picker-now-btn') < 0))){
-          return;
+        const target = event.target;
+        const modelDom = target.closest('.ant-modal-root');
+        if(modelDom && !target.closest('.ant-btn')){
+          return; // 表单 / 表单&&弹出框
+        }
+        if(target.closest('.ant-select-dropdown')){
+          return; // 下拉框
+        }
+        if(target.closest('.ant-picker-dropdown') && !target.closest('.ant-btn') && !target.closest('.ant-picker-now-btn')){
+          return; // 日期时间字段
         }
         handler(event);
       };
