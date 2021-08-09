@@ -505,10 +505,10 @@ export const LookupField = observer((props:any) => {
             setParams({ open:false, openTag: new Date() });
         }
         return (
-            <React.Fragment>
+            <div className="lookup-field-container">
                 {
                     needReferenceToSelect && 
-                    (<Select   {...referenceToSelectProps} className="left_label_menu">
+                    (<Select   {...referenceToSelectProps} className="lookup-field-left-select">
                     {
                         map(referenceToOptions,(item)=>{
                             return (
@@ -521,7 +521,7 @@ export const LookupField = observer((props:any) => {
                     </Select>)
                 }
                 {showModal ? modalDom(lookupInput) : lookupInput}
-            </React.Fragment>
+            </div>
         )
     }
 });
