@@ -8,6 +8,7 @@ import sourceMaps from 'rollup-plugin-sourcemaps';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 import svg from 'rollup-plugin-svg';
+import image from '@rollup/plugin-image';
 import { uglify } from 'rollup-plugin-uglify';
 const rollupPostcssLessLoader = require('rollup-plugin-postcss-webpack-alias-less-loader')
 import alias from '@rollup/plugin-alias';
@@ -25,6 +26,7 @@ const options = {
   },
   plugins: [,
     // Allow json resolution
+    image(),
     json(),
     nodeResolve({
       extensions: [ '.jsx', '.js', '.json', '.node' ],

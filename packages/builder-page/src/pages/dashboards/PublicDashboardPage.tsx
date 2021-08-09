@@ -2,7 +2,6 @@ import { isEmpty } from "lodash";
 import React from "react";
 import PropTypes from "prop-types";
 
-import Link from "../../components/Link";
 import BigMessage from "../../components/BigMessage";
 import PageHeader from "../../components/PageHeader";
 import Parameters from "../../components/Parameters";
