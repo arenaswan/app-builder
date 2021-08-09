@@ -15,10 +15,10 @@ const withModalWrap = (component: React.FunctionComponent, provideProps) => {
     </SteedosProvider>);
   }
 }
-export const render = (component: React.FunctionComponent, componentParams: any, modalRoot: any, provideProps: any = {} ) => {
+export const render = (component: React.FunctionComponent, componentProps: any, container: any, provideProps: any = {} ) => {
     const wrapComponent: any = withModalWrap(component, provideProps);
     const contentEle = React.createElement(wrapComponent,{
-        ...componentParams
+        ...componentProps
       });
-    ReactDOM.render(contentEle, modalRoot);
+    ReactDOM.render(contentEle, container);
 }
