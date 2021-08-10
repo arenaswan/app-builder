@@ -83,27 +83,27 @@ export const SelectField = observer((props: any) => {
           setParams({ open, openTag: new Date() });
         }
       }
-      let optionItemRender;
-      optionItemRender = (item: any) => {
-        return (
-          item.icon ? (
-            <React.Fragment>
-              <span role="img" aria-label="smile" className="anticon anticon-smile"><SteedosIcon name={item.icon} size="x-small" /></span>
-              <span>{item.label}</span>
-            </React.Fragment>
-          ) : item.label
-        )
-      }
       proFieldProps = {
         request,
         params,
-        onDropdownVisibleChange,
-        optionItemRender
+        onDropdownVisibleChange
       }
     } else if (options) {
       //options为空时不能直接覆盖fieldProps.options中的值，因为要允许直接给控件fieldProps.options赋值
       props.fieldProps.options = options;
     }
+    let optionItemRender;
+    optionItemRender = (item: any) => {
+      return (
+        item.icon ? (
+          <React.Fragment>
+            <span role="img" aria-label="smile" className="anticon anticon-smile"><SteedosIcon name={item.icon} size="x-small" /></span>
+            <span>{item.label}</span>
+          </React.Fragment>
+        ) : item.label
+      )
+    }
+    proFieldProps.optionItemRender = optionItemRender;
     proFieldProps.showSearch = true;
     proFieldProps.showArrow = true;
     proFieldProps.optionFilterProp = 'label';
