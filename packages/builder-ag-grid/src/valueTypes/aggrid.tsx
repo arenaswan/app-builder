@@ -36,9 +36,9 @@ export const ObjectFieldGrid = (props) => {
     const newRow = {
       _id: uuidv4(),
     }
-    value.push(newRow)
-    gridApi.setRowData(value);
-    onChange(value)
+    const newValue = value.concat(newRow)
+    gridApi.setRowData(newValue);
+    onChange(newValue)
   }
 
   const deleteRow = (props) => {
