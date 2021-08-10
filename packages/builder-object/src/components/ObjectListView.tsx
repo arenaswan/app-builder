@@ -157,7 +157,7 @@ function getRowButtons(objectSchema) {
     let visible: any = false;
     if (isString(action._visible)) {
       try {
-        const visibleFunction = eval(`(${action._visible.replaceAll("_.", "window._.")})`);
+        const visibleFunction = eval(`(${action._visible.replace(/_\./g, "window._.")})`);
         visible = function(){ return visibleFunction.apply( this, arguments );};
       } catch (error) {
         console.error(error, action._visible)
@@ -173,7 +173,7 @@ function getRowButtons(objectSchema) {
     let todo = action._todo || action.todo;
     if (isString(todo) && todo.startsWith("function")) {
       try {
-        todo = eval(`(${todo.replaceAll("_.", "window._.")})`);
+        todo = eval(`(${todo.replace(/_\./g, "window._.")})`);
       } catch (error) {
         console.error(error, todo)
       }
