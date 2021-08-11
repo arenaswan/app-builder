@@ -1,4 +1,4 @@
-import { forEach, isArray, remove, sortBy } from 'lodash';
+import { forEach, isArray, remove, sortBy, map } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import ProField from "@ant-design/pro-field";
 import Dropdown from '@salesforce/design-system-react/components/menu-dropdown'; 
@@ -29,24 +29,24 @@ export const ObjectFieldGrid = (props) => {
     if (!row._id)
       row._id=uuidv4()
   })
-  const [value, setValue] = useState<any>(initialValue && isArray(initialValue)? initialValue : [])
+  const defaultValue = initialValue && isArray(initialValue)? initialValue : [];
   const [gridApi, setGridApi] = useState<any>(null)
 
   const addRow = () => {
     const newRow = {
       _id: uuidv4(),
     }
-    const newValue = value.concat(newRow)
+    const newValue = defaultValue.concat(newRow)
     gridApi.setRowData(newValue);
     onChange(newValue)
   }
 
   const deleteRow = (props) => {
     const selectedId = props.data?._id
-    const newValue = value.filter(function (dataItem) {
+    const rows = map(props.api.rowModel.rowsToDisplay, 'data');
+    const newValue = rows.filter(function (dataItem) {
       return dataItem._id != selectedId
     });
-    setValue(newValue)
     props.api.setRowData(newValue);
     onChange(newValue)
   }
@@ -88,7 +88,6 @@ export const ObjectFieldGrid = (props) => {
       rowData.push(node.data);
     });
     onChange(rowData)
-    setValue(rowData)
   };
 
   const getRowNodeId = function (data) {
@@ -162,7 +161,7 @@ export const ObjectFieldGrid = (props) => {
         getRowNodeId={getRowNodeId}
         rowDragManaged={true}
         animateRows={true}
-        rowData={value}
+        rowData={defaultValue}
         columnDefs={getColumns()}
         suppressMovableColumns={mode === 'read' ? true : false}
         onRowDragEnd={onRowDragEnd.bind(this)}
