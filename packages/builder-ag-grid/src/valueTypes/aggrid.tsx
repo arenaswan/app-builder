@@ -46,9 +46,7 @@ export const ObjectFieldGrid = (props) => {
     const newValue = value.filter(function (dataItem) {
       return dataItem._id != selectedId
     });
-    remove(value, function (dataItem: any) {
-      return dataItem._id === selectedId
-    })
+    setValue(newValue)
     props.api.setRowData(newValue);
     onChange(newValue)
   }
