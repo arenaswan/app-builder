@@ -52,6 +52,7 @@ export const Field = observer((props: any) => {
   const formItemPropsMerged = {
     ...attributes,
     ...formItemProps,
+    tooltip: props.fieldSchema.inlineHelpText,
     className: `field type-${valueType} mode-${mode} field-${readonly ? 'readonly' : 'editable'}`,
   }
 
