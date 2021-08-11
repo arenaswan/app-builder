@@ -294,7 +294,7 @@ export const LookupField = observer((props:any) => {
                 return (
                     referenceToObjectIcon || item.icon ?
                     (<React.Fragment>
-                        <span role="img" aria-label="smile" className="anticon anticon-smile"><SteedosIcon name={referenceToObjectIcon || item.icon} size="x-small"/></span>
+                        <span role="img" aria-label="smile" className="anticon anticon-smile"><SteedosIcon name={item.icon || referenceToObjectIcon} size="x-small"/></span>
                         <span>{item.label}</span>
                     </React.Fragment>)
                     : item.label

@@ -10,14 +10,21 @@ export class SteedosIcon extends React.Component {
 	render() {
 		let { category="standard", name, size="small", assistiveText  } = this.props;
 		return (
-			<IconSettings actionSprite={actionSprite} standardSprite={standardSprite} customSprite={customSprite} utilitySprite={utilitySprite}>
+			window.Creator ?
+			(<Icon
+				assistiveText={assistiveText}
+				category={category}
+				name={name}
+				size={size}
+			/>)
+			: (<IconSettings actionSprite={actionSprite} standardSprite={standardSprite} customSprite={customSprite} utilitySprite={utilitySprite}>
 				<Icon
                     assistiveText={assistiveText}
                     category={category}
                     name={name}
                     size={size}
                 />
-			</IconSettings>
+			</IconSettings>)
 		);
 	}
 }
