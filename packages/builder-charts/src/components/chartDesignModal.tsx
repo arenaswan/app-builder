@@ -3,15 +3,13 @@ import { observer } from "mobx-react-lite";
 import { Modal, Button, Form } from 'antd';
 import { ChartDesign, ChartDesignProps, CHART_OBJECT_APINAME } from './chartDesign'
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { API } from '@steedos/builder-store';
+import { API, Objects } from '@steedos/builder-store';
 import { isEmpty } from 'lodash';
 import './chartDesignModal.less';
-
 export const ChartDesignModal = observer((props: ChartDesignProps) => {
   const { chartId } = props;
   const [visible, setVisible] = React.useState(false);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
-  const [modalText, setModalText] = React.useState('Content of the modal');
   const [editOptions, setEditOptions] = React.useState({});
   const [form] = Form.useForm();
   const showModal = () => {
@@ -31,6 +29,7 @@ export const ChartDesignModal = observer((props: ChartDesignProps) => {
             API.updateRecord(CHART_OBJECT_APINAME, chartId, record).then((value)=>{
               closeModal();
               setConfirmLoading(false);
+              Objects.getObject(CHART_OBJECT_APINAME).getRecord(record._id, []).loadRecord();
             }).catch(info => {
               setConfirmLoading(false);
             });
@@ -57,7 +56,7 @@ export const ChartDesignModal = observer((props: ChartDesignProps) => {
 
   return (
     <>
-      <Button onClick={showModal}>
+      <Button onClick={showModal} id="chartDesignModalBtn">
         打开设计器
       </Button>
       <Modal

@@ -68,7 +68,7 @@ function useDashboard(dashboardData) {
   const updateDashboard = useCallback(
     (data, includeVersion = true) => {
       setDashboard(currentDashboard => extend({}, currentDashboard, data));
-      data = { ...data, id: dashboard.id };
+      data = { ...data, _id: dashboard._id };
       if (includeVersion) {
         data = { ...data, version: dashboard.version };
       }

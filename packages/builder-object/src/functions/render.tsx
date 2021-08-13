@@ -16,6 +16,9 @@ const withModalWrap = (component: React.FunctionComponent, provideProps) => {
   }
 }
 export const render = (component: React.FunctionComponent, componentProps: any, container: any, provideProps: any = {} ) => {
+    if(window.Creator && !provideProps.iconPath){
+      provideProps.iconPath = '/assets/icons'
+    }
     const wrapComponent: any = withModalWrap(component, provideProps);
     const contentEle = React.createElement(wrapComponent,{
         ...componentProps

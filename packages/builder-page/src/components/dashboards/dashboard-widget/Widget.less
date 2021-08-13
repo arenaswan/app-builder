@@ -156,8 +156,10 @@
     margin-right: -4px;
     margin-top: 2px;
   }
+}
 
-  .widget-visualization[data-refreshing="false"] & {
+.widget-visualization[data-refreshing="false"] {
+  .refresh-indicator{
     display: none;
   }
 }
@@ -262,4 +264,8 @@
       }
     }
   }
+}
+
+.js-plotly-plot .plotly .modebar-group{
+  display: inline-flex !important;
 }

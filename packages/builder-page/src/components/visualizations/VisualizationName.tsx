@@ -7,7 +7,7 @@ function VisualizationName({ visualization }) {
   const config = registeredVisualizations[visualization.type];
   return (
     <span className="visualization-name">
-      {config && visualization.name !== config.name ? visualization.name : null}
+      {config && visualization.label !== config.name ? visualization.label : null}
     </span>
   );
 }

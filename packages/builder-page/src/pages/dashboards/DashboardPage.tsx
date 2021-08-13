@@ -20,8 +20,8 @@ import useImmutableCallback from "../../lib/hooks/useImmutableCallback";
 import useDashboard from "./hooks/useDashboard";
 import DashboardHeader from "./components/DashboardHeader";
 
-import '../../assets/less/main.less'
-
+import '../../assets/less/main.less';
+import '../../assets/less/global.less';
 import "./DashboardPage.less";
 
 function DashboardSettings({ dashboardConfiguration }) {
@@ -117,7 +117,7 @@ function DashboardComponent(props) {
   }, [pageContainer, editingLayout]);
 
   return (
-    <div className="container" ref={setPageContainer} data-test={`DashboardId${dashboard.id}Container`}>
+      <div className="container" ref={setPageContainer} data-test={`DashboardId${dashboard.id}Container`}>
       <DashboardHeader
         dashboardConfiguration={dashboardConfiguration}
         headerExtra={
@@ -187,7 +187,7 @@ function DashboardPage({ pageIdSlug, pageId, onError }) {
       .catch(handleError);
   }, [pageId, pageIdSlug, handleError]);
 
-  return <div className="dashboard-page">{dashboard && <DashboardComponent dashboard={dashboard} />}</div>;
+  return <div className="steedos-page"><div className="dashboard-page">{dashboard && <DashboardComponent dashboard={dashboard} />}</div></div>;
 }
 
 DashboardPage.propTypes = {

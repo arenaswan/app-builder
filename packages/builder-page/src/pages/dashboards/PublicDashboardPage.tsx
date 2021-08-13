@@ -13,7 +13,7 @@ import { Dashboard } from "../../services/dashboard";
 import useDashboard from "./hooks/useDashboard";
 
 
-
+import '../../assets/less/global.less';
 import "./PublicDashboardPage.less";
 
 function PublicDashboard({ dashboard }) {
@@ -22,7 +22,7 @@ function PublicDashboard({ dashboard }) {
   );
 
   return (
-    <div className="container p-t-10 p-b-20">
+      <div className="container p-t-10 p-b-20">
       <PageHeader title={dashboard.name} />
       {!isEmpty(globalParameters) && (
         <div className="m-b-10 p-15 bg-white tiled">
@@ -77,6 +77,8 @@ class PublicDashboardPage extends React.Component {
   render() {
     const { loading, dashboard } = this.state;
     return (
+    <div className="steedos-page">
+      
       <div className="public-dashboard-page">
         {loading ? (
           <div className="container loading-message">
@@ -85,6 +87,7 @@ class PublicDashboardPage extends React.Component {
         ) : (
           <PublicDashboard dashboard={dashboard} />
         )}
+      </div>
       </div>
     );
   }

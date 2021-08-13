@@ -45,7 +45,8 @@ export const sessionRefreshInterceptor = createAuthRefreshInterceptor(
 
 axios.interceptors.request.use(config => {
   config.url = API.client.getUrl() + config.url;
-  const apiKey = API.client.getAuthToken() || "KDDdZ734Djw9C9HdJ,3c5aa202fd410a21bb318caf060129803d59eb7b3e96f8fa17ebcfdd2842dff6feb27146aa20277f927e9b";
+  console.log(`API.client.getAuthToken()`, API.client.getAuthToken())
+  const apiKey = API.client.getAuthToken()
   if (apiKey) {
     config.headers.Authorization = `Bearer ${apiKey}`;
   }

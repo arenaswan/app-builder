@@ -155,7 +155,7 @@ function transformResponse(data) {
   return data;
 }
 
-const saveOrCreateUrl = data => (data.id ? `api/dashboards/${data.id}` : "api/dashboards");
+// const saveOrCreateUrl = data => (data.id ? `api/dashboards/${data.id}` : "api/dashboards");
 const DashboardService = {
   get: ({ id, slug }) => {
     const params: any = {};
@@ -166,7 +166,13 @@ const DashboardService = {
   },
   // getByToken: ({ token }) => axios.get(`api/dashboards/public/${token}`).then(transformResponse),
   getByToken: ({ token }) => axios.get(`/service/api/~packages-@steedos/service-pages/page/${token}`).then(transformResponse),
-  save: data => axios.post(saveOrCreateUrl(data), data).then(transformResponse),
+  save: data => {
+    if(data._id){
+      return axios.put(`/api/v4/pages/${data._id}`, data).then(transformResponse);
+    }else{
+      return axios.post(`/api/v4/pages`, data).then(transformResponse);
+    }
+  },
   delete: ({ id }) => axios.delete(`api/dashboards/${id}`).then(transformResponse),
   query: params => axios.get("api/dashboards", { params }).then(transformResponse),
   recent: params => axios.get("api/dashboards/recent", { params }).then(transformResponse),
@@ -228,7 +234,7 @@ Dashboard.prototype.getParametersDefs = function getParametersDefs() {
 
 Dashboard.prototype.addWidget = function addWidget(textOrVisualization, options = {}) {
   const props = {
-    page: this._id,
+    page: this.name,
     options: {
       ...options,
       isHidden: false,
@@ -244,13 +250,12 @@ Dashboard.prototype.addWidget = function addWidget(textOrVisualization, options 
     props.text = textOrVisualization;
     props.type = 'textbox';
   } else if (_.isObject(textOrVisualization)) {
-    props.visualization_id = (textOrVisualization as any)._id;
+    props.visualization_id = (textOrVisualization as any).name;
     props.visualization = textOrVisualization;
     props.type = 'charts';
   } else {
     // TODO: Throw an error?
   }
-  debugger;
   const widget = new Widget(props);
 
   const position = calculateNewWidgetPosition(this.widgets, widget);

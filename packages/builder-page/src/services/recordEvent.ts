@@ -6,7 +6,7 @@ let events = [];
 const post = debounce(() => {
   const eventsToSend = events;
   events = [];
-  console.log(`post api/events`, eventsToSend)
+  // console.log(`post api/events`, eventsToSend)
   // axios.post("api/events", eventsToSend);
 }, 1000);
 

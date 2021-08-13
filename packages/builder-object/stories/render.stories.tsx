@@ -1,5 +1,6 @@
 import { ObjectTable, render } from "@steedos/builder-object";
 import { PublicPage } from "@steedos/builder-page";
+import { ChartDesignModal, ChartDesign } from '@steedos/builder-charts';
 import * as React from "react"
 import { Button, Tabs } from "antd"
 const { TabPane } = Tabs;
@@ -77,19 +78,26 @@ export const SteedosUI = () => {
     function callback(key) {
         setTimeout(()=>{
             if (key === 'page') {
-                (window as any).SteedosUI.render(PublicPage, { token: '610cdddedb5d0c2aacf390fb' }, document.getElementById('render_page'))
+                (window as any).SteedosUI.render(PublicPage, { token: 'myPage' }, document.getElementById('render_page'))
             } else if (key === 'table') {
                 (window as any).SteedosUI.render(ObjectTable, getSchemaTalbeProps(), document.getElementById('render_table'))
+            }else if (key === 'chart') {
+                (window as any).SteedosUI.render(ChartDesignModal, { chartId: "610a4aef57bf2463c0af445b" }, document.getElementById('ChartDesignModalDiv'));
             }
         }, 300)
     }
+
+    
     return (
         <Tabs defaultActiveKey="1" onChange={callback}>
-            <TabPane tab="Render Table" key="table" id="render_table">
+            <TabPane tab="Render Table" key="table">
                 <div id="render_table"></div>
             </TabPane>
-            <TabPane tab="Render page" key="page" id="render_page">
+            <TabPane tab="Render page" key="page">
                 <div id="render_page"></div>
+            </TabPane>
+            <TabPane tab="Render ChartDesignModal" key="chart" id="ChartDesignModal">
+                <div id="ChartDesignModalDiv"></div>
             </TabPane>
         </Tabs>
         //   <React.Fragment>

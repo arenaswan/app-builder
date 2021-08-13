@@ -5,13 +5,15 @@ import { ObjectTable, ObjectProTable,
     Organizations, OrganizationsModal,
     ObjectTree, ObjectExpandTable, ObjectModal
 } from '@steedos/builder-object';
-
+import { ChartDesignModal } from '@steedos/builder-charts';
+import { Page, PublicPage } from '@steedos/builder-page';
 Object.assign(ComponentRegistry.components,{ 
     ObjectTable, ObjectProTable,
     ObjectForm, ObjectListView,
     SpaceUsers, SpaceUsersModal,
     Organizations, OrganizationsModal,
-    ObjectTree, ObjectExpandTable, ObjectModal
+    ObjectTree, ObjectExpandTable, ObjectModal,
+    Page, PublicPage, ChartDesignModal
 });
 
 export { ObjectTable, ObjectForm, API, SteedosProvider, SteedosRouter, Forms, ObjectListView} from '@steedos/builder-object';

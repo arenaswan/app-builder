@@ -38,8 +38,8 @@ function DashboardPageTitle({ dashboardConfiguration }) {
         <h3 className="h3">
           <EditInPlace
             isEditable={editingLayout}
-            onDone={name => updateDashboard({ name })}
-            value={dashboard.name}
+            onDone={name => updateDashboard({ label: name })}
+            value={dashboard.label}
             ignoreBlanks
           />
         </h3>

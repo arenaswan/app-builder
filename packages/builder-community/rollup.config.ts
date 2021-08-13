@@ -67,6 +67,7 @@ const options = {
         '../../node_modules/@ant-design/**'
       ],
       // exclude: 'node_modules/',
+      // exclude: ["../../node_modules/d3/**", "../../node_modules/d3-*/**"],
       presets: ["@babel/preset-react", "@babel/preset-env"],
       plugins: [
         ['import', { libraryName: 'antd', style: true, "libraryDirectory": "es" }, 'antd'],
@@ -96,6 +97,7 @@ const options = {
       // transformMixedEsModules: true,
       // exclude: ["../../node_modules/antd/**", "../../node_modules/@ant-design/**"],
       // include: /\**node_modules\**/,
+      // exclude: ["../../node_modules/d3/**", "../../node_modules/d3-*/**"],
     }),
     // css({ output: 'builder-object.css' }),
   ],
@@ -112,6 +114,7 @@ export default [
         file: 'dist/builder-community.react.js', 
         format: 'cjs', 
         sourcemap: true,
+        strict: false,
         globals: { react: 'React' }
       }
     ],

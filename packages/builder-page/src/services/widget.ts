@@ -108,7 +108,7 @@ class Widget {
   _id: any;
   page: any;
   type: any;
-
+  label: any;
   constructor(data) {
     // Copy properties
     extend(this, data);
