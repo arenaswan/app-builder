@@ -4,6 +4,8 @@ import createAuthRefreshInterceptor from "axios-auth-refresh";
 import qs from "query-string";
 import { API } from '@steedos/builder-store';
 
+axiosLib.defaults.withCredentials = true;
+
 export const axios = axiosLib.create({
   paramsSerializer: params => qs.stringify(params),
   xsrfCookieName: "csrf_token",
