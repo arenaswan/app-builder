@@ -130,7 +130,7 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
     let result; 
     if(!recordId){
       try {
-        result = await API.insertRecord(objectApiName,values);
+        result = await API.insertRecord(objectApiName,Object.assign({},initialValues,values));
         if(afterInsert){
           return afterInsert(result);
         }else{
