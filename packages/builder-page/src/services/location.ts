@@ -26,49 +26,51 @@ const location = {
   },
 
   confirmChange(handler) {
-    if (isFunction(handler)) {
-      return history.block(nextLocation => {
-        return handler(normalizeLocation(nextLocation), location);
-      });
-    } else {
-      return () => {};
-    }
+    // if (isFunction(handler)) {
+    //   console.log(`history.block`, handler)
+    //   return history.block(nextLocation => {
+    //     return handler(normalizeLocation(nextLocation), location);
+    //   });
+    // } else {
+    //   return () => {};
+    // }
   },
 
   update(newLocation: any, replace = false) {
-    if (isObject(newLocation)) {
-      // remap fields and remove undefined ones
-      newLocation = omitBy(
-        {
-          pathname: (newLocation as any).path,
-          search: (newLocation as any).search,
-          hash: (newLocation as any).hash,
-        },
-        isUndefined
-      );
+    // if (isObject(newLocation)) {
+    //   // remap fields and remove undefined ones
+    //   newLocation = omitBy(
+    //     {
+    //       pathname: (newLocation as any).path,
+    //       search: (newLocation as any).search,
+    //       hash: (newLocation as any).hash,
+    //     },
+    //     isUndefined
+    //   );
 
-      // keep existing fields (!)
-      newLocation = extend(
-        {
-          pathname: location.path,
-          search: location.search,
-          hash: location.hash,
-        },
-        newLocation
-      );
+    //   // keep existing fields (!)
+    //   newLocation = extend(
+    //     {
+    //       pathname: location.path,
+    //       search: location.search,
+    //       hash: location.hash,
+    //     },
+    //     newLocation
+    //   );
 
-      // serialize search and keep existing search parameters (!)
-      if (isObject(newLocation.search)) {
-        newLocation.search = omitBy(extend({}, location.search, newLocation.search), isNil);
-        newLocation.search = mapValues(newLocation.search, value => (value === true ? null : value));
-        newLocation.search = qs.stringify(newLocation.search);
-      }
-    }
-    if (replace) {
-      history.replace(newLocation);
-    } else {
-      history.push(newLocation);
-    }
+    //   // serialize search and keep existing search parameters (!)
+    //   if (isObject(newLocation.search)) {
+    //     newLocation.search = omitBy(extend({}, location.search, newLocation.search), isNil);
+    //     newLocation.search = mapValues(newLocation.search, value => (value === true ? null : value));
+    //     newLocation.search = qs.stringify(newLocation.search);
+    //   }
+    // }
+    // console.log(`history replace`, replace)
+    // if (replace) {
+    //   history.replace(newLocation);
+    // } else {
+    //   history.push(newLocation);
+    // }
   },
 
   url: undefined,
@@ -95,5 +97,5 @@ function locationChanged() {
 
 history.listen(locationChanged);
 locationChanged(); // init service
-
+(window as any).__location = location;
 export default location;
