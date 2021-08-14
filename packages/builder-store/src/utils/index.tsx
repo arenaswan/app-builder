@@ -1,7 +1,7 @@
 import { each, isArray, forEach, isObject, isString, keys, isFunction, isNil} from 'lodash';
 export function safeEval(js: string){
 	try{
-		return eval(js.replaceAll("_.", "window._."))
+    return eval(js.replace(/_\./g, "window._.").replace(/\bt\(/g, "window.t("))
 	}catch (e){
 		console.error(e, js);
 	}
@@ -100,12 +100,12 @@ const getFieldSchema = (fieldName: any, objectConfig: any)=>{
     else{
       fieldSchema = field;
     }
-    if(field._filtersFunction){
-      let filtersFunction = safeEval(`(${field._filtersFunction})`);
+    if(field._filtersFunction || isString(field.filtersFunction) ){
+      let filtersFunction = safeEval(`(${field._filtersFunction || field.filtersFunction})`);
       fieldSchema = Object.assign({}, fieldSchema, {filtersFunction});
     }
-    if(field._optionsFunction){
-      let optionsFunction = safeEval(`(${field._optionsFunction})`);
+    if(field._optionsFunction || isString(field.optionsFunction)){
+      let optionsFunction = safeEval(`(${field._optionsFunction || field.optionsFunction})`);
       fieldSchema = Object.assign({}, fieldSchema, {optionsFunction});
     }
     if(field._options){

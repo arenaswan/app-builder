@@ -7,6 +7,8 @@ import { ObjectTable, ObjectProTable,
 } from '@steedos/builder-object';
 import { ChartDesignModal } from '@steedos/builder-charts';
 import { Page, PublicPage } from '@steedos/builder-page';
+import { isExpression, parseSingleExpression } from '@steedos/builder-object';
+
 Object.assign(ComponentRegistry.components,{ 
     ObjectTable, ObjectProTable,
     ObjectForm, ObjectListView,
@@ -20,3 +22,9 @@ export { ObjectTable, ObjectForm, API, SteedosProvider, SteedosRouter, Forms, Ob
 export { ObjectGrid } from '@steedos/builder-ag-grid';
 export { ComponentRegistry }
 export { Page, PublicPage } from '@steedos/builder-page';
+
+let Utils = {}
+Object.assign(Utils,{
+    isExpression, parseSingleExpression 
+});
+export { Utils }

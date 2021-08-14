@@ -100,6 +100,7 @@ const getSections = (objectApiName, mergedSchema, fields, isModalForm, mode, for
     if (schemaContainsExpression(field)) {
       Object.assign(field, parseAllExpression(field, formData, "#", globalData));
       if(field.visible_on === false){
+        field.omit = true;
         field.hidden = true;
       }
     }

@@ -157,7 +157,7 @@ function getRowButtons(objectSchema) {
     let visible: any = false;
     if (isString(action._visible)) {
       try {
-        const visibleFunction = eval(`(${action._visible.replaceAll("_.", "window._.")})`);
+        const visibleFunction = eval(`(${action._visible.replace(/_\./g, "window._.")})`);
         visible = function(){ return visibleFunction.apply( this, arguments );};
       } catch (error) {
         console.error(error, action._visible)
@@ -173,7 +173,7 @@ function getRowButtons(objectSchema) {
     let todo = action._todo || action.todo;
     if (isString(todo) && todo.startsWith("function")) {
       try {
-        todo = eval(`(${todo.replaceAll("_.", "window._.")})`);
+        todo = eval(`(${todo.replace(/_\./g, "window._.")})`);
       } catch (error) {
         console.error(error, todo)
       }
@@ -197,6 +197,7 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
   const object = Objects.getObject(objectApiName);
   if (object.isLoading) return (<div>Loading object ...</div>)
   const schema = object.schema;
+  const suppressClickEdit = schema.enable_inline_edit === false ? true : false;
   let TableComponent = ObjectGrid;
   if(schema.enable_tree){
     TableComponent = ObjectTreeGrid;
@@ -262,6 +263,7 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
       sort={_sort}
       rowButtons={rowButtons}
       pagination={pagination}
+      suppressClickEdit={suppressClickEdit}
       // className={["object-listview", rest.className].join(" ")}
       {...rest}
     />

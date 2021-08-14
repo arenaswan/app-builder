@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { forEach, compact, filter, includes, keys, map, isEmpty, isFunction, isObject, uniq, find, sortBy, reverse, clone, isArray, isString } from 'lodash';
 import useAntdMediaQuery from 'use-media-antd-query';
 import { observer } from "mobx-react-lite"
@@ -41,6 +41,13 @@ export type ObjectGridProps<T extends ObjectGridColumnProps> =
       onChange?: ([any]) => void
       linkTarget?: string //单元格如果是链接，配置其链接的target属性值
       autoClearSelectedRows?: boolean//当请求列表数据时自动清除选中项
+      rows?: any[]//静态数据配合objectSchema使用
+      objectSchema?: any//不传入objectApiName时，使用静态objectSchema
+      rowKey?: string//选中项的key，即字段名
+      selectedRowKeys?: [string]//选中项值集合
+      isInfinite?: boolean//是否使用滚动翻页模式，即rowModelType是否为infinite
+      autoFixHeight?: boolean//当isInfinite且记录总数量大于pageSize时，自动把Grid高度设置为pageSize行的总高度，即rowHeight*pageSize
+      autoHideForEmptyData: boolean//当数据为空时自动隐藏整个Grid记录详细界面子表需要该属性
       // filterableFields?: [string]
     } & {
       defaultClassName?: string
@@ -60,6 +67,10 @@ const FilterTypesMap = {
   'greaterThanOrEqual': '>=',
   'empty': 'empty' //TODO 不支持
 }
+
+const DEFAULT_ROW_HEIGHT = 28;
+const DEFAULT_HEADER_HEIGHT = 33;
+const DEFAULT_GRID_HEIGHT = "100%";
 
 /**
  * 
@@ -141,16 +152,58 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     onModelUpdated,
     onUpdated,
     checkboxSelection = true,
-    pagination = true,
+    pagination: defaultPagination = true,
+    isInfinite: defaultIsInfinite = true,
+    rowHeight,
+    headerHeight,
     selectedRowKeys,
     rowKey = '_id',
     objectSchema: defaultObjectSchema,
     rows,
     linkTarget,
     autoClearSelectedRows = true,
+    autoFixHeight = false,
+    autoHideForEmptyData = false,
     ...rest
   } = props;
+  const [objectGridApi, setObjectGridApi] = useState({} as any);
+  const [isGridReady, setIsGridReady] = useState(false);
+  const [gridHeight, setGridHeight] = useState(DEFAULT_GRID_HEIGHT as string | number);
+  const [isDataEmpty, setIsDataEmpty] = useState(false);
+  let pagination = defaultPagination;
+  let isInfinite = defaultIsInfinite;
+  // const isInfinite = rowModelType === "infinite";
+  let rowModelType = "serverSide"; //serverSide、infinite
+  if(rows){
+    // 传入rows静态数据时不支持翻页，以后有需求再说
+    pagination = false;
+    isInfinite = false;
+  }
+  if(pagination === false){
+    // 传入defaultIsInfinite为false表示一次性加载所有数据，不需要按isInfinite来滚动翻页请求数据
+    isInfinite = false;
+  }
+  if(isInfinite){
+    rowModelType = "infinite";
+    pagination = false;
+  }
+
+  let getDataSource: Function;
+  useEffect(() => {
+    if(isGridReady && isInfinite){
+      objectGridApi.setDatasource(getDataSource(objectGridApi));
+    }
+  }, [defaultFilters, isGridReady]);
   const table = Tables.loadById(name, objectApiName,rowKey);
+  // 将初始值存放到 store 中。
+  useEffect(() => {
+    // 只需要触发一次selectedRowKeys即可
+    // 用!isGridReady判断可以避免每次过滤条件变更后重新触发addSelectedRowsByKeys，进而带来多余的network请求
+    if(!isGridReady && selectedRowKeys && selectedRowKeys.length){
+      table.addSelectedRowsByKeys(selectedRowKeys, columnFields, rows, defaultFilters);
+    }
+  }, [selectedRowKeys, defaultFilters, isGridReady]);
+
   const [editedMap, setEditedMap] = useState({});
   let sort = defaultSort;
   if(sort && sort.length){
@@ -160,17 +213,13 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
       });
     }
   }
-  // 将初始值存放到 stroe 中。
-  if(selectedRowKeys && selectedRowKeys.length){
-    table.addSelectedRowsByKeys(selectedRowKeys, columnFields, rows, defaultFilters)
-  }
   // const [drawerVisible, setDrawerVisible] = useState(false);
   // const [modal] = Modal.useModal();
   // const colSize = useAntdMediaQuery();
   // const isMobile = (colSize === 'sm' || colSize === 'xs') && !props.disableMobile;
   let sideBar = defaultSideBar;
   let _pageSize = pageSize;
-  if(!pagination){
+  if(!pagination && !isInfinite){
     _pageSize = 0;
   }
   if(isEmpty(sideBar) && sideBar !== false ){
@@ -194,12 +243,12 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
 
   const objectSchema = defaultObjectSchema ? defaultObjectSchema : object.schema;
 
-  const setSelectedRows = (params)=>{
+  const setSelectedRows = (params, gridApi?)=>{
       // 当前显示页中store中的初始值自动勾选。
       const selectedRowKeys = table.getSelectedRowKeys();
-      const gridApi = params.api;
+      const currentGridApi = params.api || gridApi;
       if(selectedRowKeys && selectedRowKeys.length){
-        gridApi.forEachNode(node => {
+        currentGridApi.forEachNode(node => {
           if(node.data && node.data[rowKey]){
             if (selectedRowKeys.indexOf(node.data[rowKey])>-1) {
               node.setSelected(true);
@@ -210,16 +259,22 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         });
       }
       else{
-        gridApi.deselectAll();
+        currentGridApi.deselectAll();
       }
   }
 
-  const getDataSource = () => {
+  getDataSource = (gridApi?: any) => {
     return {
         getRows: params => {
+          // console.log("===getRows=params==", params);
+          // console.log("===getRows=isInfinite==", isInfinite);
+          const currentGridApi = isInfinite ? gridApi : params.api;
+          const sortModel = isInfinite ? params.sortModel : params.request.sortModel;
+          const filterModel = isInfinite ? params.filterModel : params.request.filterModel;
+          const startRow = isInfinite ? params.startRow : params.request.startRow;
           if(rows){
             const sort = []
-            forEach(params.request.sortModel, (sortField)=>{
+            forEach(sortModel, (sortField)=>{
               sort.push([sortField.colId, sortField.sort])
             })
             let sortedRows = clone(rows);
@@ -229,11 +284,17 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
                 sortedRows = reverse(sortedRows)
               }
             }
-            params.success({
-              rowData: sortedRows,
-              rowCount: rows.length
-            });
-            setSelectedRows(params);
+            if(isInfinite){
+              let lastRow = sortedRows.length;
+              params.successCallback(sortedRows, lastRow);
+            }
+            else{
+              params.success({
+                rowData: sortedRows,
+                rowCount: rows.length
+              });
+            }
+            setSelectedRows(params, currentGridApi);
           }
           else{
             let fields = ['name'];
@@ -242,25 +303,26 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
             });
             fields = uniq(compact(fields.concat(extraColumnFields).concat(["owner", "company_id", "company_ids", "locked"])));
             const sort = []
-            forEach(params.request.sortModel, (sortField)=>{
+            forEach(sortModel, (sortField)=>{
               sort.push([sortField.colId, sortField.sort])
             })
-            // const filters = compact([].concat([defaultFilters]).concat(filterModelToOdataFilters(params.request.filterModel)));
-            const modelFilters:any = filterModelToOdataFilters(params.request.filterModel);
+            // const filters = compact([].concat([defaultFilters]).concat(filterModelToOdataFilters(filterModel)));
+            const modelFilters:any = filterModelToOdataFilters(filterModel);
             const filters = concatFilters(defaultFilters, modelFilters)
             // TODO 此处需要叠加处理 params.request.fieldModel
             // console.log("===params.request.startRow===", params.request.startRow);
             let options: any = {
               sort,
               $top: pageSize,
-              $skip: params.request.startRow
+              $skip: startRow
             };
-            if(!pagination){
+            if(!pagination && !isInfinite){
               options = {
                 sort
               };
             }
-            if(autoClearSelectedRows && params.api.paginationGetCurrentPage() === 0){
+            let isFirstPage = isInfinite ? startRow === 0 : params.api.paginationGetCurrentPage() === 0
+            if(autoClearSelectedRows && isFirstPage){
               // 只有在第一页才自动清除选中项，这样翻页时就可以保持之前选中项不被清除
               table.clearSelectedRows();
             }
@@ -268,16 +330,35 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
               objectApiName,
               filters,
               fields,options).then((data)=>{
-                params.success({
-                  rowData: data.value,
-                  rowCount: data['@odata.count']
-                });
-                if(!modelFilters.length && !data['@odata.count']){
-                  params.api.setSideBarVisible(false)
-                }else if(sideBar !== false){
-                  params.api.setSideBarVisible(true)
+                const dataLength = data["@odata.count"];
+                if(isInfinite){
+                  if(autoFixHeight && pageSize && pageSize < dataLength){
+                    // const rowItemHeight = currentGridApi.getRowNode().rowHeight;
+                    setGridHeight(pageSize * (rowHeight || DEFAULT_ROW_HEIGHT) + (headerHeight || DEFAULT_HEADER_HEIGHT));
+                  }
+                  else{
+                    // 这里故意不再重置为DEFAULT_GRID_HEIGHT，因为会重新渲染整个grid，比如正在过滤数据，会把打开的右侧过滤器自动隐藏了体验不好
+                    // setGridHeight(DEFAULT_GRID_HEIGHT);
+                  }
+                  params.successCallback(data.value, dataLength);
                 }
-                setSelectedRows(params);
+                else{
+                  params.success({
+                    rowData: data.value,
+                    rowCount: dataLength
+                  });
+                }
+
+                if(!modelFilters.length && !dataLength){
+                  currentGridApi.setSideBarVisible(false)
+                  setIsDataEmpty(true);
+                }else {
+                  if(sideBar !== false){
+                    currentGridApi.setSideBarVisible(true)
+                  }
+                  setIsDataEmpty(false);
+                }
+                setSelectedRows(params, currentGridApi);
             })
           }
         }
@@ -309,6 +390,14 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     return filter;
   }
 
+  const onGridReady = (params) => {
+    if(isInfinite){
+      // 如果在非isInfinite模式下执行下面两个state变更，会造成多次执行serverSideDatasource语句进而产生多余的network请求
+      setObjectGridApi(params.api);
+      setIsGridReady(true);
+    }
+  };
+
   const getColumns = (rowButtons)=>{
     const width = checkboxSelection ? 80 : 50;
     const columns:any[] = [
@@ -328,7 +417,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         // 对象name_field字段为不存在时，列表视图上应该显示序号为name链接
         cellRenderer: 'AgGridCellRenderer',
         cellRendererParams: {
-          render: !objectSchema?.NAME_FIELD_KEY && getNameFieldColumnRender(objectApiName)
+          // rows静态数据传入不应该显示为链接
+          render: !objectSchema?.NAME_FIELD_KEY && !rows && getNameFieldColumnRender(objectApiName)
         },
       },
       // {
@@ -574,12 +664,14 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
 
   return (
 
-    <div className="ag-theme-balham" style={{height: "100%", flex: "1 1 auto",overflow:"hidden"}}>
+    <div className={`ag-theme-balham ${autoHideForEmptyData && isDataEmpty ? 'hidden' : ''}`}  style={{height: gridHeight, flex: "1 1 auto",overflow:"hidden"}}>
       <AgGridReact
         columnDefs={getColumns(rowButtons)}
         paginationAutoPageSize={false}
         localeText={AG_GRID_LOCALE_ZH_CN}
-        rowModelType='serverSide'
+        rowModelType={rowModelType}
+        rowBuffer={0}//该参数默认值为10，ag-grid infinite-scrolling官网示例中该参数为0
+        onGridReady={onGridReady}
         pagination={pagination}
         onSortChanged={onSortChanged}
         onFilterChanged={onFilterChanged}
@@ -588,6 +680,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         suppressExcelExport={true}
         cacheBlockSize={_pageSize}
         rowSelection={rowSelection}
+        rowHeight={rowHeight}
+        headerHeight={headerHeight}
         suppressRowClickSelection={true}
         // suppressCellSelection={true}
         // rowMultiSelectWithClick={true}
@@ -596,7 +690,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         modules={AllModules}
         stopEditingWhenGridLosesFocus={false}
         stopEditingWhenCellsLoseFocus={false}
-        serverSideDatasource={getDataSource()}
+        serverSideDatasource={isInfinite ? null : getDataSource()}
         onModelUpdated={onModelUpdated}
         serverSideStoreType={ServerSideStoreType.Partial}
         sideBar={sideBar}
@@ -606,6 +700,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         onRowSelected={onRowSelected}
         context={{editedMap: editedMap}}
         suppressClickEdit={suppressClickEdit}
+        suppressClipboardPaste={suppressClickEdit}
         processCellForClipboard={processCellForClipboard}
         processCellFromClipboard={processCellFromClipboard}
         frameworkComponents = {{

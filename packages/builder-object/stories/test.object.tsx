@@ -165,6 +165,14 @@ export default {
       modalClassName: 'myModal',
       modal_mode: 'dialog'
     },
+    lookup_multiple: {
+      group:'lookup测试',
+      reference_to: 'accounts',
+      multiple: true,
+      type: 'lookup',
+      label: 'lookup多选弹出',
+      modal_mode: 'dialog'
+    },
     populationType: {
       group: 'select测试',
       type: 'select',

@@ -3,6 +3,8 @@ import { isFunction, filter } from 'lodash';
 import FieldSelect from '@ant-design/pro-field/es/components/Select';
 import { safeRunFunction } from '@steedos/builder-sdk';
 import { observer } from "mobx-react-lite";
+import { SteedosIcon } from '@steedos/builder-lightning';
+import "./select.less"
 
 export const SelectField = observer((props: any) => {
   const { valueType, mode, fieldProps = {}, form, ...rest } = props;
@@ -84,18 +86,32 @@ export const SelectField = observer((props: any) => {
       proFieldProps = {
         request,
         params,
-        onDropdownVisibleChange,
+        onDropdownVisibleChange
       }
     } else if (options) {
       //options为空时不能直接覆盖fieldProps.options中的值，因为要允许直接给控件fieldProps.options赋值
       props.fieldProps.options = options;
     }
+    let optionItemRender;
+    optionItemRender = (item: any) => {
+      return (
+        item.icon ? (
+          <React.Fragment>
+            <span role="img" aria-label="smile" className="anticon anticon-smile"><SteedosIcon name={item.icon} size="x-small" /></span>
+            <span>{item.label}</span>
+          </React.Fragment>
+        ) : item.label
+      )
+    }
+    proFieldProps.optionItemRender = optionItemRender;
     proFieldProps.showSearch = true;
     proFieldProps.showArrow = true;
     proFieldProps.optionFilterProp = 'label';
     // TODO: multiple：如果是true, 后期 需要 支持对已选中项进行拖动排序
     return (
-      <FieldSelect mode='edit' {...props} {...proFieldProps} />
+      <div className="select-field-container">
+        <FieldSelect mode='edit' {...props} {...proFieldProps} />
+      </div>
     )
   }
 })

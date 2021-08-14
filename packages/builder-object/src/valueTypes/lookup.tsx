@@ -25,7 +25,7 @@ export const LookupField = observer((props:any) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { valueType, mode, fieldProps, request, form, ...rest } = props;
     const { field_schema: fieldSchema = {},onChange, _grid_row_id, depend_field_values: dependFieldValues={} } = fieldProps;
-    const { reference_to, reference_sort,reference_limit, showIcon, multiple, reference_to_field = "_id", filters: fieldFilters = [],filtersFunction, create = false, modal_mode, table_schema, link_target, modalClassName } = fieldSchema;
+    const { reference_to, reference_sort,reference_limit, showIcon = true, multiple, reference_to_field = "_id", filters: fieldFilters = [],filtersFunction, create = false, modal_mode, table_schema, link_target, modalClassName } = fieldSchema;
     // TODO: 添加 fieldProps.defaultValue 修复lookup字段默认值显示value 而不显示label的bug。 select字段一直是正常了，lookup字段一开始是正常的，后面就出问题了。
     let fieldValue = fieldProps.defaultValue || fieldProps.value || props.text;//ProTable那边fieldProps.value没有值，只能用text
     let [ fieldsValue ,setFieldsValue ] = useState({});
@@ -289,14 +289,16 @@ export const LookupField = observer((props:any) => {
             })
         }
         let optionItemRender;
-        if(showIcon && referenceToObjectIcon){
+        if(showIcon){
             optionItemRender = (item) => {
                 return (
-                    <React.Fragment>
-                        <span role="img" aria-label="smile" className="anticon anticon-smile"><SteedosIcon name={referenceToObjectIcon} size="x-small"/></span>
+                    referenceToObjectIcon || item.icon ?
+                    (<React.Fragment>
+                        <span role="img" aria-label="smile" className="anticon anticon-smile"><SteedosIcon name={item.icon || referenceToObjectIcon} size="x-small"/></span>
                         <span>{item.label}</span>
-                    </React.Fragment>
-                    )
+                    </React.Fragment>)
+                    : item.label
+                )
             }
         }
         let proFieldProps: any;
@@ -503,10 +505,10 @@ export const LookupField = observer((props:any) => {
             setParams({ open:false, openTag: new Date() });
         }
         return (
-            <React.Fragment>
+            <div className="lookup-field-container">
                 {
                     needReferenceToSelect && 
-                    (<Select   {...referenceToSelectProps} className="left_label_menu">
+                    (<Select   {...referenceToSelectProps} className="lookup-field-left-select">
                     {
                         map(referenceToOptions,(item)=>{
                             return (
@@ -519,7 +521,7 @@ export const LookupField = observer((props:any) => {
                     </Select>)
                 }
                 {showModal ? modalDom(lookupInput) : lookupInput}
-            </React.Fragment>
+            </div>
         )
     }
 });
