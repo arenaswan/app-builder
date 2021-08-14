@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Renderer, Editor } from "@redash/viz";
+import { Renderer, Editor } from "@steedos/builder-viz-lib";
 import { Select } from 'antd';
 import { observer } from "mobx-react-lite";
 import { Queries } from "@steedos/builder-store";

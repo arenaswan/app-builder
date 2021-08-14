@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { markdown } from "markdown";
 import Menu from "antd/lib/menu";
-import HtmlContent from "@redash/viz/lib/components/HtmlContent";
+import HtmlContent from "@steedos/builder-viz-lib/lib/components/HtmlContent";
+// import HtmlContent from "@redash/viz/lib/components/HtmlContent";
 import TextboxDialog from "../TextboxDialog";
 import Widget from "./Widget";
 

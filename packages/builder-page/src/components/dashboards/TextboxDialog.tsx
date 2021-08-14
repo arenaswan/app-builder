@@ -8,7 +8,8 @@ import Input from "antd/lib/input";
 import Tooltip from "../Tooltip";
 import Divider from "antd/lib/divider";
 import Link from "../Link";
-import HtmlContent from "@redash/viz/lib/components/HtmlContent";
+import HtmlContent from "@steedos/builder-viz-lib/lib/components/HtmlContent";
+// import HtmlContent from "@redash/viz/lib/components/HtmlContent";
 import { wrap as wrapDialog, DialogPropType } from "../DialogWrapper";
 import notification from "../notification";
 

@@ -19,7 +19,8 @@ import {
 import location from "./location";
 import { cloneParameter } from "./parameters";
 import dashboardGridOptions from "../config/dashboard-grid-options";
-import { registeredVisualizations } from "@redash/viz/lib";
+// import { registeredVisualizations } from "@redash/viz/lib";
+import { registeredVisualizations } from "@steedos/builder-viz-lib/lib";
 import { Query } from "./query";
 import { API } from '@steedos/builder-store';
 const axios: any = {};

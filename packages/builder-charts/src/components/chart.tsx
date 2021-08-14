@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Renderer, updateVisualizationsSettings } from "@redash/viz";
+import { Renderer, updateVisualizationsSettings } from "@steedos/builder-viz-lib";
 import { observer } from "mobx-react-lite";
 import { Queries, Objects } from "@steedos/builder-store";
 import './chart.less'

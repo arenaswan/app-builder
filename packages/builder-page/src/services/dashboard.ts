@@ -5,7 +5,6 @@ import Widget from "./widget";
 import location from "./location";
 import { cloneParameter } from "./parameters";
 import { policy } from "./policy";
-import { API } from '@steedos/builder-store';
 
 export const urlForDashboard = ({ id, slug }) => `dashboards/${id}-${slug}`;
 

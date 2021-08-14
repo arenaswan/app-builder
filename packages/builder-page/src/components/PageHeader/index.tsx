@@ -6,7 +6,7 @@ import "./index.less";
 export default function PageHeader({ title, actions }) {
   return (
     <div className="page-header-wrapper">
-      <h3 className='h3'>{title}</h3>
+      {title && <h3 className='h3'>{title}</h3>}
       {actions && <div className="page-header-actions">{actions}</div>}
     </div>
   );

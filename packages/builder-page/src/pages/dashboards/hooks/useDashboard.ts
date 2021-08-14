@@ -183,7 +183,7 @@ function useDashboard(dashboardData) {
 
   const showAddWidgetDialog = useCallback(() => {
     (window as any).SteedosUI.showModal(ObjectTable, {
-      title: `Add Widget`,
+      title: `Add Charts`,
       objectApiName: 'charts',
       rowSelection: 'single',
       onFinish: async (values, rows) => {

@@ -1,5 +1,6 @@
 import React from "react";
-import { VisualizationType, registeredVisualizations } from "@redash/viz/lib";
+// import { VisualizationType, registeredVisualizations } from "@redash/viz/lib";
+import { VisualizationType, registeredVisualizations } from "@steedos/builder-viz-lib/lib";
 
 import "./VisualizationName.less";
 

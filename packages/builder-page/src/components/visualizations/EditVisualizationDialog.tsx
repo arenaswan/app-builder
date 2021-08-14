@@ -11,12 +11,18 @@ import Visualization from "../../services/visualization";
 import recordEvent from "../../services/recordEvent";
 import useQueryResultData from "../../lib/useQueryResultData";
 import { useUniqueId } from "../../lib/hooks/useUniqueId";
+// import {
+//   registeredVisualizations,
+//   getDefaultVisualization,
+//   newVisualization,
+//   VisualizationType,
+// } from "@redash/viz/lib";
 import {
   registeredVisualizations,
   getDefaultVisualization,
   newVisualization,
   VisualizationType,
-} from "@redash/viz/lib";
+} from "@steedos/builder-viz-lib/lib";
 import { Renderer, Editor } from "../visualizations/visualizationComponents";
 
 import "./EditVisualizationDialog.less";

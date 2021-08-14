@@ -58,7 +58,7 @@ function AddWidgetContainer({ dashboardConfiguration, className, ...props }) {
           Add Textbox
         </Button>
         <Button type="primary" onClick={showAddWidgetDialog} data-test="AddWidgetButton">
-          Add Widget
+          Add Charts
         </Button>
       </div>
     </div>

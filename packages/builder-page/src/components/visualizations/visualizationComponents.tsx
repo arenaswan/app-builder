@@ -2,13 +2,18 @@ import React from "react";
 import { pick } from "lodash";
 import HelpTrigger from "../HelpTrigger";
 import Link from "../Link";
-import { Renderer as VisRenderer, Editor as VisEditor, updateVisualizationsSettings } from "@redash/viz/lib";
 import { clientConfig } from "../../services/auth";
+// import { Renderer as VisRenderer, Editor as VisEditor, updateVisualizationsSettings } from "@redash/viz/lib";
 
-import countriesDataUrl from "@redash/viz/lib/visualizations/choropleth/maps/countries.geo.json";
-// import usaDataUrl from "@redash/viz/lib/visualizations/choropleth/maps/usa-albers.geo.json";
-import subdivJapanDataUrl from "@redash/viz/lib/visualizations/choropleth/maps/japan.prefectures.geo.json";
-const usaDataUrl = {};
+// import countriesDataUrl from "@redash/viz/lib/visualizations/choropleth/maps/countries.geo.json";
+// // import usaDataUrl from "@redash/viz/lib/visualizations/choropleth/maps/usa-albers.geo.json";
+// import subdivJapanDataUrl from "@redash/viz/lib/visualizations/choropleth/maps/japan.prefectures.geo.json";
+// const usaDataUrl = {};
+import { Renderer as VisRenderer, Editor as VisEditor, updateVisualizationsSettings } from "@steedos/builder-viz-lib/lib/";
+import countriesDataUrl from "@steedos/builder-viz-lib/lib/visualizations/choropleth/maps/countries.geo.json";
+import usaDataUrl from "@steedos/builder-viz-lib/lib/visualizations/choropleth/maps/usa-albers.geo.json";
+import subdivJapanDataUrl from "@steedos/builder-viz-lib/lib/visualizations/choropleth/maps/japan.prefectures.geo.json";
+
 function wrapComponentWithSettings(WrappedComponent) {
   return function VisualizationComponent(props) {
     updateVisualizationsSettings({
@@ -63,6 +68,7 @@ function wrapComponentWithSettings(WrappedComponent) {
         "tableCellMaxJSONSize",
         "allowCustomJSVisualizations",
         "hidePlotlyModeBar",
+        "displayModeBar"
       ]),
     });
 

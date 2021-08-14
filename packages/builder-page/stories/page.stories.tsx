@@ -7,13 +7,13 @@ export default {
 export const PageSimple = () => {
   return (
     //   <Dashboard {...dashboard} layoutEditing={true}/>
-    <Page pageId="myPage"/>
+    <Page pageId="test5" pageSlug="" pageIdSlug=""/>
   )
 }
 
 export const PublicPageSimple = () => {
     return (
       //   <Dashboard {...dashboard} layoutEditing={true}/>
-      <PublicPage token="myPage"/>
+      <PublicPage token="test5"/>
     )
   }
