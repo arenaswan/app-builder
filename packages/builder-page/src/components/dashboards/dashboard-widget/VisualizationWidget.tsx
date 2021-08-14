@@ -238,7 +238,6 @@ class VisualizationWidget extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log(`widget`, props.widget)
     this.state = {
       localParameters: props.widget.getLocalParameters(),
       localFilters: props.filters,

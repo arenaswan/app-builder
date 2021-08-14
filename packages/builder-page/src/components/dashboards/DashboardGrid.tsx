@@ -176,7 +176,7 @@ class DashboardGrid extends React.Component {
     // remove next line when fix lands
     this.mode = document.body.offsetWidth <= cfg.mobileBreakPoint ? SINGLE : MULTI;
     // end workaround
-    console.log(`this.mode`, this.mode, SINGLE)
+    // console.log(`this.mode`, this.mode, SINGLE)
     // don't save single column mode layout
     if (this.mode === SINGLE) {
       return;
