@@ -196,7 +196,14 @@ export const Objects = types.model({
     newObject.loadObject();
     return newObject
   }
+  const reloadObject = (objectApiName: string)=>{
+    const object = getObject(objectApiName);
+    if(object){
+      object.loadObject();
+    }
+  }
   return {
     getObject,
+    reloadObject
   }
 }).create()
