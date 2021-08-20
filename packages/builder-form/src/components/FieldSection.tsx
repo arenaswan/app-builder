@@ -43,6 +43,7 @@ export const FieldSection = observer((props: any) => {
       <ExpandableSection
         id="default-expandable-section"
         title={title}
+        className={props?.className}
       >
         <Grid {...boxOptions}>
           {children}
