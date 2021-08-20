@@ -75,8 +75,12 @@ const getFieldSchemaArray = (mergedSchema, fields, isModalForm, mode)=>{
 const getSection = (objectApiName, fieldSchemaArray, isModalForm, mode, sectionName, options, form) => {
   const sectionFields = filter(fieldSchemaArray, { 'group': sectionName });
   const columns = isModalForm ? 2 : undefined
+  let isAllFieldsHidden:any;
+  if(sectionFields.length == filter(sectionFields, ['hidden', true]).length){
+    isAllFieldsHidden = true;
+  }
   return (
-    <FieldSection title={sectionName} key={sectionName} columns={columns} {...options}>
+    <FieldSection title={sectionName} key={sectionName} columns={columns} {...options} className={isAllFieldsHidden ? "hidden": ""}>
       {map(sectionFields, (field:any)=>{
         const fieldProps = {
           key: field.name,
