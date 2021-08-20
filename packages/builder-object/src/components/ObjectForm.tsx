@@ -92,12 +92,12 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
       // field.group = field.label
       field.is_wide = true;
     }
-    // // 新建记录时，把autonumber、formula、summary类型字段视为omit字段不显示
-    // let isOmitField = isModalForm && ["autonumber", "formula", "summary"].indexOf(field.type) > -1;
+    // 新建记录时，把autonumber、formula、summary类型字段视为omit字段不显示
+    let isOmitField = !recordId && ["autonumber", "formula", "summary"].indexOf(field.type) > -1;
     let isValid = !fields || !fields.length || fields.indexOf(fieldName) > -1
     // if (!field.hidden && !isObjectField && !isOmitField && isValid){
     // 这里不可以直接把hidden的字段排除，因为hidden的字段需要加载但不显示，见：表单字段omit,hidden规则变更 #138
-    if (!isObjectField && isValid){
+    if (!isObjectField && !isOmitField && isValid){
       fieldSchemaArray.push(defaults({name: fieldName}, field))
     }
   })

@@ -23,7 +23,7 @@ export type ObjectFormSectionsProps = {
   form?: any
 }
 
-const getFieldSchemaArray = (mergedSchema, fields, isModalForm, mode)=>{
+const getFieldSchemaArray = (mergedSchema, fields, isModalForm, mode, recordId)=>{
   let fieldSchemaArray = [];
   fieldSchemaArray.length = 0
 
@@ -44,11 +44,14 @@ const getFieldSchemaArray = (mergedSchema, fields, isModalForm, mode)=>{
       // field.group = field.label
       field.is_wide = true;
     }
-    // 新建记录时，把autonumber、formula、summary类型字段视为omit字段不显示
     let isOmitField = false;
     if(mode !== "read"){
       // #138 编辑状态下omit的字段不显示, 不render
       isOmitField = field.omit;
+      // 新建记录时，把autonumber、formula、summary类型字段视为omit字段不显示
+      if(!recordId && ["autonumber", "formula", "summary"].indexOf(field.type) > -1){
+        isOmitField = true;
+      }
     }
     /**
       #138 表单字段omit,hidden整体规则
@@ -98,7 +101,7 @@ const getSection = (objectApiName, fieldSchemaArray, isModalForm, mode, sectionN
   )
 }
 
-const getSections = (objectApiName, mergedSchema, fields, isModalForm, mode, formData, form, globalData) => {
+const getSections = (objectApiName, mergedSchema, fields, isModalForm, mode, formData, form, recordId, globalData) => {
   const _schema = cloneDeep(mergedSchema);
   forEach(_schema.fields, (field, key)=>{
     if (schemaContainsExpression(field)) {
@@ -110,7 +113,7 @@ const getSections = (objectApiName, mergedSchema, fields, isModalForm, mode, for
     }
   })
 
-  const fieldSchemaArray = getFieldSchemaArray(_schema, fields, isModalForm, mode)
+  const fieldSchemaArray = getFieldSchemaArray(_schema, fields, isModalForm, mode, recordId)
   const sections = groupBy(fieldSchemaArray, 'group');
   const dom = [];
   const options = (Object.keys(sections).length == 1)?{titleHidden: true}: {}
@@ -128,6 +131,7 @@ export const ObjectFormSections = observer((props:ObjectFormSectionsProps) => {
     formData={},
     formId = 'default',
     form,
+    recordId,
     isModalForm,
     onRef
   } = props;
@@ -148,7 +152,7 @@ export const ObjectFormSections = observer((props:ObjectFormSectionsProps) => {
           clearTimeout(setTimeoutId);
         }
         setTimeoutId = setTimeout(()=>{
-          const newSections = getSections(objectApiName, objectSchema, fields, isModalForm, mode, value, form, globalData);
+          const newSections = getSections(objectApiName, objectSchema, fields, isModalForm, mode, value, form, recordId, globalData);
           if(!isDeepEqual(sections, newSections)){
             setSections(newSections)
           }
@@ -162,7 +166,7 @@ export const ObjectFormSections = observer((props:ObjectFormSectionsProps) => {
   if (object && object.isLoading) return (<div><Spin/></div>)
 
   useEffect(() => {
-    setSections(getSections(objectApiName, objectSchema, fields, isModalForm, mode, formData, form, globalData))
+    setSections(getSections(objectApiName, objectSchema, fields, isModalForm, mode, formData, form, recordId, globalData))
   }, [JSON.stringify(objectSchema), JSON.stringify(formData), mode]);
 
   return (
