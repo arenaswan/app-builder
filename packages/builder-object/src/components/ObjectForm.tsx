@@ -1,7 +1,7 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import * as PropTypes from 'prop-types';
-import { forEach, defaults, groupBy, filter, map, defaultsDeep, isObject, isEmpty, clone, isNil, compact, uniq} from 'lodash';
+import { forEach, defaults, groupBy, filter, map, defaultsDeep, isObject, isEmpty, clone, isNil, compact, uniq, pick} from 'lodash';
 import { useQuery } from 'react-query'
 // import { FooterToolbar } from '@ant-design/pro-layout';
 import { Form } from '@steedos/builder-form';
@@ -130,7 +130,9 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
     let result; 
     if(!recordId){
       try {
-        result = await API.insertRecord(objectApiName,Object.assign({},initialValues,values));
+        let objectValues = Object.assign({},initialValues,values);
+        objectValues = pick(objectValues,fieldNames)
+        result = await API.insertRecord(objectApiName,objectValues);
         if(afterInsert){
           return afterInsert(result);
         }else{
