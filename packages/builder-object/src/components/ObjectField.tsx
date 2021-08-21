@@ -61,9 +61,21 @@ export const ObjectField = observer((props: any) => {
     formFieldProps.rules = [
       {
         required: true,
-        message: `请输入${formFieldProps.label}...`,
+        message: `请输入${formFieldProps.label}`,
       },
     ]
+  }
+  if (formFieldProps.valueType === "email") {
+    const emailRule = {
+      type: 'email',
+      message: `${formFieldProps.label}必须是合法的电邮地址`,
+    };
+    if(formFieldProps.rules){
+      formFieldProps.rules.push(emailRule)
+    }
+    else{
+      formFieldProps.rules = [emailRule]
+    }
   }
 
   const formItemProps:any = {
