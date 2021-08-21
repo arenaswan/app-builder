@@ -400,6 +400,12 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
 
   const getColumns = (rowButtons)=>{
     const width = checkboxSelection ? 80 : 50;
+    let showSortColumnAsLink = false;
+    if(objectSchema?.NAME_FIELD_KEY){
+      if(!find(columnFields,['fieldName',objectSchema.NAME_FIELD_KEY]) && !rows){
+        showSortColumnAsLink = true;
+      }
+    }
     const columns:any[] = [
       {
         resizable: false,
@@ -418,7 +424,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         cellRenderer: 'AgGridCellRenderer',
         cellRendererParams: {
           // rows静态数据传入不应该显示为链接
-          render: !objectSchema?.NAME_FIELD_KEY && !rows && getNameFieldColumnRender(objectApiName, props.linkTarget)
+          render: showSortColumnAsLink && getNameFieldColumnRender(objectApiName, props.linkTarget)
         },
       },
       // {
