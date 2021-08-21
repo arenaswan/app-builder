@@ -1,8 +1,17 @@
 const canvas = document.createElement("canvas");
 canvas.style.display = "none";
-document.body.appendChild(canvas);
+canvas.id="steedosPageCalculateTextWidthCanvas";
+
+const initCanvas = ()=>{
+  if(document.body && document.body.appendChild){
+    if(!document.getElementById("steedosPageCalculateTextWidthCanvas")){
+      document.body.appendChild(canvas);
+    }
+  }
+}
 
 export function calculateTextWidth(text: string, container = document.body) {
+  initCanvas();
   const ctx = canvas.getContext("2d");
   if (ctx) {
     const containerStyle = window.getComputedStyle(container);
