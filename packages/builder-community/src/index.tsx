@@ -9,15 +9,6 @@ import { ChartDesignModal } from '@steedos/builder-charts';
 import { Page, PublicPage } from '@steedos/builder-page';
 import { isExpression, parseSingleExpression } from '@steedos/builder-object';
 
-
-if(!document.body){
-    var tempBody = document.createElement("body");
-    document.body = tempBody;
-    document.addEventListener('DOMContentLoaded', (event) => {
-        tempBody.remove()
-    });
-}
-
 Object.assign(ComponentRegistry.components,{ 
     ObjectTable, ObjectProTable,
     ObjectForm, ObjectListView,
