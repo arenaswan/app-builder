@@ -418,7 +418,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         cellRenderer: 'AgGridCellRenderer',
         cellRendererParams: {
           // rows静态数据传入不应该显示为链接
-          render: !objectSchema?.NAME_FIELD_KEY && !rows && getNameFieldColumnRender(objectApiName)
+          render: !objectSchema?.NAME_FIELD_KEY && !rows && getNameFieldColumnRender(objectApiName, props.linkTarget)
         },
       },
       // {
