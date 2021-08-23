@@ -60,7 +60,7 @@ export const SpaceUsersModal = ({
     },{
       fieldName: "organizations_parents",
       hideInTable: true,
-      hideInSearch: false,
+      hideInSearch: isMobile ? false : true,
       ...expandProps,
     },{
       fieldName: "mobile",
