@@ -402,7 +402,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     const showSortNumber = !isMobile;
     let width = checkboxSelection ? 80 : 50;
     if(!showSortNumber){
-      width -= 30;
+      width -= 38;
     }
     let showSortColumnAsLink = false;
     if(showSortNumber && objectSchema?.NAME_FIELD_KEY){
