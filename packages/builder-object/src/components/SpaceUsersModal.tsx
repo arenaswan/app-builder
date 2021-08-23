@@ -50,11 +50,9 @@ export const SpaceUsersModal = ({
   if(!props.columnFields){
     props.columnFields = [{
       fieldName: "name",
-      hideInSearch: isMobile ? true : false,
       sorter: true,
     },{
       fieldName: "email",
-      hideInSearch: isMobile ? true : false,
     },{
       fieldName: "user",
       hideInSearch: true,
@@ -66,7 +64,6 @@ export const SpaceUsersModal = ({
       ...expandProps,
     },{
       fieldName: "mobile",
-      hideInSearch: isMobile ? true : false,
     }]
   }
 
