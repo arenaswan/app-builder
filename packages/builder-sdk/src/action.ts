@@ -1,5 +1,5 @@
 export default class Action {
-    executeAction(object_name, action, record_id, item_element, list_view_id, record, callback){
+    executeAction(object_name, action, record_id, item_element, list_view_id, record, callback?){
         if(window.Meteor){
             const object = window.Creator.getObject(object_name)
             const collectionName = object.label
