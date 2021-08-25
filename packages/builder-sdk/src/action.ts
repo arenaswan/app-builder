@@ -1,5 +1,5 @@
 export default class Action {
-    executeAction(object_name, action, record_id, item_element, list_view_id, record){
+    executeAction(object_name, action, record_id, item_element, list_view_id, record, callback?){
         if(window.Meteor){
             const object = window.Creator.getObject(object_name)
             const collectionName = object.label
@@ -11,7 +11,7 @@ export default class Action {
         const Creator = (window as any).Creator;
         if(Creator && Creator.executeAction){
             if(action.todo == "standard_delete"){
-                return Creator.executeAction(object_name, action, record_id, item_element, list_view_id, record)
+                return Creator.executeAction(object_name, action, record_id, item_element, list_view_id, record, callback)
             }else{
                 return Creator.executeAction(object_name, action, record_id, item_element)
             }

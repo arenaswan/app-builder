@@ -215,8 +215,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   }
   // const [drawerVisible, setDrawerVisible] = useState(false);
   // const [modal] = Modal.useModal();
-  // const colSize = useAntdMediaQuery();
-  // const isMobile = (colSize === 'sm' || colSize === 'xs') && !props.disableMobile;
+  const colSize = useAntdMediaQuery();
+  const isMobile = (colSize === 'sm' || colSize === 'xs') && !props.disableMobile;
   let sideBar = defaultSideBar;
   let _pageSize = pageSize;
   if(!pagination && !isInfinite){
@@ -399,9 +399,13 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   };
 
   const getColumns = (rowButtons)=>{
-    const width = checkboxSelection ? 80 : 50;
+    const showSortNumber = !isMobile;
+    let width = checkboxSelection ? 80 : 50;
+    if(!showSortNumber){
+      width -= 38;
+    }
     let showSortColumnAsLink = false;
-    if(objectSchema?.NAME_FIELD_KEY){
+    if(showSortNumber && objectSchema?.NAME_FIELD_KEY){
       if(!find(columnFields,['fieldName',objectSchema.NAME_FIELD_KEY]) && !rows){
         showSortColumnAsLink = true;
       }
@@ -411,7 +415,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         resizable: false,
         pinned: "left",
         valueGetter: params => {
-          return parseInt(params.node.id) + 1
+          return showSortNumber ? parseInt(params.node.id) + 1 : null;
         },
         width: width,
         maxWidth: width,

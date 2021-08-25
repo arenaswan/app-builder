@@ -44,6 +44,7 @@ export const ObjectModal = ({
   multiple,
   value,
   tableMode = "ag-grid",//ag-grid, ant-pro-table
+  filters,
   ...rest
 }: ObjectModalProps) => {
   const selectedValue = (value && value.length && (isArray(value) ? value : [value])) || []
@@ -136,11 +137,12 @@ export const ObjectModal = ({
       <ContentComponent
       {...contentComponentProps}
       {...omit(rest, ['visible', 'title', 'onChange'])}
+      filters={filters}
       onChange={handleOnChange}
       gridRef={gridRef}
     />
     )
-  }, [visible]);
+  }, [visible, filters]);
 
   // 关闭弹出框 清空store中的值。
   const gridRefApi = gridRef && gridRef.current && gridRef.current.api;
