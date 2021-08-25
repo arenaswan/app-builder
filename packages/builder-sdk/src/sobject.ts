@@ -19,6 +19,13 @@ export default class SObject {
             userContext.userId = this.client.getUserId();
             userContext.spaceId = this.client.getSpaceId();
             userContext.user = {}; //TODU:当前用户userSession
+            const Creator = (window as any).Creator;
+            if(Creator && Creator.USER_CONTEXT){
+                userContext = Creator.USER_CONTEXT
+            }
+            if(userContext.user.utcOffset === undefined){
+                userContext.user.utcOffset = 8;
+            }
             return formatFiltersToODataQuery(filters, userContext)
         }
         return filters;
