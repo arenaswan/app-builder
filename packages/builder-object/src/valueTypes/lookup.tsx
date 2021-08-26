@@ -404,10 +404,11 @@ export const LookupField = observer((props:any) => {
                     onBlur: null, 
                     onSelect: null
                 }
+                const referenceToObjectLabel = referenceToObjectSchema.label;
                 modalDom = (trigger: any)=>{
                     let ModalComponent = ObjectModal;
                     let modalPorps:any = {
-                        title: `选择 ${referenceToObjectSchema.label}`,
+                        title: `选择 ${referenceToObjectLabel}`,
                         modalProps: { className: modalClassName},
                         objectApiName: referenceTo,
                         multiple,
