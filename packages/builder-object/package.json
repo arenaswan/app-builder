@@ -67,6 +67,7 @@
     "react-sortable-hoc": "^2.0.0",
     "react-to-webcomponent": "^1.5.1",
     "react-use": "^17.2.4",
+    "rich-markdown-editor": "^11.17.3",
     "tslib": "^2.1.0"
   },
   "devDependencies": {
