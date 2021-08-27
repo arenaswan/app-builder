@@ -6,7 +6,7 @@ import { Link as RouterLink } from "react-router-dom";
 export const Link = observer((props:any) => {
   const {to, className, children, ...rest} = props
   if(window.Meteor){
-      return (<a href={to} className={className}>{children}</a>)
+      return (<a target={props.target} href={to} className={className}>{children}</a>)
   }
   return (
     <RouterLink to={to} className={className} {...rest}>{children}</RouterLink>
