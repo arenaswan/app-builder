@@ -422,7 +422,8 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
   };
 
   const getColumns = (rowButtons)=>{
-    const showSortNumber = !isMobile;
+    // const showSortNumber = !isMobile;
+    const showSortNumber = false;
     let width = checkboxSelection ? 80 : 50;
     if(!showSortNumber){
       width -= 38;
@@ -434,26 +435,26 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
       }
     }
     const columns:any[] = [
-      // {
-      //   resizable: false,
-      //   pinned: "left",
-      //   valueGetter: params => {
-      //     return showSortNumber ? parseInt(params.node.id) + 1 : null;
-      //   },
-      //   width: width,
-      //   maxWidth: width,
-      //   minWidth: width,
-      //   cellStyle: {"text-align": "right" },
-      //   checkboxSelection: checkboxSelection,
-      //   headerCheckboxSelection: checkboxSelection, //仅rowModelType等于Client-Side时才生效
-      //   suppressMenu: true,
-      //   // 对象name_field字段为不存在时，列表视图上应该显示序号为name链接
-      //   cellRenderer: 'AgGridCellRenderer',
-      //   cellRendererParams: {
-      //     // rows静态数据传入不应该显示为链接
-      //     render: showSortColumnAsLink && getNameFieldColumnRender(objectApiName, props.linkTarget)
-      //   },
-      // },
+      {
+        resizable: false,
+        pinned: "left",
+        valueGetter: params => {
+          return showSortNumber ? parseInt(params.node.id) + 1 : null;
+        },
+        width: width,
+        maxWidth: width,
+        minWidth: width,
+        cellStyle: {"text-align": "right" },
+        checkboxSelection: checkboxSelection,
+        headerCheckboxSelection: checkboxSelection, //仅rowModelType等于Client-Side时才生效
+        suppressMenu: true,
+        // 对象name_field字段为不存在时，列表视图上应该显示序号为name链接
+        cellRenderer: 'AgGridCellRenderer',
+        cellRendererParams: {
+          // rows静态数据传入不应该显示为链接
+          render: showSortColumnAsLink && getNameFieldColumnRender(objectApiName, props.linkTarget)
+        },
+      },
       // {
       //   resizable: false,
       //   pinned: "left",
