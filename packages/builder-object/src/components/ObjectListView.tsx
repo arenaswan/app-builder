@@ -103,6 +103,14 @@ export const getListviewColumns = (objectSchema: any, listName: any) => {
   return listViewColumns;
 }
 
+export const getListviewNameFieldKey = (objectSchema: any) =>{
+  let nameFieldKey = objectSchema.NAME_FIELD_KEY;
+  if(objectSchema.name === "organizations"){
+    nameFieldKey = "name";
+  }
+  return nameFieldKey;
+}
+
 export const getListviewExtraColumns = (objectSchema: any, listName: any) => {
   let listView = API.client.listview.find(objectSchema.list_views, listName);
   let listViewColumns = listView && listView.extra_columns;
@@ -205,7 +213,7 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
   let listView = listSchema ? listSchema : API.client.listview.find(schema.list_views, listName);
   const listViewColumns = listSchema && listSchema.columns ? listSchema.columns : getListviewColumns(schema, listName);
   const listViewExtraColumns = listSchema && listSchema.extra_columns ? listSchema.extra_columns : getListviewExtraColumns(schema, listName);
-  const nameFieldKey = schema.NAME_FIELD_KEY;
+  const nameFieldKey = getListviewNameFieldKey(schema);
   if(!columnFields || columnFields.length==0){
     columnFields = getListViewColumnFields(listViewColumns, props, nameFieldKey);
   }

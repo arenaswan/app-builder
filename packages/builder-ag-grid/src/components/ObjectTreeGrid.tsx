@@ -318,7 +318,7 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
             let filters = concatFilters(defaultFilters, modelFilters)
             
             var groupKeys = params.request.groupKeys;
-            console.log("===groupKeys===", groupKeys);
+            // console.log("===groupKeys===", groupKeys);
             const isGroup = groupKeys && groupKeys.length;
             if(isGroup){
               filters = concatFilters(filters, [parentField, "=", groupKeys[groupKeys.length - 1]])
@@ -705,14 +705,15 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
     if(!field){
       return ;
     }
-    let fieldWidth = find(columnFields,(item)=>{
+    let nameColumnField = find(columnFields,(item)=>{
       return item.fieldName === nameFieldKey ;
-    }).width;
+    });
+    let fieldWidth = nameColumnField.width;
     fieldWidth = fieldWidth ? fieldWidth : (field.is_wide ? 300 : 150);
-    // let fieldRender = null;
-    // if((columnItem as any).render){
-    //   fieldRender = (columnItem as any).render
-    // }
+    let fieldRender = null;
+    if((nameColumnField as any).render){
+      fieldRender = (nameColumnField as any).render
+    }
     // let fieldWidth = field.width ? field.width : field.is_wide? 300: 150;
     // let fieldSort = find(sort, (item)=>{
     //   return item.field_name === nameFieldKey
@@ -729,18 +730,22 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
       // rowGroup,
       // flex: 1,
       // sortable: true,
-      // cellRenderer: 'AgGridCellRenderer',
+      cellRenderer: 'agGroupCellRenderer',
       cellRendererParams: {
         // fieldSchema: field,
         // valueType: field.type,
         // render: (a, b)=>{
         //   return (<span>aa</span>);
         // },
-        innerRenderer: (params)=> {
-          return params.data.name;
-          // return (<Link to={getObjectRecordUrl(objectApiName, params.data._id)} className="text-blue-600 hover:text-blue-500 hover:underline">{params.data.name}</Link>);
-          // return fieldRender ? fieldRender(params.data.name, params.data) : params.data.name;
-        }
+        fieldSchema: Object.assign({}, { ...field }, { link_target: linkTarget }),
+        valueType: field.type,
+        render: fieldRender,
+        innerRenderer: "agGroupCellInnerRenderer"
+        // innerRenderer: (params)=> {
+        //   return params.data.name;
+        //   // return (<Link to={getObjectRecordUrl(objectApiName, params.data._id)} className="text-blue-600 hover:text-blue-500 hover:underline">{params.data.name}</Link>);
+        //   // return fieldRender ? fieldRender(params.data.name, params.data) : params.data.name;
+        // }
       },
       // cellEditor: 'AgGridCellEditor',
       // cellEditorParams: {
@@ -802,6 +807,7 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
           AgGridCellTextFilter: AgGridCellTextFilter,
           AgGridCellNumberFilter: AgGridCellNumberFilter,
           AgGridCellBooleanFilter: AgGridCellBooleanFilter,
+          agGroupCellInnerRenderer: AgGridCellRenderer,
           rowActions: AgGridRowActions,
         }}
         ref={gridRef}
