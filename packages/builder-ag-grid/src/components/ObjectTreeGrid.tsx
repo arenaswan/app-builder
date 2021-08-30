@@ -818,10 +818,7 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
           return params.rowNode.level < 1;
         }}
         isServerSideGroup={function (dataItem) {
-          // console.log("===dataItem==", dataItem);
-          // console.log("===dataItem.parent_id==", dataItem[parentField]);
-          // console.log("===gridRef==", gridRef);
-          return !!!dataItem.parentField;
+          return dataItem.children && dataItem.children.length;
         }}
         getServerSideGroupKey={function (dataItem) {
           return dataItem._id;

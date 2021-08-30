@@ -11,8 +11,8 @@ export const Grid = () => {
       <ObjectGrid 
         // objectApiName='accounts' 
         // selectedRowKeys={["6k5svcTmfopo3dXWr"]}
-        objectApiName='contracts' 
-        selectedRowKeys={["C25heacKZD9uy2EAj"]}
+        objectApiName='organizations' 
+        // selectedRowKeys={["C25heacKZD9uy2EAj"]}
         sort="created desc,name desc"
         // rowSelection="single"
         columnFields={
@@ -20,6 +20,11 @@ export const Grid = () => {
             {
               fieldName: 'name',
               width: '200'
+            },
+            {
+              fieldName: 'fullname',
+              // hideInTable: true,
+              width: 240
             },
             // {
             //   fieldName: 'description'
@@ -62,8 +67,8 @@ export const GridWithRefreshButton = () => {
         gridRef={gridRef}
         // objectApiName='accounts' 
         // selectedRowKeys={["6k5svcTmfopo3dXWr"]}
-        objectApiName='contracts' 
-        selectedRowKeys={["C25heacKZD9uy2EAj"]}
+        objectApiName='space_users' 
+        // selectedRowKeys={["C25heacKZD9uy2EAj"]}
         sort="created desc,name desc"
         // rowSelection="single"
         columnFields={
@@ -341,9 +346,18 @@ export const TreeGrid = () => {
               width: 240
             },
             // {
+            //   fieldName: 'fullname',
+            //   // hideInTable: true,
+            //   width: 240
+            // },
+            // {
             //   fieldName: 'parent',
             //   hideInTable: true
             // },
+            {
+              fieldName: 'children',
+              hideInTable: true
+            },
             {
               fieldName: 'created',
               width: 300
