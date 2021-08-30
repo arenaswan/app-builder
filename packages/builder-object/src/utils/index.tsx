@@ -29,7 +29,7 @@ export const getTreeDataFromRecords = (records: [] = [], nameField: string = "na
   let getChildrenNodes = (parent: string)=>{
     let nodes = [];
     records.forEach((record: any)=>{
-      if(record.parent === parent){
+      if(record[parentField] === parent){
         let tempNode: any = {
           title: record[nameField],
           value: record._id,
