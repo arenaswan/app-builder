@@ -21,7 +21,7 @@ import { Modal, Drawer, Button, Space } from 'antd';
 import { AG_GRID_LOCALE_ZH_CN } from '../locales/locale.zh-CN'
 import { Tables } from '@steedos/builder-store';
 import { message } from 'antd';
-import { translate, getObjectNameFieldKey } from '@steedos/builder-sdk';
+import { translate, getObjectNameFieldKey, getObjectChildrenFieldName } from '@steedos/builder-sdk';
 
 import './ObjectGrid.less'
 
@@ -145,12 +145,50 @@ const getSortModel = (objectSchema: any, sortModel: any)=>{
   });
 }
 
+const getColumnFieldsForTreeGrid = (objectSchema: any, columnFields: any)=>{
+  let result = [];
+  const nameFieldKey = getObjectNameFieldKey(objectSchema);
+  const childrenFieldName = getObjectChildrenFieldName(objectSchema);
+  let hasNameField = false, hasChildrenField = false;
+  columnFields.forEach((item)=>{
+    let fieldItem = item;
+    if(item.fieldName === nameFieldKey){
+      hasNameField = true;
+      fieldItem = Object.assign({}, item, {
+        hideInTable: true,
+      });
+    }
+    else if(item.fieldName === childrenFieldName){
+      hasChildrenField = true;
+      fieldItem = Object.assign({}, item, {
+        hideInTable: true,
+        hideInSearch: true
+      });
+    }
+    result.push(fieldItem);
+  });
+  if(!hasNameField){
+    result.push({
+      fieldName: 'name',
+      hideInTable: true,
+      width: 240
+    });
+  }
+  if(!hasChildrenField){
+    result.push({
+      fieldName: 'children',
+      hideInTable: true,
+      hideInSearch: true,
+    });
+  }
+  return result;
+}
+
 export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
 
   const {
     name = 'default',
     objectApiName,
-    columnFields = [],
     extraColumnFields = [],
     filters: defaultFilters,
     sort: defaultSort,
@@ -185,6 +223,7 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
   const [isGridReady, setIsGridReady] = useState(false);
   const [gridHeight, setGridHeight] = useState(DEFAULT_GRID_HEIGHT as string | number);
   const [isDataEmpty, setIsDataEmpty] = useState(false);
+  let columnFields = props.columnFields || [];
   let pagination = defaultPagination;
   let isInfinite = defaultIsInfinite;
   // const isInfinite = rowModelType === "infinite";
@@ -257,6 +296,8 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
   if (object && object.isLoading) return (<div><Spin/></div>)
 
   const objectSchema = defaultObjectSchema ? defaultObjectSchema : object.schema;
+
+  columnFields = getColumnFieldsForTreeGrid(objectSchema, columnFields);
 
   const setSelectedRows = (params, gridApi?)=>{
       // 当前显示页中store中的初始值自动勾选。

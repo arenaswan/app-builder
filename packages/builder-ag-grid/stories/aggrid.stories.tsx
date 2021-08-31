@@ -342,7 +342,6 @@ export const TreeGrid = () => {
           [
             {
               fieldName: 'name',
-              hideInTable: true,
               width: 240
             },
             // {
@@ -350,14 +349,6 @@ export const TreeGrid = () => {
             //   // hideInTable: true,
             //   width: 240
             // },
-            // {
-            //   fieldName: 'parent',
-            //   hideInTable: true
-            // },
-            {
-              fieldName: 'children',
-              hideInTable: true
-            },
             {
               fieldName: 'created',
               width: 300

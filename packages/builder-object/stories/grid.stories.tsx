@@ -217,7 +217,6 @@ export const ListViewTree = () => {
           [
             {
               fieldName: 'name',
-              hideInTable: true
             },
             // {
             //   fieldName: 'parent',

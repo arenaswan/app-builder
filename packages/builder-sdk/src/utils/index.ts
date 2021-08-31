@@ -22,3 +22,7 @@ export const getObjectNameFieldKey = (objectSchema: any) =>{
   }
   return nameFieldKey || "name";
 }
+
+export const getObjectChildrenFieldName = (objectSchema: any) =>{
+  return objectSchema.children_field || "children"
+}
