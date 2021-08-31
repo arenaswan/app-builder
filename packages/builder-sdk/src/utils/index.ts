@@ -14,3 +14,11 @@ export const safeRunFunction = (fun: any, args: any, defaultValue?: any, _this?:
 }
 
 export const BASE_FIELDNAMES_FOR_PERMISSIONS = ["owner", "company_id", "company_ids", "locked"];
+
+export const getObjectNameFieldKey = (objectSchema: any) =>{
+  let nameFieldKey = objectSchema.NAME_FIELD_KEY;
+  if(objectSchema.name === "organizations"){
+    nameFieldKey = "name";
+  }
+  return nameFieldKey || "name";
+}

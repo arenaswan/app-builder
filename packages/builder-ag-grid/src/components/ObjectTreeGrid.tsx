@@ -21,7 +21,7 @@ import { Modal, Drawer, Button, Space } from 'antd';
 import { AG_GRID_LOCALE_ZH_CN } from '../locales/locale.zh-CN'
 import { Tables } from '@steedos/builder-store';
 import { message } from 'antd';
-import { translate } from '@steedos/builder-sdk';
+import { translate, getObjectNameFieldKey } from '@steedos/builder-sdk';
 
 import './ObjectGrid.less'
 
@@ -129,6 +129,20 @@ const getField = (objectSchema, fieldName: any)=>{
     }
     return o[x]
   }, objectSchema.fields)
+}
+
+const getSortModel = (objectSchema: any, sortModel: any)=>{
+  return sortModel.map((model: any)=>{
+    if(model.colId === "ag-Grid-AutoColumn"){
+      // tree模式下无法把group的field名称识别为colId，需要转换下
+      return Object.assign({}, model, {
+        colId: getObjectNameFieldKey(objectSchema)
+      });
+    }
+    else{
+      return model;
+    }
+  });
 }
 
 export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
@@ -275,7 +289,8 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
           // console.log("===getRows=params==", params);
           // console.log("===getRows=isInfinite==", isInfinite);
           const currentGridApi = isInfinite ? gridApi : params.api;
-          const sortModel = isInfinite ? params.sortModel : params.request.sortModel;
+          let sortModel = isInfinite ? params.sortModel : params.request.sortModel;
+          sortModel = getSortModel(objectSchema, sortModel);
           const filterModel = isInfinite ? params.filterModel : params.request.filterModel;
           const startRow = isInfinite ? params.startRow : params.request.startRow;
           if(rows){
@@ -730,7 +745,7 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
       // filterParams,
       // rowGroup,
       // flex: 1,
-      // sortable: true,
+      sortable: true,
       cellRenderer: 'agGroupCellRenderer',
       cellRendererParams: {
         // fieldSchema: field,
