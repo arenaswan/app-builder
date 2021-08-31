@@ -1,38 +1,64 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import { observer } from "mobx-react-lite";
 import Editor from "rich-markdown-editor";
+import { Settings, API } from '@steedos/builder-store';
 
 export const HtmlField = observer((props: any) => {
-  const { fieldProps = {} ,mode ,text, fileType} = props;
-  const { onChange } = fieldProps;
-  // const {id , defaultValue, value, placeholder, readOnly, readOnlyWriteCheckboxes} = props;
-  if (mode === 'read') {
-    return (<Editor value={text as string} {...props} />)
-  }else{
-    const propsOther = {
+  const { fieldProps = {}, mode, text, fileType, name } = props;
+  const { onChange, field_schema } = fieldProps;
+  const { readOnly } = field_schema;
 
-      onChange: (options: any) => {
-        console.log('html内置onChange==>',options)
-      }
-    };
-    return (<Editor value={text as string} {...props} {...propsOther}/>)
-  }
+  // 每次执行 fieldProps.onChange 时只传更新的值到form中去， 不更新该字段的value（不render）。
+  const value = useMemo(() => {
+    return fieldProps.value || props.text;
+  }, []);
+  const onUploadImage = useCallback(
+    async (file: File) => {
+      const result = await API.client.uploadFileAsync(file);
+      // TODO: 接口方案二 有空就继续尝试。
+      // const result = await API.client.postS3File(file);
+      const url = result['_id'] ? Settings.rootUrl + '/api/files/' + 'images' + '/' + result['_id'] : null;
+      return url;
+    },
+    [name]
+  );
+  // TODO: ID值应该用recordID + fieldname
+  const propsOther = {
+    id: 'fieldHtml',
+    readOnly: mode === 'read' ? true : readOnly,
+    onImageUploadStart: () => {
+      // console.log('onImageUploadStart==>')
+    },
+    uploadImage: onUploadImage,
+    onImageUploadStop: (args) => {
+      // console.log('onImageUploadStop==>')
+    },
+    onChange: (valueFun: any) => {
+      const value = valueFun();
+      // console.log('onChange==>', value)
+      onChange(value)
+    },
+    onFocus: () => {
+      // console.log('onFocus==>')
+    },
+    onBlur: () => {
+      // console.log('onBlur==>')
+    },
+    dictionary:{
+      // newLineEmpty: '输入“/”以插入…',
+      /* imageCaptionPlaceholde: '撰写一个标题',
+      newLineWithSlash: 'newLineWithSlash' */
+    }
+  };
+
+  return (<Editor value={value} {...props} {...propsOther} style={{border: '1px solid #d9d9d9',borderRadius: '2px'}}/>)
 })
 
 export const html = {
   render: (text: any, props: any) => {
-    console.log('html--readonly==>',props.name, props)
-    // return (
-    //   <Editor value={text as string} {...props} />
-    // )
     return (<HtmlField {...props} mode="read" ></HtmlField>)
   },
   renderFormItem: (text: any, props: any) => {
-    console.log('html--edit==>',props.name, props)
-    // const {id , defaultValue, value, placeholder, readOnly, readOnlyWriteCheckboxes} = props;
-    // return (
-    //   <Editor text={text as string} {...props} />
-    // )
     return (<HtmlField {...props} mode="edit" ></HtmlField>)
   }
 }
