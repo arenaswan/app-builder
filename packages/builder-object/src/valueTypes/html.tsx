@@ -3,6 +3,8 @@ import { observer } from "mobx-react-lite";
 import Editor from "rich-markdown-editor";
 import { Settings, API } from '@steedos/builder-store';
 
+import "./html.less"
+
 export const HtmlField = observer((props: any) => {
   const { fieldProps = {}, mode, text, fileType, name } = props;
   const { onChange, field_schema } = fieldProps;
