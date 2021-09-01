@@ -478,22 +478,33 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         // 允许不配置order，不配置就按升序排序。
         fieldSort.order = "asc";
       }
-
-      let fieldWidth = (columnItem as any).width ? (columnItem as any).width : (field.is_wide ? 300 : 150);
+      let columnWidth = (columnItem as any).width;
+      if(!columnWidth && field.is_wide){
+        columnWidth = 300;
+      }
+      let columnFlex;
+      if(!columnWidth){
+        columnFlex = 1;
+      }
+      // console.log("===field.is_wide===", field.is_wide, fieldName);
+      // console.log("===fieldWidth===", columnWidth, fieldName);
+      // console.log("===columnFlex===", columnFlex, fieldName);
 
       columns.push({
         field: fieldName,
         hide: hideInTable,
+        // wrapText:true,
+        // autoHeight:true,
         headerName: field.label ? field.label:fieldName,
-        width: fieldWidth,
-        minWidth: fieldWidth ? fieldWidth : 60,
+        width: columnWidth,
+        minWidth: columnWidth ? columnWidth : 60,
         resizable: true,
         filter,
         sort: fieldSort ? fieldSort.order : undefined,
         filterParams,
         menuTabs: ['filterMenuTab','generalMenuTab','columnsMenuTab'],
         rowGroup,
-        flex: 1,
+        flex: columnFlex,
         sortable: true,
         cellRenderer: 'AgGridCellRenderer',
         // cellClassRules: {
