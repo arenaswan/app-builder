@@ -53,7 +53,7 @@ export const HtmlField = observer((props: any) => {
     }
   };
 
-  return (<Editor value={value} {...props} {...propsOther} style={{border: '1px solid #d9d9d9',borderRadius: '2px'}}/>)
+  return (<Editor value={value} {...props} {...propsOther} style={{border: '1px solid #d9d9d9',borderRadius: '2px',padding: '4px 11px'}}/>)
 })
 
 export const html = {
