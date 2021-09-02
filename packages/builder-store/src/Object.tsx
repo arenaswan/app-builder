@@ -167,12 +167,23 @@ export const ObjectModel = types.model({
     return newRecordList
   }
 
+  const getPermissions = ()=>{
+    const Creator = window.Creator;
+    if(Creator){
+      return Creator.getPermissions(self.id);
+    }
+    else{
+      return self.schema?.permissions;
+    }
+  }
+
   return {
     loadObject,
     getRecord,
     reloadRecord,
     deleteRecord,
-    getRecordList
+    getRecordList,
+    getPermissions
   }
 })
 
