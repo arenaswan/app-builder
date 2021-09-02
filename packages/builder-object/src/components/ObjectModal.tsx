@@ -157,7 +157,7 @@ export const ObjectModal = ({
     }
   }
   let buttonNewRecord: any;
-  if(showCreateButton){
+  if(showCreateButton && objectApiName){
     const object = Objects.getObject(objectApiName);
     if (object.isLoading) return (<div><Spin/></div>);
     const objectLabel = object.schema?.label;

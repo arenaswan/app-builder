@@ -25,7 +25,7 @@ export const LookupField = observer((props:any) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { valueType, mode, fieldProps, request, form, ...rest } = props;
     const { field_schema: fieldSchema = {},onChange, _grid_row_id, depend_field_values: dependFieldValues={} } = fieldProps;
-    const { reference_to, reference_sort,reference_limit, showIcon = true, multiple, reference_to_field = "_id", filters: fieldFilters = [],filtersFunction, create = false, modal_mode, table_schema, link_target, modalClassName } = fieldSchema;
+    const { reference_to, reference_sort,reference_limit, showIcon = true, multiple, reference_to_field = "_id", filters: fieldFilters = [],filtersFunction, create = true, modal_mode, table_schema, link_target, modalClassName } = fieldSchema;
     // TODO: 添加 fieldProps.defaultValue 修复lookup字段默认值显示value 而不显示label的bug。 select字段一直是正常了，lookup字段一开始是正常的，后面就出问题了。
     let fieldValue = fieldProps.defaultValue || fieldProps.value || props.text;//ProTable那边fieldProps.value没有值，只能用text
     let [ fieldsValue ,setFieldsValue ] = useState({});
@@ -303,7 +303,8 @@ export const LookupField = observer((props:any) => {
         }
         let proFieldProps: any;
         let dropdownRender;
-        if(create && referenceTo){
+        // TODO: 下拉框新建按钮有bug, 解决后再放开。 其create默认值也要再思考下。
+        if(create && referenceTo && false){
             const createObjectName = referenceToObjectSchema.label;
             dropdownRender = (menu)=>{
             return (
@@ -413,7 +414,7 @@ export const LookupField = observer((props:any) => {
                         objectApiName: referenceTo,
                         multiple,
                         name: `lookup-${objectApiName}-${props.name}`,
-                        showCreateButton: create,
+                        showCreateButton: referenceTo && create,
                         value: fieldValue,
                         // 弹出框会返回rowKey对应的字段值，默认为_id，比如space_users要求返回user字段值
                         rowKey: reference_to_field,
