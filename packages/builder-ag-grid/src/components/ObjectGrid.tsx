@@ -490,11 +490,11 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
       // console.log("===fieldWidth===", columnWidth, fieldName);
       // console.log("===columnFlex===", columnFlex, fieldName);
 
-      // isInfinite为true时wrap功能有bug，见：https://github.com/ag-grid/ag-grid/issues/3909，暂时只支持isInfinite为false情况
       let columnWrap = (columnItem as any).wrap;
       let wrapText = false;
       let autoHeight = false;
-      if(columnWrap){
+      // isInfinite为true时wrap功能有bug，见：https://github.com/ag-grid/ag-grid/issues/3909，暂时只支持isInfinite为false情况
+      if(columnWrap && !isInfinite){
         wrapText = true;
         autoHeight = true;
       }
