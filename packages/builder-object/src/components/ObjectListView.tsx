@@ -128,9 +128,10 @@ export const getListViewColumnFields = (listViewColumns: any, props: any, nameFi
   let { columnFields = [], master } = props;
   if (columnFields.length === 0) {
     forEach(listViewColumns, (column: any) => {
-      let fieldName: string = (column as any).field;
+      let fieldName: string = column;
       let columnOption: any = {  };
       if(isObject(column)){
+        fieldName = (column as any).field;
         columnOption = Object.assign({},{
           fieldName
         }, column)
