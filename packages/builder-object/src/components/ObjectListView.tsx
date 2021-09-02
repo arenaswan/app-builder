@@ -128,15 +128,19 @@ export const getListViewColumnFields = (listViewColumns: any, props: any, nameFi
   let { columnFields = [], master } = props;
   if (columnFields.length === 0) {
     forEach(listViewColumns, (column: any) => {
-      let fieldName: string, fieldWidth;
+      let fieldName: string = (column as any).field;
+      let columnOption: any = {  };
       if(isObject(column)){
-        fieldName = (column as any).field;
-        fieldWidth = (column as any).width;
+        columnOption = Object.assign({},{
+          fieldName
+        }, column)
       }
       else{
-        fieldName = column;
+        columnOption = {
+          fieldName
+        }
       }
-      let columnOption: any = { fieldName, width: fieldWidth };
+      delete columnOption.field;
       if(fieldName === nameFieldKey){
         columnOption.render = getNameFieldColumnRender(props.objectApiName, linkTarget);
       }

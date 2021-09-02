@@ -158,6 +158,34 @@ export const ListView = () => {
   )
 }
 
+// wrap功能暂时只支持isInfinite为false的情况
+export const ListViewWithColumnWrap = () => {
+  return (
+    <div style={{height:'500px'}}>
+      <ObjectListView objectApiName='tasks' 
+          listName="all"
+          isInfinite={false}
+          // columnFields={
+          //   [
+          //     {
+          //       fieldName: 'name',
+          //       width: '200',
+          //       wrap: true
+          //     },
+          //     {
+          //       fieldName: 'created'
+          //     },
+          //     {
+          //       fieldName: 'created_by'
+          //     },
+          //   ]
+          // }
+        >
+      </ObjectListView>
+    </div>
+  )
+}
+
 export const ListViewColumnRender= () => {
   return (
       <ObjectListView objectApiName='tasks' 

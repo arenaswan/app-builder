@@ -52,6 +52,34 @@ export const Grid = () => {
   )
 }
 
+// wrap功能暂时只支持isInfinite为false的情况
+export const GridWithColumnWrap = () => {
+  return (
+    <div style={{height:'500px'}}>
+      <ObjectGrid 
+        objectApiName='tasks' 
+        isInfinite={false}
+        columnFields={
+          [
+            {
+              fieldName: 'name',
+              width: '200',
+              wrap: true
+            },
+            {
+              fieldName: 'created'
+            },
+            {
+              fieldName: 'created_by'
+            },
+          ]
+        }
+      >
+      </ObjectGrid>
+    </div>
+  )
+}
+
 export const GridWithRefreshButton = () => {
 	const gridRef = useRef(null as any);
   return (
