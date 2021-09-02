@@ -490,11 +490,19 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
       // console.log("===fieldWidth===", columnWidth, fieldName);
       // console.log("===columnFlex===", columnFlex, fieldName);
 
+      let columnWrap = (columnItem as any).wrap;
+      let wrapText = false;
+      let autoHeight = false;
+      if(columnWrap){
+        wrapText = true;
+        autoHeight = true;
+      }
+
       columns.push({
         field: fieldName,
         hide: hideInTable,
-        // wrapText:true,
-        // autoHeight:true,
+        wrapText,
+        autoHeight,
         headerName: field.label ? field.label:fieldName,
         width: columnWidth,
         minWidth: columnWidth ? columnWidth : 60,
