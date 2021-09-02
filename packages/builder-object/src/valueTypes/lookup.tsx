@@ -72,11 +72,12 @@ export const LookupField = observer((props:any) => {
             fieldValue=fieldValue['ids'];
         }
     //}
-    let referenceToObject,referenceToObjectSchema,referenceToLableField, referenceToObjectIcon, referenceParentField;
+    let referenceToObject,referenceToObjectSchema,referenceToLableField, referenceToObjectIcon, referenceParentField, isAllowCreate;
     if(referenceTo){
         referenceToObject = Objects.getObject(referenceTo);
         if (referenceToObject.isLoading) return (<div><Spin/></div>);
         referenceToObjectSchema = referenceToObject.schema;
+        isAllowCreate = referenceToObjectSchema.permissions.allowCreate;
         referenceToLableField = referenceToObjectSchema["NAME_FIELD_KEY"] ? referenceToObjectSchema["NAME_FIELD_KEY"] : "name";
         // TODO: organizations.object.yml 文件里后续也要添加一个类似enable_tree属性 parent_field。
         referenceParentField = referenceToObjectSchema.parent_field || "parent"
@@ -304,7 +305,7 @@ export const LookupField = observer((props:any) => {
         let proFieldProps: any;
         let dropdownRender;
         // TODO: 下拉框新建按钮有bug, 解决后再放开。 其create默认值也要再思考下。
-        if(create && referenceTo && false){
+        if(isAllowCreate && create && referenceTo && false){
             const createObjectName = referenceToObjectSchema.label;
             dropdownRender = (menu)=>{
             return (
@@ -415,7 +416,7 @@ export const LookupField = observer((props:any) => {
                         multiple,
                         // TODO: 有可能后续带上recordId ? recordId : 'new'
                         name: `lookup-${objectApiName}-${props.name}-${referenceTo}`,
-                        showCreateButton: referenceTo && create,
+                        showCreateButton: isAllowCreate && referenceTo && create,
                         value: fieldValue,
                         // 弹出框会返回rowKey对应的字段值，默认为_id，比如space_users要求返回user字段值
                         rowKey: reference_to_field,
