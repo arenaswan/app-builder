@@ -317,7 +317,7 @@ export const LookupField = observer((props:any) => {
                         mode="edit" 
                         isModalForm={true} 
                         objectApiName={referenceTo} 
-                        name={`form-new-${referenceTo}`} 
+                        name={`lookup-create-${objectApiName}-${props.name}-${referenceTo}`}
                         submitter={false}
                         trigger={
                             <a className="add_button text-blue-600 hover:text-blue-500 hover:underlin"  onClick={()=>{
@@ -413,7 +413,8 @@ export const LookupField = observer((props:any) => {
                         modalProps: { className: modalClassName},
                         objectApiName: referenceTo,
                         multiple,
-                        name: `lookup-${objectApiName}-${props.name}`,
+                        // TODO: 有可能后续带上recordId ? recordId : 'new'
+                        name: `lookup-${objectApiName}-${props.name}-${referenceTo}`,
                         showCreateButton: referenceTo && create,
                         value: fieldValue,
                         // 弹出框会返回rowKey对应的字段值，默认为_id，比如space_users要求返回user字段值

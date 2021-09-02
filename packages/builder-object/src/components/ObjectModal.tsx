@@ -169,7 +169,8 @@ export const ObjectModal = ({
       mode="edit" 
       isModalForm={true} 
       objectApiName={objectApiName} 
-      name={`lookup-modal-new-${objectApiName}`}
+      // TODO: name 还应该带个随机数
+      name={`modal-create-${objectApiName}`}
       submitter={false}
       trigger={ <span>新建</span> }
       afterInsert={async (values)=>{
