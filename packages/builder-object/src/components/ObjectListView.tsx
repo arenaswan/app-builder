@@ -183,6 +183,16 @@ function getRowButtons(objectSchema) {
   return buttons
 }
 
+function getListView(schema, listName){
+  const Creator = (window as any).Creator;
+  if(Creator && Creator.getListView){
+    return Creator.getListView(schema.name, listName, true)
+  }
+  else{
+    return API.client.listview.find(schema.list_views, listName);
+  }
+}
+
 export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
   let {
     objectApiName,
@@ -202,8 +212,8 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
   if(schema.enable_tree){
     TableComponent = ObjectTreeGrid;
   }
-  let listView = listSchema ? listSchema : API.client.listview.find(schema.list_views, listName);
-  const listViewColumns = listSchema && listSchema.columns ? listSchema.columns : getListviewColumns(schema, listName);
+  let listView = listSchema ? listSchema : getListView(schema, listName);
+  const listViewColumns = listView && listView.columns ? listView.columns : getListviewColumns(schema, listName);
   const listViewExtraColumns = listSchema && listSchema.extra_columns ? listSchema.extra_columns : getListviewExtraColumns(schema, listName);
   const nameFieldKey = schema.NAME_FIELD_KEY;
   if(!columnFields || columnFields.length==0){
