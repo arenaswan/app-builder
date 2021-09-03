@@ -436,6 +436,7 @@ export const LookupField = observer((props:any) => {
                     if(referenceTo === "space_users"){
                         ModalComponent = SpaceUsersModal;
                         Object.assign(modalPorps, {
+                            showCreateButton: false,
                             columnFields: undefined //使用SpaceUsersModal默认定义的columnFields
                         })
                     }
