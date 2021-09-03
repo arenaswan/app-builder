@@ -119,7 +119,7 @@ export const SpaceUsersModal = ({
       toolbar={toolbar}
       contentComponent={SpaceUsers}
       {...props}
-      {...omit(rest, ['objectApiName', 'contentComponent'])}
+      {...omit(rest, ['contentComponent'])}
     />
   )
 }
