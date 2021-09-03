@@ -23,7 +23,7 @@ export const OrganizationsModal = ({
     <ObjectModal
       contentComponent={Organizations}
       {...props}
-      {...omit(rest, ['objectApiName', 'contentComponent'])}
+      {...omit(rest, ['contentComponent'])}
     />
   )
 }

@@ -441,6 +441,10 @@ export const LookupField = observer((props:any) => {
                     }
                     else if(referenceTo === "organizations"){
                         ModalComponent = OrganizationsModal;
+                        // TODO: 暂时不允许新建 organizations
+                        Object.assign(modalPorps, {
+                            showCreateButton: false
+                        })
                     }
                     return (
                         <ModalComponent {...modalPorps}/>
