@@ -441,7 +441,7 @@ export const LookupField = observer((props:any) => {
                     }
                     else if(referenceTo === "organizations"){
                         ModalComponent = OrganizationsModal;
-                        // TODO: 暂时不允许新建 organizations
+                        // TODO: 暂时不允许新建 organizations; 放开后 新建完能保存，但是点击保存后窗口没关闭。
                         Object.assign(modalPorps, {
                             showCreateButton: false
                         })
