@@ -169,7 +169,7 @@ export const ObjectModel = types.model({
 
   const getPermissions = ()=>{
     const Creator = window.Creator;
-    if(Creator){
+    if(Creator && Creator.getPermissions){
       return Creator.getPermissions(self.id);
     }
     else{
