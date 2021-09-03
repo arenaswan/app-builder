@@ -145,10 +145,10 @@ const getSortModel = (objectSchema: any, sortModel: any)=>{
   });
 }
 
-const getColumnFieldsForTreeGrid = (objectSchema: any, columnFields: any)=>{
+const getColumnFieldsForTreeGrid = (columnFields: any, nameFieldKey: any, childrenFieldName: any)=>{
   let result = [];
-  const nameFieldKey = getObjectNameFieldKey(objectSchema);
-  const childrenFieldName = getObjectChildrenFieldName(objectSchema);
+  // const nameFieldKey = getObjectNameFieldKey(objectSchema);
+  // const childrenFieldName = getObjectChildrenFieldName(objectSchema);
   let hasNameField = false, hasChildrenField = false;
   columnFields.forEach((item)=>{
     let fieldItem = item;
@@ -176,7 +176,7 @@ const getColumnFieldsForTreeGrid = (objectSchema: any, columnFields: any)=>{
   }
   if(!hasChildrenField){
     result.push({
-      fieldName: 'children',
+      fieldName: childrenFieldName,
       hideInTable: true,
       hideInSearch: true,
     });
@@ -296,8 +296,10 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
   if (object && object.isLoading) return (<div><Spin/></div>)
 
   const objectSchema = defaultObjectSchema ? defaultObjectSchema : object.schema;
-
-  columnFields = getColumnFieldsForTreeGrid(objectSchema, columnFields);
+ 
+  const nameFieldKey = getObjectNameFieldKey(objectSchema);
+  const childrenFieldName = getObjectChildrenFieldName(objectSchema);
+  columnFields = getColumnFieldsForTreeGrid(columnFields, nameFieldKey, childrenFieldName);
 
   const setSelectedRows = (params, gridApi?)=>{
       // 当前显示页中store中的初始值自动勾选。
@@ -874,7 +876,7 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
           return params.rowNode.level < 1;
         }}
         isServerSideGroup={function (dataItem) {
-          return dataItem.children && dataItem.children.length;
+          return dataItem[childrenFieldName] && dataItem[childrenFieldName].length;
         }}
         getServerSideGroupKey={function (dataItem) {
           return dataItem._id;
