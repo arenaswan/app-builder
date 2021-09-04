@@ -2,7 +2,7 @@ import React, { useState , useRef, useEffect} from "react";
 import { formatFiltersToODataQuery } from '@steedos/filters';
 import { Select, Spin } from 'antd';
 import "antd/es/tree-select/style/index.css";
-import { isFunction, isArray, isObject, uniq, filter, map, forEach, isString, isEmpty, concat } from 'lodash';
+import { isFunction, isArray, isObject, uniq, filter, map, forEach, isString, isEmpty, concat, isBoolean } from 'lodash';
 import { concatFilters } from '@steedos/builder-sdk';
 import { Objects, API, Settings } from '@steedos/builder-store';
 import { observer } from "mobx-react-lite";
@@ -17,6 +17,11 @@ import { ObjectForm, ObjectTable, ObjectExpandTable,ObjectListView,
 import { BAD_FILTERS } from '../utils';
 
 const { Option } = Select;
+
+const getObjectEnhancedLookup=(objectSchema)=>{
+    const enable_enhanced_lookup = objectSchema.enable_enhanced_lookup;
+    return isBoolean(enable_enhanced_lookup) ? enable_enhanced_lookup : true;
+}
 // 相关表类型字段
 // 通过下拉框显示相关表中的数据，可以搜索
 // 参数 props.reference_to:
@@ -350,7 +355,7 @@ export const LookupField = observer((props:any) => {
             )
             }
         }
-        let showModal = ["dialog", "drawer"].indexOf(modal_mode) > -1 || (referenceToObjectSchema &&  referenceToObjectSchema.enable_enhanced_lookup)
+        let showModal = ["dialog", "drawer"].indexOf(modal_mode) > -1 || (referenceToObjectSchema &&  getObjectEnhancedLookup(referenceToObjectSchema))
         if(options){
             showModal = false;
         }
