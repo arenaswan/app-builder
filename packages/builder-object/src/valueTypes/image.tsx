@@ -6,6 +6,7 @@ import { Settings , API} from '@steedos/builder-store';
 import FieldImage from '@ant-design/pro-field/es/components/Image';
 import { observer } from "mobx-react-lite";
 import { forEach, isArray } from 'lodash';
+import { translate } from '@steedos/builder-sdk';
 
 import "./image.less"
 
@@ -110,13 +111,30 @@ export const ImageField = observer((props: any) => {
             },
             onChange: (options: any) => {
                 const { file, fileList: newFileList } = options;
-                setFileList(newFileList);
                 let fileIds:any = [];
                 forEach(newFileList,(item)=>{
                     if (item.status === "done") {
                         fileIds.push(item.response._id)
                     }
-                })
+                    else if (item.status === "error") {
+                        let errorCode = item.error?.status;
+                        let errorMsg = item.error?.reason || item.error?.message || "";
+                        if(errorMsg){
+                            errorMsg = translate(errorMsg);
+                        }
+                        let matchedResponseTitles = (item.response?.match("\<title\>\(.+)<\/title\>") || []);
+                        let responseTitle = matchedResponseTitles[1];
+                        if(responseTitle){
+                            // 如果是nginx报错，比如文件太大，会返回html，取出其title显示。
+                            item.response = errorMsg ? `${errorMsg} \r\n ${responseTitle}` : responseTitle;
+                        }
+                        if(errorCode === 413){
+                            item.response = translate("请求文件太大了");
+                        }
+                        message.error(item.response);
+                    }
+                });
+                setFileList(newFileList);
                 if (newFileList.length == fileIds.length) {
                     if(!multiple){
                         fileIds= fileIds.length ? fileIds[0] : '';
