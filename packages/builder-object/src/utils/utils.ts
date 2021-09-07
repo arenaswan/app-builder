@@ -1,4 +1,5 @@
 import { get, set, cloneDeep } from 'lodash';
+import { translate } from '@steedos/builder-sdk';
 
 // 后面三个参数都是内部递归使用的，将schema的树形结构扁平化成一层, 每个item的结构
 // {
@@ -1141,3 +1142,22 @@ export const removeHiddenFromResult = (data, flatten) => {
   });
   return data;
 };
+
+export const getFileResponseErrorMessage = (file: any) => {
+  let result = "";
+  let errorCode = file.error?.status;
+  let errorMsg = file.error?.reason || file.error?.message || "";
+  if(errorMsg){
+      errorMsg = translate(errorMsg);
+  }
+  let matchedResponseTitles = (file.response?.match("\<title\>\(.+)<\/title\>") || []);
+  let responseTitle = matchedResponseTitles[1];
+  if(responseTitle){
+      // 如果是nginx报错，比如文件太大，会返回html，取出其title显示。
+      result = errorMsg ? `${errorMsg} \r\n ${responseTitle}` : responseTitle;
+  }
+  if(errorCode === 413){
+      result = translate("请求文件太大了");
+  }
+  return result;
+}
