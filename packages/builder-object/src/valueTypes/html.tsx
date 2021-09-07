@@ -53,7 +53,7 @@ export const HtmlField = observer((props: any) => {
     }
   };
 
-  return (<Editor value={value} {...props} {...propsOther} style={{border: '1px solid #d9d9d9',borderRadius: '2px',padding: '10px 23px'}}/>)
+  return (<Editor className='rich-markdown-editor' value={value} {...props} {...propsOther} />)
 })
 
 export const html = {
