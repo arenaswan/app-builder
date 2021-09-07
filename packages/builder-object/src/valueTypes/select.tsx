@@ -6,6 +6,35 @@ import { observer } from "mobx-react-lite";
 import { SteedosIcon } from '@steedos/builder-lightning';
 import "./select.less"
 
+const hexToRgb = (hex)=>{
+  hex = hex.slice(1);
+  if (hex.length === 3) {
+    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+  }
+  return {
+    r: Number.parseInt(hex.slice(0, 2), 16),
+    g: Number.parseInt(hex.slice(2, 4), 16),
+    b: Number.parseInt(hex.slice(4, 6), 16)
+  };
+};
+
+const _pickTextColorBasedOnBgColorAdvanced = (bgColor, lightColor, darkColor)=>{
+  const rgb = hexToRgb(bgColor);
+  const {r,g,b} = rgb
+  const uicolors = [r / 255, g / 255, b / 255];
+  const c = uicolors.map((col)=>{
+    if (col <= 0.03928) {
+      return col / 12.92;
+    }
+    return Math.pow((col + 0.055) / 1.055, 2.4);
+  });
+  const L = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  if (L > 0.179) {
+    return darkColor;
+  } else {
+    return lightColor;
+  }
+};
 export const SelectField = observer((props: any) => {
   const { valueType, mode, fieldProps = {}, form, ...rest } = props;
   const [params, setParams] = useState({ open: false, openTag: null });
@@ -45,18 +74,21 @@ export const SelectField = observer((props: any) => {
       tags.sort((m,n)=>{return value.indexOf(m.value) - value.indexOf(n.value)})
     }
     const tagsDom = tags.map((tagItem, index) => {
-      let colorStyle: any = {
-        borderRadius: '10px',
-        padding: '1px 6px',
-        border: '1px',
-      }
+      let selectClassNames: string[] = [];
+      let colorStyle: any={};
       if (tagItem.color && tagItem.color.length) {
         colorStyle.background = '#' + tagItem.color;
+        const fontColor = _pickTextColorBasedOnBgColorAdvanced(tagItem.color, '#fff', '#333')
+        colorStyle.color = fontColor;
+        selectClassNames.push('select-color');
+      }
+      if(multiple){
+        selectClassNames.push("select-multiple");
       }
       return (
         <React.Fragment key={tagItem.value}>
           {index > 0 && ' '}
-          <span style={{ ...colorStyle }} >
+          <span style={{ ...colorStyle }} className={selectClassNames.join(" ")} >
             {tagItem.label}
           </span>
         </React.Fragment>
