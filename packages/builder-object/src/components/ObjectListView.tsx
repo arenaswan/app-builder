@@ -186,7 +186,7 @@ function getRowButtons(objectSchema) {
 function getListView(schema, listName){
   const Creator = (window as any).Creator;
   if(Creator && Creator.getListView){
-    return Creator.getListView(schema.name, listName, true)
+    return Creator.getListView(schema.table_name || schema.name, listName, true)
   }
   else{
     return API.client.listview.find(schema.list_views, listName);
