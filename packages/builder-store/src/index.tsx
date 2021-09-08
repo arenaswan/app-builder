@@ -50,6 +50,9 @@ declare global {
   interface Window {
     SteedosUI: any
   }
+  interface Window {
+    Steedos: any
+  }
 }
 
 if(!window.Meteor){

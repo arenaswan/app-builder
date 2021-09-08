@@ -19,6 +19,11 @@ import { BAD_FILTERS } from '../utils';
 const { Option } = Select;
 
 const getObjectEnhancedLookup=(objectSchema)=>{
+    // TODO: bug: 苹果手机 弹出框选项选中后无值； 如果是苹果手机，全设置为下拉框选项。
+    const Steedos = window.Steedos;
+    if(Steedos && Steedos.isCordova() && Steedos.isiOS()){
+        return false;
+    }
     const enable_enhanced_lookup = objectSchema.enable_enhanced_lookup;
     return isBoolean(enable_enhanced_lookup) ? enable_enhanced_lookup : true;
 }
