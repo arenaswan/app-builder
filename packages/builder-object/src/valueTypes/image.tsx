@@ -6,6 +6,7 @@ import { Settings , API} from '@steedos/builder-store';
 import FieldImage from '@ant-design/pro-field/es/components/Image';
 import { observer } from "mobx-react-lite";
 import { forEach, isArray } from 'lodash';
+import { getFileResponseErrorMessage } from '../utils/utils';
 
 import "./image.less"
 
@@ -110,14 +111,24 @@ export const ImageField = observer((props: any) => {
             },
             onChange: (options: any) => {
                 const { file, fileList: newFileList } = options;
-                setFileList(newFileList);
+                if (file.status === "error") {
+                    message.error(getFileResponseErrorMessage(file));
+                }
                 let fileIds:any = [];
+                let isUploading = false;
                 forEach(newFileList,(item)=>{
-                    if (item.status === "done") {
+                    if(item.status === "uploading"){
+                        isUploading = true;
+                    }
+                    else if (item.status === "done") {
                         fileIds.push(item.response._id)
                     }
-                })
-                if (newFileList.length == fileIds.length) {
+                    else if (item.status === "error") {
+                        item.response = getFileResponseErrorMessage(item);
+                    }
+                });
+                setFileList(newFileList);
+                if (!isUploading) {
                     if(!multiple){
                         fileIds= fileIds.length ? fileIds[0] : '';
                     }

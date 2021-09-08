@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, Button,  Spin} from 'antd';
+import { Upload, Button,  Spin, message} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { Settings , Objects } from '@steedos/builder-store';
 import { observer } from "mobx-react-lite";
 import { forEach, isArray } from 'lodash';
 import './file.less'
+import { getFileResponseErrorMessage } from '../utils/utils';
 
 const getFileListItem = (item:any, _fileType)=>{
     return (
@@ -101,14 +102,24 @@ export const FileField = observer((props: any) => {
             },
             onChange: (options: any) => {
                 const { file, fileList: newFileList } = options;
-                setFileList(newFileList);
+                if (file.status === "error") {
+                    message.error(getFileResponseErrorMessage(file));
+                }
                 let fileIds:any = [];
+                let isUploading = false;
                 forEach(newFileList,(item)=>{
-                    if (item.status === "done") {
+                    if(item.status === "uploading"){
+                        isUploading = true;
+                    }
+                    else if (item.status === "done") {
                         fileIds.push(item.response._id)
                     }
-                })
-                if (newFileList.length == fileIds.length) {
+                    else if (item.status === "error") {
+                        item.response = getFileResponseErrorMessage(item);
+                    }
+                });
+                setFileList(newFileList);
+                if (!isUploading) {
                     if(!multiple){
                         fileIds= fileIds.length ? fileIds[0] : '';
                     }
