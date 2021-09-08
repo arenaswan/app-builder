@@ -1157,7 +1157,7 @@ export const getFileResponseErrorMessage = (file: any) => {
       result = errorMsg ? `${errorMsg} \r\n ${responseTitle}` : responseTitle;
   }
   if(errorCode === 413){
-      result = translate("请求文件太大了");
+      result = translate("creator_request_oversized");
   }
   return result;
 }
