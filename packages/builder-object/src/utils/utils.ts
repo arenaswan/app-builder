@@ -231,7 +231,7 @@ export function isDeepEqual(param1, param2) {
   if (param1.constructor === Array) {
     if (param1.length !== param2.length) return false;
     for (let i = 0; i < param1.length; i++) {
-      if (param1[i].constructor === Array || param1[i].constructor === Object) {
+      if (param1[i]?.constructor === Array || param1[i]?.constructor === Object) {
         if (!isDeepEqual(param1[i], param2[i])) return false;
       } else if (param1[i] !== param2[i]) return false;
     }
@@ -242,8 +242,8 @@ export function isDeepEqual(param1, param2) {
       if (
         param1[key] &&
         typeof param1[key] !== 'number' &&
-        (param1[key].constructor === Array ||
-          param1[key].constructor === Object)
+        (param1[key]?.constructor === Array ||
+          param1[key]?.constructor === Object)
       ) {
         if (!isDeepEqual(param1[key], param2[key])) return false;
       } else if (param1[key] !== param2[key]) return false;
