@@ -52,8 +52,8 @@ export const HtmlField = observer((props: any) => {
       newLineWithSlash: 'newLineWithSlash' */
     }
   };
-
-  return (<Editor className='rich-markdown-editor' value={value} {...props} {...propsOther} />)
+  const className = props?.className ? `rich-markdown-editor ${props?.className}` : 'rich-markdown-editor';
+  return (<Editor value={value} {...props} {...propsOther} className={className}/>)
 })
 
 export const html = {
