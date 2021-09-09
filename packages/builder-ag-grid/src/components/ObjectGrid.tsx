@@ -301,6 +301,10 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
             forEach(columnFields, ({ fieldName, ...columnItem }: ObjectGridColumnProps) => {
               fields.push(fieldName)
             });
+            if(objectApiName === "cms_files"){
+              // 附件列表需要这个字段判断权限
+              extraColumnFields.push("parent")
+            }
             fields = uniq(compact(fields.concat(extraColumnFields).concat(["owner", "company_id", "company_ids", "locked"])));
             const sort = []
             forEach(sortModel, (sortField)=>{
