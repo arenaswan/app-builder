@@ -409,8 +409,14 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
       width -= 38;
     }
     let showSortColumnAsLink = false;
-    if(showSortNumber && objectSchema?.NAME_FIELD_KEY){
-      if(!find(columnFields,['fieldName',objectSchema.NAME_FIELD_KEY]) && !rows){
+    if(showSortNumber){
+      if(rows){
+        showSortColumnAsLink = false;
+      }
+      else if(!objectSchema?.NAME_FIELD_KEY){
+        showSortColumnAsLink = true;
+      }
+      else if(!find(columnFields,['fieldName',objectSchema.NAME_FIELD_KEY])){
         showSortColumnAsLink = true;
       }
     }
