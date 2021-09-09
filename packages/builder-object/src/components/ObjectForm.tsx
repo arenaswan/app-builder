@@ -1,7 +1,7 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import * as PropTypes from 'prop-types';
-import { forEach, defaults, groupBy, filter, map, defaultsDeep, isObject, isEmpty, clone, isNil, compact, uniq, pick} from 'lodash';
+import { forEach, defaults, groupBy, filter, map, defaultsDeep, isObject, isEmpty, clone, isNil, compact, uniq, pick, isArray} from 'lodash';
 import { useQuery } from 'react-query'
 // import { FooterToolbar } from '@ant-design/pro-layout';
 import { Form } from '@steedos/builder-form';
@@ -43,6 +43,21 @@ export type ObjectFormProps = {
   form?: any
   // showFooterToolbar?: boolean
 } & FormProps
+
+const dealWithMultipleFieldValue = (filedValue: any, isFieldMultiple: any)=>{
+  if(isFieldMultiple && !isArray(filedValue)){
+    // 单选字段有值后 将其改为多选
+    if(filedValue){
+      return [filedValue];
+    }
+  }else if(!isFieldMultiple && isArray(filedValue)){
+    // 多选字段有值后 将其改为单选 默认取第一个保存。
+    if(filedValue.length){
+      return filedValue[0];
+    }
+  }
+  return filedValue;
+}
 
 export const ObjectForm = observer((props:ObjectFormProps) => {
   const {
@@ -112,8 +127,11 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
       return (<div><Spin/></div>)
     if(recordCache.data){
       record = recordCache.data;
+      const formFields = mergedSchema.fields
       forEach(fieldNames, (fieldName:any)=>{
         let filedValue = record[fieldName];
+        const isFieldMultiple = formFields[fieldName]?.multiple;
+        filedValue = dealWithMultipleFieldValue(filedValue, isFieldMultiple);
         // 字段值为null等也传过去, null表示往数据库存空值。
         if (filedValue !== undefined ){
           defaultValues[fieldName] = filedValue;
