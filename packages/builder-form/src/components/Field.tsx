@@ -153,6 +153,7 @@ export const Field = observer((props: any) => {
 
 
     const containerOptions = {
+      className: 'field-flex-container'
     }
 
     return (
@@ -161,7 +162,7 @@ export const Field = observer((props: any) => {
         role="group"
         onDoubleClick={() => { if (!readonly) onInlineEdit(); }}
       >
-        <Box flex="1"><ProField mode='read' {...proFieldProps} /></Box>
+        <Box flex="1" className='field-flex-box-content'><ProField mode='read' {...proFieldProps} /></Box>
         {showInlineIcon && (<Box width="16px">{inlineIcon}</Box>)}
       </Flex>
     )
