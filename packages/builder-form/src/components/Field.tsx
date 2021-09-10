@@ -104,6 +104,9 @@ export const Field = observer((props: any) => {
         field_schema: fieldSchema,
         placeholder,
         depend_field_values: dependFieldValues,
+        min:fieldSchema?.min,
+        max:fieldSchema?.max,
+        precision:fieldSchema?.scale
       }),
       ...rest
     }
