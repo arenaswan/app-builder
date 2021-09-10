@@ -188,12 +188,14 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     pagination = false;
   }
 
+  const [editedMap, setEditedMap] = useState({});
+
   let getDataSource: Function;
   useEffect(() => {
     if(isGridReady && isInfinite){
       objectGridApi.setDatasource(getDataSource(objectGridApi));
     }
-  }, [defaultFilters, isGridReady]);
+  }, [defaultFilters, isGridReady, editedMap]);
   const table = Tables.loadById(name, objectApiName,rowKey);
   // 将初始值存放到 store 中。
   useEffect(() => {
@@ -204,7 +206,6 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     }
   }, [selectedRowKeys, defaultFilters, isGridReady]);
 
-  const [editedMap, setEditedMap] = useState({});
   let sort = defaultSort;
   if(sort && sort.length){
     if(isArray(sort[0])){
