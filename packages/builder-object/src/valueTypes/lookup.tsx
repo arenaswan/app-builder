@@ -122,9 +122,6 @@ export const LookupField = observer((props:any) => {
                     selectItem = recordListData.value.map((recordItem: any) => { 
                         return { value: recordItem[tagsValueField], label: recordItem[referenceToLableField] } 
                     });
-                    if (multiple && fieldValue && fieldValue.length > 1) {
-                        selectItem.sort((m,n)=>{return fieldValue.indexOf(m.value) - fieldValue.indexOf(n.value)})
-                    }
                 }
                 tags = selectItem;
             }else{
@@ -133,6 +130,9 @@ export const LookupField = observer((props:any) => {
                 tags = filter(options,(optionItem: any)=>{
                     return multiple ? fieldValue.indexOf(optionItem.value) > -1 : optionItem.value === fieldValue;
                 })
+            }
+            if (multiple && fieldValue.length > 1) {
+                tags.sort((m,n)=>{return fieldValue.indexOf(m.value) - fieldValue.indexOf(n.value)})
             }
         }
         return (<React.Fragment>{tags.map((tagItem, index)=>{return (
