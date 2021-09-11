@@ -201,12 +201,14 @@ export const ObjectModal = ({
       // TODO: rest.name || 'default' 后期需要优化。
       const table = Tables.getById(rest.name || 'default');
       // 因为通过gridRefApi获取的选中值可能会缺失，例如：当默认值不在已打开过的显示页中，gridRefApi获取的值中会缺失 默认值， 所以通过store获取所有的选中值。
-      const gridSelectedRows=table?.getSelectedRows();
-      let gridSelectedKeys=[];
-      forEach(gridSelectedRows,(item)=>{
-        gridSelectedKeys.push(item[rest.rowKey || '_id'])
-      })
-      success = await onFinish(gridSelectedKeys,gridSelectedRows);
+      if(table){
+        const gridSelectedRows=table.getSelectedRows();
+        let gridSelectedKeys=[];
+        forEach(gridSelectedRows,(item)=>{
+          gridSelectedKeys.push(item[rest.rowKey || '_id'])
+        })
+        success = await onFinish(gridSelectedKeys,gridSelectedRows);
+      }
     }
     else{
       success = await onFinish(selectedRowKeys, selectedRows);
