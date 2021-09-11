@@ -36,8 +36,12 @@ export const HtmlField = observer((props: any) => {
       // console.log('onImageUploadStop==>')
     },
     onChange: (valueFun: any) => {
-      const value = valueFun();
+      let value:any = valueFun();
       // console.log('onChange==>', value)
+      // fix required: true 失效的bug; 
+      if(value === '\\\n'){
+        value = ''
+      }
       onChange(value)
     },
     onFocus: () => {
