@@ -44,7 +44,12 @@ export type ObjectFormProps = {
   // showFooterToolbar?: boolean
 } & FormProps
 
-const dealWithMultipleFieldValue = (filedValue: any, isFieldMultiple: any)=>{
+const dealWithMultipleFieldValue = (filedValue: any, fieldSchema: any)=>{
+  const isFieldMultiple = fieldSchema?.multiple;
+  const isInTypes = ["lookup", "master_detail", "select", "image", "file"];
+  if(isInTypes.indexOf(fieldSchema.type) < 0){
+    return filedValue;
+  }
   if(isFieldMultiple && !isArray(filedValue)){
     // 单选字段有值后 将其改为多选
     if(filedValue){
@@ -130,8 +135,7 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
       const formFields = mergedSchema.fields
       forEach(fieldNames, (fieldName:any)=>{
         let filedValue = record[fieldName];
-        const isFieldMultiple = formFields[fieldName]?.multiple;
-        filedValue = dealWithMultipleFieldValue(filedValue, isFieldMultiple);
+        filedValue = dealWithMultipleFieldValue(filedValue, formFields[fieldName]);
         // 字段值为null等也传过去, null表示往数据库存空值。
         if (filedValue !== undefined ){
           defaultValues[fieldName] = filedValue;
