@@ -51,9 +51,30 @@ export const HtmlField = observer((props: any) => {
       // console.log('onBlur==>')
     },
     dictionary:{
-      // newLineEmpty: '输入“/”以插入…',
+      newLineEmpty: '输入“/”以插入…',
       /* imageCaptionPlaceholde: '撰写一个标题',
       newLineWithSlash: 'newLineWithSlash' */
+      h1: "主标题",
+      h2: "次标题",
+      h3: "小标题",
+      checkboxList: "任务列表",
+      bulletList: "无序列表",
+      orderedList: "有序列表",
+      table: "表格",
+      quote: "引用",
+      codeBlock: "代码块",
+      hr: "分割线",
+      pageBreak: "分页符",
+      image: "图片",
+      // imageUploadError: "Sorry, an error occurred uploading the image",
+      imageCaptionPlaceholder: "撰写一个标题",
+      link: "链接",
+      info: "信息",
+      infoNotice: "提示信息",
+      warning: "警告",
+      warningNotice: "警告信息",
+      tip: "提示",
+      tipNotice: "提示信息",
     }
   };
   const className = props?.className ? `rich-markdown-editor ${props?.className}` : 'rich-markdown-editor';
