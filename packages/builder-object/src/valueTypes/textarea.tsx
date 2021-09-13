@@ -16,8 +16,15 @@ export const textarea = {
     )
   },
   renderFormItem: (text: any, props: any) => {
+    const { fieldProps } = props;
+    const { field_schema } = fieldProps;
+    const { rows } = field_schema;
+    let newFieldProps =  fieldProps;
+    if(typeof rows === 'number'){
+      newFieldProps = Object.assign({}, fieldProps , {rows})
+    }
     return (
-      <FieldTextArea text={text as string} {...props} />
+      <FieldTextArea text={text as string} {...props} fieldProps={newFieldProps}/>
     )
   }
 }
