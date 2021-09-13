@@ -8,7 +8,7 @@ import "./html.less"
 export const HtmlField = observer((props: any) => {
   const { fieldProps = {}, mode, text, fileType, name } = props;
   const { onChange, field_schema } = fieldProps;
-  const { readOnly } = field_schema;
+  const { readOnly, defaultValue } = field_schema;
 
   // 每次执行 fieldProps.onChange 时只传更新的值到form中去， 不更新该字段的value（不render）。
   const value = useMemo(() => {
@@ -28,6 +28,7 @@ export const HtmlField = observer((props: any) => {
   const propsOther = {
     id: 'fieldHtml',
     readOnly: mode === 'read' ? true : readOnly,
+    defaultValue: defaultValue,
     onImageUploadStart: () => {
       // console.log('onImageUploadStart==>')
     },
