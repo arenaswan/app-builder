@@ -4,6 +4,7 @@ import FieldSelect from '@ant-design/pro-field/es/components/Select';
 import { safeRunFunction } from '@steedos/builder-sdk';
 import { observer } from "mobx-react-lite";
 import { SteedosIcon } from '@steedos/builder-lightning';
+import styled from 'styled-components'
 import "./select.less"
 
 const hexToRgb = (hex)=>{
@@ -35,6 +36,20 @@ const _pickTextColorBasedOnBgColorAdvanced = (bgColor, lightColor, darkColor)=>{
     return lightColor;
   }
 };
+
+let ColorSpan = styled.span`
+  border-radius: 10px;
+  padding: 2px 6px;
+  border: 1px;
+  vertical-align: middle;
+  &.select-multiple{
+      margin-right:1px;
+      @media (max-width: 767px) {
+        margin-right:4px;
+      }
+  }
+`;
+
 export const SelectField = observer((props: any) => {
   const { valueType, mode, fieldProps = {}, form, ...rest } = props;
   const [params, setParams] = useState({ open: false, openTag: null });
@@ -88,9 +103,9 @@ export const SelectField = observer((props: any) => {
       return (
         <React.Fragment key={tagItem.value}>
           {index > 0 && ' '}
-          <span style={{ ...colorStyle }} className={selectClassNames.join(" ")} >
+          <ColorSpan style={{ ...colorStyle }} className={selectClassNames.join(" ")} >
             {tagItem.label}
-          </span>
+          </ColorSpan>
         </React.Fragment>
       )
     });
