@@ -1,9 +1,7 @@
 import { isEqual, extend, map, sortBy, findIndex, filter, pick, omit } from "lodash";
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
-import Modal from "antd/lib/modal";
-import Select from "antd/lib/select";
-import Input from "antd/lib/input";
+import { Modal, Select, Input } from 'antd';
 import { wrap as wrapDialog, DialogPropType } from "../DialogWrapper";
 import Filters, { filterData } from "../Filters";
 import notification from "../notification";

@@ -2,7 +2,7 @@ import { map, includes, groupBy, first, find } from "lodash";
 import React, { useState, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import Select from "antd/lib/select";
-import Modal from "antd/lib/modal";
+import { Modal } from 'antd';
 import { wrap as wrapDialog, DialogPropType } from "../DialogWrapper";
 import { MappingType, ParameterMappingListInput } from "../ParameterMappingInput";
 import QuerySelector from "../QuerySelector";

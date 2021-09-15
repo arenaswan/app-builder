@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "antd/lib/button";
-import Modal from "antd/lib/modal";
+import { Modal, Button } from 'antd';
 import { wrap as wrapDialog, DialogPropType } from "../DialogWrapper";
 import { FiltersType } from "../Filters";
 import VisualizationRenderer from "../visualizations/VisualizationRenderer";
