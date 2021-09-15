@@ -38,10 +38,11 @@ const _pickTextColorBasedOnBgColorAdvanced = (bgColor, lightColor, darkColor)=>{
 };
 
 let ColorSpan = styled.span`
-  border-radius: 10px;
-  padding: 2px 6px;
-  border: 1px;
-  vertical-align: middle;
+  &.select-color{
+    border-radius: 10px;
+    padding: 2px 6px;
+    border: 1px;
+  }
   &.select-multiple{
       margin-right:1px;
       @media (max-width: 767px) {
@@ -89,7 +90,7 @@ export const SelectField = observer((props: any) => {
       tags.sort((m,n)=>{return value.indexOf(m.value) - value.indexOf(n.value)})
     }
     const tagsDom = tags.map((tagItem, index) => {
-      let selectClassNames: string[] = [];
+      let selectClassNames: string[] = ["select-container"];
       let colorStyle: any={};
       if (tagItem.color && tagItem.color.length) {
         colorStyle.background = '#' + tagItem.color;
