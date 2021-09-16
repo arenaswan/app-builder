@@ -131,6 +131,30 @@ const getField = (objectSchema, fieldName: any)=>{
   }, objectSchema.fields)
 }
 
+const getFieldMinWidth = (field: any)=>{
+  const fieldType = field.type;
+  let result = 80;
+  if(["text", "textarea", "select", "lookup", "master_detail", "autonumber", "url", "email", "image", "file"].indexOf(fieldType) > -1){
+    result = 100
+  }
+  else if(["date"].indexOf(fieldType) > -1){
+    result = 110
+  }
+  else if(["datetime"].indexOf(fieldType) > -1){
+    result = 150
+  }
+  else if(["html"].indexOf(fieldType) > -1){
+    result = 200
+  }
+  else if(["formula", "summary", "number", "percent"].indexOf(fieldType) > -1){
+    result = 80
+  }
+  if(field.is_wide){
+    result = 200;
+  }
+  return result;
+}
+
 export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
 
   const {
@@ -523,6 +547,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         autoHeight = true;
       }
 
+      const minWidth = getFieldMinWidth(field);
+
       columns.push({
         field: fieldName,
         hide: hideInTable,
@@ -530,7 +556,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         autoHeight,
         headerName: field.label ? field.label:fieldName,
         width: columnWidth,
-        minWidth: 60,
+        minWidth,
         // minWidth: columnWidth ? columnWidth : 60,
         resizable: true,
         filter,
