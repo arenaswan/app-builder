@@ -413,9 +413,10 @@ export default class SteedosClient {
       
         // eslint-disable-next-line no-undef
         if (option.file instanceof Blob) {
-          formData.append(option.filename, option.file, (option.file as any).name);
+            // TODO: 突然不支持第三个参数，暂时注释掉， 不影响功能。官网介绍：https://developer.mozilla.org/zh-CN/docs/Web/API/FormData/append
+          //   formData.append(option.filename, option.file, (option.file as any).name);
+          formData.append(option.filename, option.file);
         } else {
-
           formData.append(option.filename, option.file);
         }
       
