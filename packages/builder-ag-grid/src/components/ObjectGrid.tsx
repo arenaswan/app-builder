@@ -135,7 +135,7 @@ const getFieldMinWidth = (field: any)=>{
   const fieldType = field.type;
   let result = 80;
   if(["text", "textarea", "select", "lookup", "master_detail", "autonumber", "url", "email", "image", "file"].indexOf(fieldType) > -1){
-    result = 100
+    result = 110
   }
   else if(["date"].indexOf(fieldType) > -1){
     result = 110
@@ -144,13 +144,13 @@ const getFieldMinWidth = (field: any)=>{
     result = 150
   }
   else if(["html"].indexOf(fieldType) > -1){
-    result = 200
+    result = 220
   }
   else if(["formula", "summary", "number", "percent"].indexOf(fieldType) > -1){
     result = 80
   }
   if(field.is_wide){
-    result = 200;
+    result = 220;
   }
   return result;
 }
@@ -528,11 +528,11 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
       }
       let columnWidth = (columnItem as any).width;
       if(!columnWidth && field.is_wide){
-        columnWidth = 300;
+        columnWidth = 220;
       }
-      let columnFlex;
-      if(!columnWidth){
-        columnFlex = 1;
+      let columnFlex = 1;
+      if(field.is_wide){
+        columnFlex = 2;
       }
       // console.log("===field.is_wide===", field.is_wide, fieldName);
       // console.log("===fieldWidth===", columnWidth, fieldName);
