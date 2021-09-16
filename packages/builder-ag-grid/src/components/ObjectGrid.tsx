@@ -170,6 +170,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   const [isGridReady, setIsGridReady] = useState(false);
   const [gridHeight, setGridHeight] = useState(DEFAULT_GRID_HEIGHT as string | number);
   const [isDataEmpty, setIsDataEmpty] = useState(false);
+  let widthOfAllColumnsForFitSize = 0;
   let pagination = defaultPagination;
   let isInfinite = defaultIsInfinite;
   // const isInfinite = rowModelType === "infinite";
@@ -403,6 +404,18 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     }
   };
 
+  const onGridSizeChanged = (params)=>{
+    // console.log("===onGridSizeChanged=1==", params.api.getHorizontalPixelRange());
+    // console.log("===onGridSizeChanged=2==", document.getElementsByClassName("ag-theme-balham")[0].clientWidth);
+    // 自动调整各个列宽使其满屏显示，当出现水平滚动条即widthOfAllColumnsForFitSize < gridWidth时，不执行sizeColumnsToFit自动调整宽度
+    const {left: scrollLeft, right: scrollRight} = params.api.getHorizontalPixelRange();
+    const gridWidth = scrollRight - scrollLeft;
+    // console.log("===onGridSizeChanged=3==", widthOfAllColumnsForFitSize, gridWidth, widthOfAllColumnsForFitSize < gridWidth);
+    if(widthOfAllColumnsForFitSize > 0  && widthOfAllColumnsForFitSize < gridWidth){
+      params.api.sizeColumnsToFit();
+    }
+  }
+
   const getColumns = (rowButtons)=>{
     const showSortNumber = !isMobile;
     let width = checkboxSelection ? 80 : 50;
@@ -517,7 +530,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         autoHeight,
         headerName: field.label ? field.label:fieldName,
         width: columnWidth,
-        minWidth: columnWidth ? columnWidth : 60,
+        minWidth: 60,
+        // minWidth: columnWidth ? columnWidth : 60,
         resizable: true,
         filter,
         sort: fieldSort ? fieldSort.order : undefined,
@@ -554,6 +568,24 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         }
       })
     });
+    
+    //处理列宽自动适应
+    widthOfAllColumnsForFitSize = 0;
+    let hasNoSetWidthColumns = false;
+    forEach(columns, (column)=>{
+      if (column.field && !column.hide) {
+        if(column.width){
+          widthOfAllColumnsForFitSize += column.width;
+        }
+        else{
+          hasNoSetWidthColumns = true;
+        }
+      }
+    });
+    if(hasNoSetWidthColumns){
+      // 不是每个列都设置了宽度的话，就不执行自动宽度逻辑，只有每个列都设置了宽度才按近似百分比的方式显示各个列宽度
+      widthOfAllColumnsForFitSize = 0;
+    }
 
     //处理filters depend_on  
     map(columns, (column)=>{
@@ -713,6 +745,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         rowModelType={rowModelType}
         rowBuffer={0}//该参数默认值为10，ag-grid infinite-scrolling官网示例中该参数为0
         onGridReady={onGridReady}
+        onGridSizeChanged={onGridSizeChanged}
         pagination={pagination}
         onSortChanged={onSortChanged}
         onFilterChanged={onFilterChanged}
