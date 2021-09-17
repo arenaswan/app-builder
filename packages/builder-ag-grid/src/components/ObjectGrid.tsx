@@ -155,6 +155,40 @@ const getFieldMinWidth = (field: any)=>{
   return result;
 }
 
+const getCellValueForClipboard = (event: any)=>{
+  let value = event.value;
+  if(isArray(value)){
+    const fieldSchema = event.column?.colDef?.cellEditorParams?.fieldSchema
+    console.log(`fieldSchema`, fieldSchema)
+    if(fieldSchema && fieldSchema.multiple){
+      value = value.join(',');
+    }
+  }
+  return value;
+}
+
+const getCellValueFromClipboard = (event: any, forceFieldType?: string)=>{
+  let value = event.value;
+  if(isString(value) && value){
+    const fieldSchema = event.column?.colDef?.cellEditorParams?.fieldSchema;
+    const fileType = forceFieldType || fieldSchema.type;
+    if(fieldSchema && fieldSchema.multiple){
+      value = value.split(',');
+    }
+    if(["number", "currency", "percent"].indexOf(fileType) > -1){
+      value = Number(value);
+    }
+    else if(["boolean", "toggle"].indexOf(fileType) > -1){
+      value = value === "true";
+    }
+    else if(["formula", "summary"].indexOf(fileType) > -1){
+      // 公式和汇总字段是只读的，不需要处理
+      // value = getCellValueFromClipboard(event, fieldSchema.data_type);
+    }
+  }
+  return value;
+}
+
 export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
 
   const {
@@ -742,22 +776,12 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   // }
 
   const processCellForClipboard = (event)=>{
-    if(isArray(event.value)){
-      const fieldSchema = event.column?.colDef?.cellEditorParams?.fieldSchema
-      console.log(`fieldSchema`, fieldSchema)
-      if(fieldSchema && fieldSchema.multiple){
-        event.value = event.value.join(',')
-      }
-    }
+    event.value = getCellValueForClipboard(event);
     return event.value;
   }
+
   const processCellFromClipboard = (event)=>{
-    if(isString(event.value) && event.value){
-      const fieldSchema = event.column?.colDef?.cellEditorParams?.fieldSchema
-      if(fieldSchema && fieldSchema.multiple){
-        event.value = event.value.split(',')
-      }
-    }
+    event.value = getCellValueFromClipboard(event);
     return event.value;
   }
 
