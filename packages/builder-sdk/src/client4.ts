@@ -212,7 +212,11 @@ export default class SteedosClient {
         if (newOptions.headers) {
             Object.assign(headers, newOptions.headers);
         }
-
+        
+        if(!headers["Content-Type"]){
+            // markdown上传图片不允许有 默认值Content-Type， 当没有时浏览器会添加其及其正确的值boundary。
+            delete headers["Content-Type"];
+        }
         return {
             ...newOptions,
             headers,
@@ -325,189 +329,32 @@ export default class SteedosClient {
             {method: 'POST', body: JSON.stringify(body)},
         );
     };
-    // TODO: html 接口方案一： 功能正常，但是太复杂，需要优化
-    uploadFileAsync = (file) =>{ 
-        return new Promise((resolve, reject) => {
-            const options = {
-                action: this.getBaseRoute() + '/s3/' + 'images',
-                type: 'file',
-                method: 'post',
-                file: file,
-                filename: 'file',
-                data: {
-                    space: this.getSpaceId(),
-                    owner: this.getUserId()
-                },
-                headers: {
-                    'X-User-Id': this.getUserId(),
-                    'X-Auth-Token': this.getToken(),
-                },
-                onProgress: (e) => {
-                },
-                onSuccess: (ret: any, xhr: XMLHttpRequest) => {
-                    resolve(ret)
-                },
-                onError: (err, ret: any) => {
-                    reject(err)
-                },
-            }
-            this.uploadFile(options);
-        })
-    }
 
-    uploadFile = (option: any)=>{
-        // console.log('uploadFile==>',option, option.file)
-        const getError=(option: any, xhr: XMLHttpRequest)=>{
-            const msg = `cannot ${option.method} ${option.action} ${xhr.status}'`;
-            const err = new Error(msg) as any;
-            err.status = xhr.status;
-            err.method = option.method;
-            err.url = option.action;
-            return err;
-        }
-    
-        const getBody=(xhr: XMLHttpRequest)=>{
-            const text = xhr.responseText || xhr.response;
-            if (!text) {
-                return text;
-            }
-    
-            try {
-                return JSON.parse(text);
-            } catch (e) {
-                return text;
-            }
-        }
-
-        // eslint-disable-next-line no-undef
-        const xhr = new XMLHttpRequest();
-      
-        if (option.onProgress && xhr.upload) {
-          xhr.upload.onprogress = function progress(e: any) {
-            if (e.total > 0) {
-              e.percent = (e.loaded / e.total) * 100;
-            }
-            option.onProgress(e);
-          };
-        }
-      
-        // eslint-disable-next-line no-undef
-        const formData = new FormData();
-      
-        if (option.data) {
-          Object.keys(option.data).forEach(key => {
-            const value = option.data[key];
-            // support key-value array data
-            if (Array.isArray(value)) {
-              value.forEach(item => {
-                // { list: [ 11, 22 ] }
-                // formData.append('list[]', 11);
-                formData.append(`${key}[]`, item);
-              });
-              return;
-            }
-      
-            formData.append(key, option.data[key]);
-          });
-        }
-      
-        // eslint-disable-next-line no-undef
-        if (option.file instanceof Blob) {
-            // TODO: 突然不支持第三个参数，暂时注释掉， 不影响功能。官网介绍：https://developer.mozilla.org/zh-CN/docs/Web/API/FormData/append
-          //   formData.append(option.filename, option.file, (option.file as any).name);
-          formData.append(option.filename, option.file);
-        } else {
-          formData.append(option.filename, option.file);
-        }
-      
-        xhr.onerror = function error(e) {
-          option.onError(e);
-        };
-      
-        xhr.onload = function onload() {
-          // allow success when 2xx status
-          // see https://github.com/react-component/upload/issues/34
-          if (xhr.status < 200 || xhr.status >= 300) {
-            return option && option?.onError(getError(option, xhr), getBody(xhr));
-            // return null;
-          }
-      
-          return option.onSuccess(getBody(xhr), xhr);
-        };
-      
-        xhr.open(option.method, option.action, true);
-      
-        // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
-        if (option.withCredentials && 'withCredentials' in xhr) {
-          xhr.withCredentials = true;
-        }
-      
-        const headers = option.headers || {};
-      
-        // when set headers['X-Requested-With'] = null , can close default XHR header
-        // see https://github.com/react-component/upload/issues/33
-        if (headers['X-Requested-With'] !== null) {
-          xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        }
-      
-        Object.keys(headers).forEach(h => {
-          if (headers[h] !== null) {
-            xhr.setRequestHeader(h, headers[h]);
-          }
-        });
-        // console.log('send==>',formData)
-        xhr.send(formData);
-      
-        return {
-          abort() {
-            xhr.abort();
-          },
-        };
-      }
-    /* TODO: html 接口方案二：功能无效，失败了，后续需要优化。   
     postS3File = async (file: any) => {
-        console.log('post==>', file, this.getSpaceId(), this.userId)
         const formData = new FormData();
         if (file.blob) {
-            // $FlowFixMe
-            formData.append("file", file.file);
+            // 突然不支持第三个参数，暂时注释掉， 不影响功能。官网介绍：https://developer.mozilla.org/zh-CN/docs/Web/API/FormData/append
+            // formData.append("file", file, file.name);
+            formData.append("file", file);
         } else {
+            // 目前走的这块代码
             formData.append("file", file);
         }
         formData.append('space', this.getSpaceId());
         formData.append('owner', this.getUserId());
-        formData.append('Content-Type', 'application/json');
 
-        const uploadResponse = await fetch(`${this.getBaseRoute()}/s3/images`, {
-            method: "POST",
-            body: formData,
-            // type: 'file',
-            // 'Content-Type':'application/json',
-            // 'content-type': 'application/json',
-            // snow: 'big',
-            // contentType: file.type,
-            headers: {
-                // 'X-User-Id': Settings.userId,
-                // 'X-Auth-Token': Settings.authToken
-                'X-User-Id': this.getUserId(),
-                'X-Auth-Token': this.getToken(),
-                accept: 'application/json'
-                // 'Content-Type':'application/json'
-            }
-        });
-        return uploadResponse;
-        const auth: any = this.doFetch<UserProfile>(
+        return this.doFetch<UserProfile>(
             `${this.getBaseRoute()}/s3/images`,
             {
                 method: 'POST',
-                body: JSON.stringify({ file: file, space: this.getSpaceId(), owner: this.getUserId() }),
-                // body: JSON.stringify({ space: this.getSpaceId(), owner: this.getUserId()})
-                // body: JSON.stringify(fd),
+                body: formData,
+                headers: {
+                    'Content-Type': undefined
+                },
             }
         );
-        return auth
     };
-    */
+
     getSettings = () => {
         return this.doFetch<UserProfile>(
             `${this.getAccountsRoute()}/settings`,
