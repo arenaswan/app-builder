@@ -1,6 +1,4 @@
 // @flow
-import { observable } from "mobx";
-import { OpenIcon } from "outline-icons";
 import * as React from "react";
 import styled from "styled-components";
 
@@ -28,7 +26,6 @@ class Frame extends React.Component<Props> {
 
   componentDidMount() {
     this.mounted = true;
-    console.log(`componentDidMount`, this.mounted)
     setImmediate(this.loadIframe);
   }
 
@@ -78,21 +75,6 @@ class Frame extends React.Component<Props> {
             src={src}
             allowFullScreen
           />
-        {withBar && (
-          <Bar align="center" theme={theme}>
-            {icon} <Title>{title}</Title>
-            {canonicalUrl && (
-              <Open
-                href={canonicalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                theme={theme}
-              >
-                <OpenIcon color="currentColor" size={18} /> Open
-              </Open>
-            )}
-          </Bar>
-        )}
       </Rounded>
     );
   }

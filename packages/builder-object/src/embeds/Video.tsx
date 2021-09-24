@@ -12,7 +12,6 @@ export default class Video extends React.Component<any> {
     const { attrs } = this.props;
     const src = attrs.href.replace('/videos/', '/embed/videos/')
     const Component: any = Frame;
-    console.log(`this.props`, this.props)
     return (
       <Component
         {...this.props}
