@@ -18,6 +18,11 @@ export const FormModal = () => {
           type: 'text',
           label: "名称"
         },
+        html: {
+          type: 'html',
+          is_wide: true,
+          label: "html"
+        },
         amount: {
           type: 'currency',
           label: "金额"

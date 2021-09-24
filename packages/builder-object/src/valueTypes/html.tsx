@@ -2,8 +2,32 @@ import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import { observer } from "mobx-react-lite";
 import Editor from "rich-markdown-editor";
 import { Settings, API } from '@steedos/builder-store';
-
+import Video from '../embeds/Video'
+import { VideoCameraOutlined } from "@ant-design/icons"
 import "./html.less"
+import { dark, light, lightMobile, darkMobile } from "../embeds/theme";
+
+function matcher(Component) {
+  return (url: string) => {
+    const regexes = Component.ENABLED;
+    for (const regex of regexes) {
+      const result = url.match(regex);
+      if (result) {
+        return result;
+      }
+    }
+  };
+}
+
+const embeds = [
+  {
+    title: "Site Video",
+    keywords: "steedos site video",
+    icon: () => <VideoCameraOutlined />,
+    component: Video,
+    matcher: matcher(Video),
+  }
+]
 
 export const HtmlField = observer((props: any) => {
   const { fieldProps = {}, mode, text, fileType, name } = props;
@@ -79,7 +103,7 @@ export const HtmlField = observer((props: any) => {
     }
   };
   const className = props?.className ? `rich-markdown-editor ${props?.className}` : 'rich-markdown-editor';
-  return (<Editor value={value} {...props} {...propsOther} className={className}/>)
+  return (<Editor theme={light} value={value} {...props} {...propsOther} className={className} embeds={embeds}/>)
 })
 
 export const html = {
