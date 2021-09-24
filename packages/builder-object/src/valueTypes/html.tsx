@@ -40,9 +40,7 @@ export const HtmlField = observer((props: any) => {
   }, []);
   const onUploadImage = useCallback(
     async (file: File) => {
-      const result = await API.client.uploadFileAsync(file);
-      // TODO: 接口方案二 有空就继续尝试。
-      // const result = await API.client.postS3File(file);
+      const result = await API.client.postS3File(file);
       const url = result['_id'] ? Settings.rootUrl + '/api/files/' + 'images' + '/' + result['_id'] : null;
       return url;
     },
