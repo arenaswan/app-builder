@@ -23,7 +23,7 @@ const embeds = [
   {
     title: "Site Video",
     keywords: "steedos site video",
-    icon: () => <VideoCameraOutlined />,
+    icon: () => <VideoCameraOutlined style={{margin: '4px', width:'18px', height: '18px'}}/>,
     component: Video,
     matcher: matcher(Video),
   }
