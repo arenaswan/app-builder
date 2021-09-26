@@ -1,6 +1,7 @@
 import { ObjectGrid, ObjectTreeGrid } from "@steedos/builder-ag-grid";
 import React, { useState, useRef } from 'react';
 import { Button, Input } from "antd"
+import { Form,Field } from '@steedos/builder-form';
 export default {
   title: "Object Table AG Grid",
 }
@@ -392,6 +393,148 @@ export const TreeGrid = () => {
   )
 }
 
+export const TreeGridWithFilters = () => {
+  const [textFilters, setTextFilters] = useState<any>(null)
+  return (
+    <div style={{height:'500px'}}>
+      <Input
+        onChange={(e) => {
+          let text = e.target.value;
+          console.log("changed text:", text);
+          if(text){
+            setTextFilters(["name", "contains", text]);
+          }
+          else{
+            setTextFilters(null);
+          }
+        }}
+      ></Input>
+      <ObjectTreeGrid 
+        objectApiName='organizations' 
+        sort="created desc,name desc"
+        filters={textFilters}
+        columnFields={
+          [
+            {
+              fieldName: 'name',
+              width: 240
+            },
+            {
+              fieldName: 'created',
+              width: 300
+            },
+            {
+              fieldName: 'created_by'
+            },
+          ]
+        }
+      >
+      </ObjectTreeGrid>
+    </div>
+  )
+}
+
+export const TreeGridWithRootKeys = () => {
+  const [treeRootKeys, setTreeRootKeys] = useState<any>(null)
+  return (
+    <div style={{height:'500px'}}>
+      <Form
+        submitter={false}
+        onValuesChange={(changeValues: any)=>{
+          console.log("===changeValues===", changeValues);
+          const rootKeys = changeValues.rootKeys;
+          setTreeRootKeys(rootKeys);
+        }}
+      >
+        <Field 
+          name="rootKeys"
+          valueType="lookup"
+          mode="edit"
+          placeholder="请选择根组织"
+          fieldSchema={{
+            reference_to: "organizations",
+            multiple: true
+          }}
+        />
+      </Form>
+      <ObjectTreeGrid 
+        objectApiName='organizations' 
+        sort="created desc,name desc"
+        treeRootKeys={treeRootKeys}
+        columnFields={
+          [
+            {
+              fieldName: 'name',
+              width: 240
+            },
+            {
+              fieldName: 'created',
+              width: 300
+            },
+            {
+              fieldName: 'created_by'
+            },
+          ]
+        }
+      >
+      </ObjectTreeGrid>
+    </div>
+  )
+}
+
+export const TreeGridWithRootFilters = () => {
+  const [treeRootFilters, setTreeRootFilters] = useState<any>(null)
+  return (
+    <div style={{height:'500px'}}>
+      <Form
+        submitter={false}
+        onValuesChange={(changeValues: any)=>{
+          console.log("===changeValues===", changeValues);
+          const rootKeys = changeValues.rootKeys;
+          if(rootKeys && rootKeys.length){
+            setTreeRootFilters(["parent", "=", rootKeys]);
+          }
+          else{
+            setTreeRootFilters(null);
+          }
+        }}
+      >
+        <Field 
+          name="rootKeys"
+          valueType="lookup"
+          mode="edit"
+          placeholder="请选择根组织"
+          fieldSchema={{
+            reference_to: "organizations",
+            multiple: true
+          }}
+        />
+      </Form>
+      <ObjectTreeGrid 
+        objectApiName='organizations' 
+        sort="created desc,name desc"
+        treeRootFilters={treeRootFilters}
+        // filters={textFilters}
+        columnFields={
+          [
+            {
+              fieldName: 'name',
+              width: 240
+            },
+            {
+              fieldName: 'created',
+              width: 300
+            },
+            {
+              fieldName: 'created_by'
+            },
+          ]
+        }
+      >
+      </ObjectTreeGrid>
+    </div>
+  )
+}
 
 export const SchemaGrid = () => {
   const rows = [{

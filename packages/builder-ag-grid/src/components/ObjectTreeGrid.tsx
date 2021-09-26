@@ -211,6 +211,7 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
     selectedRowKeys,
     rowKey = '_id',
     treeRootKeys,
+    treeRootFilters,
     objectSchema: defaultObjectSchema,
     rows,
     linkTarget,
@@ -382,12 +383,24 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
               filters = concatFilters(filters, [parentField, "=", groupKeys[groupKeys.length - 1]])
             }
             else{
-              // 根目录不可以加过滤条件，只能强制先加载根目录
+              // 根目录识别过滤条件逻辑
               if(treeRootKeys && treeRootKeys.length){
                 filters = ["_id", "=", treeRootKeys];
               }
+              else if(treeRootFilters && treeRootFilters.length){
+                // 支持单独为根目录配置过滤条件，该过滤条件只影响根目录
+                if(filters && filters.length){
+                  filters = [filters,treeRootFilters];
+                }
+                else{
+                  filters = treeRootFilters;
+                }
+              }
               else{
-                filters = [parentField, "=", null];
+                // 传入的filters也影响根目录过滤，未传入时取根节点
+                if(!filters || !filters.length){
+                  filters = [parentField, "=", null];
+                }
               }
             }
             // TODO 此处需要叠加处理 params.request.fieldModel
