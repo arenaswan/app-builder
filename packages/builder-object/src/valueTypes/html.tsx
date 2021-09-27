@@ -34,10 +34,15 @@ export const HtmlField = observer((props: any) => {
   const { onChange, field_schema } = fieldProps;
   const { readOnly, defaultValue } = field_schema;
 
-  // 每次执行 fieldProps.onChange 时只传更新的值到form中去， 不更新该字段的value（不render）。
-  const value = useMemo(() => {
-    return fieldProps.value || props.text;
-  }, []);
+  let value:any;
+  if(mode === 'read'){
+    value = fieldProps.value || props.text;
+  }else{
+    // 每次执行 fieldProps.onChange 时只传更新的值到form中去， 不更新该字段的value（不render）。
+    value = useMemo(() => {
+      return fieldProps.value || props.text;
+    }, []);
+  }
   const onUploadImage = useCallback(
     async (file: File) => {
       const result = await API.client.postS3File(file);
@@ -59,13 +64,13 @@ export const HtmlField = observer((props: any) => {
       // console.log('onImageUploadStop==>')
     },
     onChange: (valueFun: any) => {
-      let value:any = valueFun();
+      let updateValue:any = valueFun();
       // console.log('onChange==>', value)
       // fix required: true 失效的bug; 
-      if(value === '\\\n'){
-        value = ''
+      if(updateValue === '\\\n'){
+        updateValue = ''
       }
-      onChange(value)
+      onChange(updateValue)
     },
     onFocus: () => {
       // console.log('onFocus==>')
