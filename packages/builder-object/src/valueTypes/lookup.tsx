@@ -82,7 +82,8 @@ export const LookupField = observer((props:any) => {
         referenceToObject = Objects.getObject(referenceTo);
         if (referenceToObject.isLoading) return (<div><Spin/></div>);
         if(isEmpty(referenceToObject.schema)){
-            return (<Alert message="未找到引用的对象" type="warning" showIcon style={{padding: '4px 15px'}}/>)
+            return null;
+            // return (<Alert message="未找到引用的对象" type="warning" showIcon style={{padding: '4px 15px'}}/>)
         }
         referenceToObjectSchema = referenceToObject.schema;
         isAllowCreate = referenceToObject.getPermissions().allowCreate;
