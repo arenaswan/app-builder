@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import _ from "lodash"
 import { Checkbox, Button, Space } from 'antd';
+import './CellMultipleUpdatePanel.less'
 
 export const CellMultipleUpdatePanel = (props: any) => {
   const { 
