@@ -117,8 +117,8 @@ const CellMultipleUpdatePanel = (props: any) => {
             </Checkbox>
           </Space>
           <Space className="justify-end p-1 w-full ag-grid-multiple-update-footer">
-            <Button onClick={cancel}>取消</Button>
-            <Button onClick={doUpdate} type="primary">应用</Button>
+            <Button onClick={cancel} size="small">取消</Button>
+            <Button onClick={doUpdate} type="primary" size="small">应用</Button>
           </Space>
         </>
       )}
