@@ -402,11 +402,12 @@ export default class SteedosClient {
     };
 
     doFetchWithResponse = async <T>(url: string, options: Options): Promise<ClientResponse<T>> => {
-        const response = await fetch(url, this.getOptions(options));
-        const headers = parseAndMergeNestedHeaders(response.headers);
+        let response:any, headers:any;
 
         let data;
         try {
+            response = await fetch(url, this.getOptions(options));
+            headers = parseAndMergeNestedHeaders(response.headers);
             data = await response.json();
         } catch (err) {
             throw new ClientError(this.getUrl(), {

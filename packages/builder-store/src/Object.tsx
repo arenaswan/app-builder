@@ -32,6 +32,7 @@ export const RecordCache = types.model({
       self.permissions = yield API.requestRecordPermissions(self.objectApiName, self.id);
       self.isLoading = false
     } catch (err) {
+      self.isLoading = false
       console.error(`Failed to load record ${self.id} `, err)
     }
   });
@@ -76,6 +77,7 @@ export const RecordListCache = types.model({
       self.recordsJson = JSON.stringify(json)
       self.isLoading = false
     } catch (err) {
+      self.isLoading = false;
       console.error(`Failed to load record ${self.id} `, err)
     }
   })
@@ -102,6 +104,7 @@ export const ObjectModel = types.model({
       Creator.Objects[self.id] = self.schema
       return self
     } catch (err) {
+      self.isLoading = false
       console.error(`Failed to load object ${self.id} `, err)
     }
   })

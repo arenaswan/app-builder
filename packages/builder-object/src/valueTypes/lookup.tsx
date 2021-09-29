@@ -1,6 +1,6 @@
 import React, { useState , useRef, useEffect} from "react";
 import { formatFiltersToODataQuery } from '@steedos/filters';
-import { Select, Spin } from 'antd';
+import { Select, Spin, Alert } from 'antd';
 import "antd/es/tree-select/style/index.css";
 import { isFunction, isArray, isObject, uniq, filter, map, forEach, isString, isEmpty, concat, isBoolean } from 'lodash';
 import { concatFilters } from '@steedos/builder-sdk';
@@ -81,6 +81,9 @@ export const LookupField = observer((props:any) => {
     if(referenceTo){
         referenceToObject = Objects.getObject(referenceTo);
         if (referenceToObject.isLoading) return (<div><Spin/></div>);
+        if(isEmpty(referenceToObject.schema)){
+            return (<Alert message="未找到引用的对象" type="warning" showIcon style={{padding: '4px 15px'}}/>)
+        }
         referenceToObjectSchema = referenceToObject.schema;
         isAllowCreate = referenceToObject.getPermissions().allowCreate;
         referenceToLableField = referenceToObjectSchema["NAME_FIELD_KEY"] ? referenceToObjectSchema["NAME_FIELD_KEY"] : "name";
