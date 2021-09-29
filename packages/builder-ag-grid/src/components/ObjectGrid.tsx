@@ -564,9 +564,12 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
       if(!columnWidth && field.is_wide){
         columnWidth = 220;
       }
-      let columnFlex = 1;
-      if(field.is_wide){
-        columnFlex = 2;
+      let columnFlex:any;
+      if(!columnWidth){
+        columnFlex = 1;
+        if(field.is_wide){
+          columnFlex = 2;
+        }
       }
       // console.log("===field.is_wide===", field.is_wide, fieldName);
       // console.log("===fieldWidth===", columnWidth, fieldName);
