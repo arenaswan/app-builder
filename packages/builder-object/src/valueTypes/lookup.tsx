@@ -2,7 +2,7 @@ import React, { useState , useRef, useEffect} from "react";
 import { formatFiltersToODataQuery } from '@steedos/filters';
 import { Select, Spin, Alert } from 'antd';
 import "antd/es/tree-select/style/index.css";
-import { isFunction, isArray, isObject, uniq, filter, map, forEach, isString, isEmpty, concat, isBoolean } from 'lodash';
+import { isFunction, isArray, isObject, uniq, filter, map, forEach, isString, isEmpty, concat, isBoolean, find } from 'lodash';
 import { concatFilters } from '@steedos/builder-sdk';
 import { Objects, API, Settings } from '@steedos/builder-store';
 import { observer } from "mobx-react-lite";
@@ -82,6 +82,9 @@ export const LookupField = observer((props:any) => {
         referenceToObject = Objects.getObject(referenceTo);
         if (referenceToObject.isLoading) return (<div><Spin/></div>);
         if(isEmpty(referenceToObject.schema)){
+            if(fieldValue){
+                return <Link target='_blank' to={getObjectRecordUrl(referenceTo, fieldValue)} className="text-blue-600 hover:text-blue-500 hover:underline">[无此记录]</Link>
+            }
             return null;
             // return (<Alert message="未找到引用的对象" type="warning" showIcon style={{padding: '4px 15px'}}/>)
         }
@@ -138,6 +141,20 @@ export const LookupField = observer((props:any) => {
             if (multiple && fieldValue.length > 1) {
                 tags.sort((m,n)=>{return fieldValue.indexOf(m.value) - fieldValue.indexOf(n.value)})
             }
+        }
+        if(multiple){
+            if(isArray(fieldValue) && fieldValue.length != tags.length){
+                tags = map(fieldValue,(val)=>{
+                    const filterValue = find(tags,{value: val});
+                    if(filterValue){
+                        return filterValue
+                    }else{
+                        return { value: val , label: '[无此记录]'}
+                    }
+                })
+            }
+        }else if(fieldValue && tags.length == 0){
+            tags = [{value: fieldValue, label: '[无此记录]'}]
         }
         return (<React.Fragment>{tags.map((tagItem, index)=>{return (
             <React.Fragment key={tagItem.value}>
