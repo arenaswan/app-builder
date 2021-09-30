@@ -684,16 +684,22 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     return columns
   }
 
+  const onCellEditingStopped = (params) => {
+    // console.log("====onCellEditingStopped===params===", params, name);
+    setTimeout(function(){
+      if(!isEmpty(editedMap)){
+        (document.getElementsByClassName(`grid-action-drawer-${name}`)[0] as any).style.display=''
+      }
+    }, 300)
+  }
+
   const onCellValueChanged = (params) => {
+    // console.log("====onCellValueChanged===params===", params, name);
     // 这里赋值有延迟，转移到 CellEditor
     if(!editedMap[params.data._id]){
       editedMap[params.data._id] = {};
     }
     editedMap[params.data._id][params.colDef.field] = params.value;
-    setTimeout(function(){
-      // setDrawerVisible(true);
-      (document.getElementsByClassName(`grid-action-drawer-${name}`)[0] as any).style.display=''
-    }, 300)
     // if(!params.colDef.editedMap){
     //   params.colDef.editedMap = {};
     // }
@@ -823,6 +829,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         sideBar={sideBar}
         undoRedoCellEditing={true}
         onCellValueChanged={onCellValueChanged}
+        onCellEditingStopped={onCellEditingStopped}
         onRowValueChanged={onRowValueChanged}
         onRowSelected={onRowSelected}
         context={{editedMap: editedMap}}
