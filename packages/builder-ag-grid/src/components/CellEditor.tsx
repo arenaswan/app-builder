@@ -2,7 +2,7 @@ import React, { useContext, useRef, useEffect, useState, useImperativeHandle, fo
 import _ from "lodash"
 import ProField from "@ant-design/pro-field";
 import { Checkbox, Button, Space } from 'antd';
-import { CellMultipleUpdatePanel } from './CellMultipleUpdatePanel';
+// import { CellMultipleUpdatePanel } from './CellMultipleUpdatePanel';
 
 function getParentsClassName(element, classNames=[]){
   if(element){
@@ -135,7 +135,7 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
           form={form}
           allowClear={false}
         />
-        <CellMultipleUpdatePanel cellProps={props} value={value} setValue={setValue} context={context} />
+        {/* <CellMultipleUpdatePanel cellProps={props} value={value} setValue={setValue} context={context} /> */}
       </div>
     </section>
   ) 
