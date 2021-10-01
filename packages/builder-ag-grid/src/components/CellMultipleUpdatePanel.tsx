@@ -1,7 +1,15 @@
 import React, { useState } from "react"
 import _ from "lodash"
 import { Checkbox, Button, Space } from 'antd';
-import './CellMultipleUpdatePanel.less'
+import './CellMultipleUpdatePanel.less';
+
+export const getIsMultipleUpdatable = (selectedRows: any, currentRowId: string)=>{
+  const currentSelectedRow = selectedRows.find((row: any)=>{
+    return row.data._id === currentRowId;
+  });
+  // 当前正在编辑的列所属行勾选上了，并且至少勾选了2行才显示批量更新按钮。
+  return currentSelectedRow && selectedRows.length > 1;
+}
 
 export const CellMultipleUpdatePanel = (props: any) => {
   const { 
@@ -15,11 +23,9 @@ export const CellMultipleUpdatePanel = (props: any) => {
   const selectedRows = cellProps.api.getSelectedNodes();
   const colField = cellProps.colDef.field;
   const rowId = cellProps.data._id;
-  const currentSelectedRow = selectedRows.find((row: any)=>{
-    return row.data._id === rowId;
-  });
+
   // 当前正在编辑的列所属行勾选上了，并且至少勾选了2行才显示批量更新按钮。
-  const isMultipleUpdatable = currentSelectedRow && selectedRows.length > 1;
+  const isMultipleUpdatable = getIsMultipleUpdatable(selectedRows, rowId);
   
   function onMultipleUpdateEnableChange(e) {
     // console.log("===onMultipleUpdateChange===");
@@ -43,6 +49,7 @@ export const CellMultipleUpdatePanel = (props: any) => {
         row.setData(Object.assign({},row.data, {[colField]:value}));
       }
     });
+    // cellProps.api.setValue(value);
     // setTimeout(() => cellProps.api.stopEditing(false), 300);
     // console.log("===doUpdate==value====", value);
     // console.log("===doUpdate==editedMap====", editedMap);

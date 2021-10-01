@@ -2,7 +2,7 @@ import React, { useContext, useRef, useEffect, useState, useImperativeHandle, fo
 import _ from "lodash"
 import ProField from "@ant-design/pro-field";
 import { Checkbox, Button, Space } from 'antd';
-import { CellMultipleUpdatePanel } from './CellMultipleUpdatePanel';
+import { CellMultipleUpdatePanel, getIsMultipleUpdatable } from './CellMultipleUpdatePanel';
 
 function getParentsClassName(element, classNames=[]){
   if(element){
@@ -14,12 +14,16 @@ function getParentsClassName(element, classNames=[]){
   return classNames
 }
 
-function useOnClickOutside(ref, handler) {
+function useOnClickOutside(ref, isMultipleUpdatable, handler) {
   useEffect(
     () => {
       const listener = (event) => {
         // Do nothing if clicking ref's element or descendent elements
         if (!ref.current || ref.current.contains(event.target)) {
+          return;
+        }
+        if(isMultipleUpdatable){
+          // 表格单元格批量编辑时，所有字段操作都不自动退出编辑，统一由字段底下的应用操作
           return;
         }
         const target = event.target;
@@ -36,6 +40,7 @@ function useOnClickOutside(ref, handler) {
         // if(target.closest('.ag-grid-multiple-update-footer')){
         //   return; 
         // }
+        // console.log("=====handler====");
         handler(event);
       };
       document.addEventListener("mousedown", listener);
@@ -78,7 +83,9 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
     }; 
   });
 
-  useOnClickOutside(refEditor, (e) => {
+  const isMultipleUpdatable = getIsMultipleUpdatable(props.api.getSelectedNodes(), props.data._id);
+
+  useOnClickOutside(refEditor, isMultipleUpdatable, (e) => {
     setTimeout(() => props.api.stopEditing(false), 300);
   });
 
@@ -109,18 +116,35 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
               }
               editedMap[props.data._id][props.colDef.field] = newValue;
             }
+            
+            if(isMultipleUpdatable){
+              // 表格单元格批量编辑时，所有字段操作都不自动退出编辑，统一由字段底下的应用操作
+              return;
+            }
+            
             if (['lookup','select','master_detail'].indexOf(valueType)>=0 && fieldSchema.multiple != true){
               return setTimeout(() => props.api.stopEditing(false), 100);
             }
 
             if(fieldSchema.multiple != true){
               if(element?.target && document.activeElement === element.target){
-                // console.log("==document.activeElement,element.target===", document.activeElement,element.target);
+              // if(element?.target && document.activeElement.closest('.ag-popup-editor.ag-popup-child')){
+                console.log("==document.activeElement,element.target===1===", document.activeElement,element.target);
                 const IntervalID = setInterval(()=>{
                   if(document.activeElement != element.target){
-                    if(document.activeElement.closest('.ag-grid-multiple-update-chckbox')){
-                      return;
-                    }
+                  // if(!document.activeElement.closest('.ag-popup-editor.ag-popup-child')){
+                    console.log("==document.activeElement,element.target====2===", document.activeElement,element.target);
+                    // if(document.activeElement.closest('.ag-grid-multiple-update-chckbox')){
+                    //   return;
+                    // }
+                    // if(document.activeElement.closest('.ag-grid-multiple-update-footer')){
+                    //   return;
+                    // }
+                    // if(document.activeElement.closest('.ag-popup-editor.ag-popup-child')){
+                    //   return;
+                    // }
+                    // console.log("==document.activeElement,element.target====3===", document.activeElement,element.target);
+                    // console.log("==clearInterval===");
                     props.api.stopEditing(false);
                     clearInterval(IntervalID);
                   }
