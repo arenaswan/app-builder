@@ -855,13 +855,13 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         visible={true}
         mask={false}
         maskClosable={false}
-        style={{height: "60px", display: "none"}}
-        bodyStyle={{padding: "12px", textAlign: "center"}}
+        style={{height: "48px", display: "none"}}
+        bodyStyle={{padding: "8px", textAlign: "center", background: "rgb(243, 242, 242)"}}
         className={`grid-action-drawer-${name}`}
       >
         <Space>
           <Button onClick={cancel}>取消</Button>
-          <Button onClick={updateMany} type="primary" >确定</Button>
+          <Button onClick={updateMany} type="primary" >保存</Button>
         </Space>
       </Drawer>
     </div>
