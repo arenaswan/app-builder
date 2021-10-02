@@ -50,7 +50,7 @@ export const CellMultipleUpdatePanel = (props: any) => {
       }
     });
     // cellProps.api.setValue(value);
-    // setTimeout(() => cellProps.api.stopEditing(false), 300);
+    setTimeout(() => cellProps.api.stopEditing(false), 300);
     // console.log("===doUpdate==value====", value);
     // console.log("===doUpdate==editedMap====", editedMap);
   }
@@ -61,7 +61,7 @@ export const CellMultipleUpdatePanel = (props: any) => {
     delete editedMap[rowId][colField];
     setValue(cellProps.value);
     // currentSelectedRow.setData(Object.assign({}, currentSelectedRow.data, {[colField]:cellProps.value}));
-    // cellProps.api.stopEditing(false);
+    setTimeout(() => cellProps.api.stopEditing(false), 300);
   }
   return (
     <>
