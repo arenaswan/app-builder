@@ -2,7 +2,7 @@ import React, { useState , useRef, useEffect} from "react";
 import { formatFiltersToODataQuery } from '@steedos/filters';
 import { Select, Spin, Alert } from 'antd';
 import "antd/es/tree-select/style/index.css";
-import { isFunction, isArray, isObject, uniq, filter, map, forEach, isString, isEmpty, concat, isBoolean, find } from 'lodash';
+import { isFunction, isArray, isObject, uniq, filter, map, forEach, isString, isEmpty, concat, isBoolean, find, isNil } from 'lodash';
 import { concatFilters } from '@steedos/builder-sdk';
 import { Objects, API, Settings } from '@steedos/builder-store';
 import { observer } from "mobx-react-lite";
@@ -153,8 +153,12 @@ export const LookupField = observer((props:any) => {
                     }
                 })
             }
-        }else if(fieldValue && tags.length == 0){
-            tags = [{value: fieldValue, label: '[无此记录]'}]
+        }else if(tags.length == 0){
+            if(!isNil(fieldValue) && !(isArray(fieldValue) && fieldValue.length === 0)){
+                // fieldValue不为空就显示[无此记录]，0/false值不是空值，要显示[无此记录]
+                // fieldValue在reference_to为数组时，无论单选多选，network返回的是{o: "accounts", ids: []}这种格式，fieldValue值是其ids属性值，如果为空数组才表示值为空
+                tags = [{value: fieldValue, label: '[无此记录]'}];
+            }
         }
         return (<React.Fragment>{tags.map((tagItem, index)=>{return (
             <React.Fragment key={tagItem.value}>
