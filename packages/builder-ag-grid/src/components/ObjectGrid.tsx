@@ -685,9 +685,9 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   }
 
   const onCellEditingStopped = (params) => {
-    // console.log("====onCellEditingStopped===params===", params, name);
+    // console.log("====onCellEditingStopped===params===", params, name, editedMap);
     setTimeout(function(){
-      if(!isEmpty(editedMap)){
+      if(!isEmpty(editedMap) && !isEmpty(editedMap[params.data._id])){
         (document.getElementsByClassName(`grid-action-drawer-${name}`)[0] as any).style.display=''
       }
     }, 300)
