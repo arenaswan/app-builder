@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { forEach, compact, filter, includes, keys, map, isEmpty, isFunction, isObject, uniq, find, sortBy, reverse, clone, isArray, isString } from 'lodash';
+import { forEach, compact, filter, includes, keys, map, isEmpty, isFunction, isObject, uniq, find, sortBy, reverse, clone, isArray, isString, isBoolean } from 'lodash';
 import useAntdMediaQuery from 'use-media-antd-query';
 import { observer } from "mobx-react-lite"
 import { Objects, API } from "@steedos/builder-store"
@@ -22,6 +22,7 @@ import { AG_GRID_LOCALE_ZH_CN } from '../locales/locale.zh-CN'
 import { Tables } from '@steedos/builder-store';
 import { message } from 'antd';
 import { translate } from '@steedos/builder-sdk';
+import { getObjectNameFieldKey } from '@steedos/builder-sdk';
 
 import './ObjectGrid.less'
 
@@ -48,6 +49,8 @@ export type ObjectGridProps<T extends ObjectGridColumnProps> =
       isInfinite?: boolean//是否使用滚动翻页模式，即rowModelType是否为infinite
       autoFixHeight?: boolean//当isInfinite且记录总数量大于pageSize时，自动把Grid高度设置为pageSize行的总高度，即rowHeight*pageSize
       autoHideForEmptyData: boolean//当数据为空时自动隐藏整个Grid记录详细界面子表需要该属性
+      filtersTransform: Function//Datasource
+      showSortNumber: boolean//显示第一列勾选框中的序号数值
       // filterableFields?: [string]
     } & {
       defaultClassName?: string
@@ -189,6 +192,20 @@ const getCellValueFromClipboard = (event: any, forceFieldType?: string)=>{
   return value;
 }
 
+const getSortModel = (objectSchema: any, sortModel: any)=>{
+  return sortModel.map((model: any)=>{
+    if(model.colId === "ag-Grid-AutoColumn"){
+      // tree模式下无法把group的field名称识别为colId，需要转换下
+      return Object.assign({}, model, {
+        colId: getObjectNameFieldKey(objectSchema)
+      });
+    }
+    else{
+      return model;
+    }
+  });
+}
+
 export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
 
   const {
@@ -222,6 +239,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     autoClearSelectedRows = true,
     autoFixHeight = false,
     autoHideForEmptyData = false,
+    filtersTransform, //DataSource的getRows最终过滤条件转换器
+    showSortNumber: defaultShowSortNumber,
     ...rest
   } = props;
   const [objectGridApi, setObjectGridApi] = useState({} as any);
@@ -329,7 +348,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
           // console.log("===getRows=params==", params);
           // console.log("===getRows=isInfinite==", isInfinite);
           const currentGridApi = isInfinite ? gridApi : params.api;
-          const sortModel = isInfinite ? params.sortModel : params.request.sortModel;
+          let sortModel = isInfinite ? params.sortModel : params.request.sortModel;
+          sortModel = getSortModel(objectSchema, sortModel);
           const filterModel = isInfinite ? params.filterModel : params.request.filterModel;
           const startRow = isInfinite ? params.startRow : params.request.startRow;
           if(rows){
@@ -357,7 +377,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
             setSelectedRows(params, currentGridApi);
           }
           else{
-            let fields = ['name'];
+            let nameFieldKey = objectSchema.NAME_FIELD_KEY || "name";
+            let fields = [nameFieldKey];
             forEach(columnFields, ({ fieldName, ...columnItem }: ObjectGridColumnProps) => {
               fields.push(fieldName)
             });
@@ -372,9 +393,12 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
             })
             // const filters = compact([].concat([defaultFilters]).concat(filterModelToOdataFilters(filterModel)));
             const modelFilters:any = filterModelToOdataFilters(filterModel);
-            const filters = concatFilters(defaultFilters, modelFilters)
+            let filters = concatFilters(defaultFilters, modelFilters)
             // TODO 此处需要叠加处理 params.request.fieldModel
             // console.log("===params.request.startRow===", params.request.startRow);
+            if(isFunction(filtersTransform)){
+              filters = filtersTransform(params, filters);
+            }
             let options: any = {
               sort,
               $top: pageSize,
@@ -475,7 +499,10 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   }
 
   const getColumns = (rowButtons)=>{
-    const showSortNumber = !isMobile;
+    let showSortNumber = defaultShowSortNumber;
+    if(!isBoolean(showSortNumber)){
+      showSortNumber = !isMobile;
+    }
     let width = checkboxSelection ? 80 : 50;
     if(!showSortNumber){
       width -= 38;
@@ -845,9 +872,11 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
           AgGridCellTextFilter: AgGridCellTextFilter,
           AgGridCellNumberFilter: AgGridCellNumberFilter,
           AgGridCellBooleanFilter: AgGridCellBooleanFilter,
+          // agGroupCellInnerRenderer: AgGridCellRenderer,
           rowActions: AgGridRowActions,
         }}
         ref={gridRef}
+        {...rest}
       />
       <Drawer
         placement={"bottom"}
