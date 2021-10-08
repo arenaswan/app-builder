@@ -665,7 +665,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     forEach(columns, (column)=>{
       if (column.field && !column.hide) {
         if(column.width){
-          widthOfAllColumnsForFitSize += column.width;
+          widthOfAllColumnsForFitSize += parseInt(column.width);
         }
         else{
           hasNoSetWidthColumns = true;
