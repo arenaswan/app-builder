@@ -38,10 +38,10 @@ const getColumnFieldsForTreeGrid = (columnFields: any, nameFieldKey: any, parent
     }
     else if(item.fieldName === childrenFieldName){
       hasChildrenField = true;
-      fieldItem = Object.assign({}, item, {
+      fieldItem = Object.assign({
         hideInTable: true,
         hideInSearch: true
-      });
+      }, item);
     }
     result.push(fieldItem);
   });
