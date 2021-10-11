@@ -2,9 +2,9 @@ import React from "react"
 import { Link } from '../components/index'
 import { Apps } from '@steedos/builder-store';
 
-export const getNameFieldColumnRender = (objectApiName: string, linkTarget?: string) => {
+export const getNameFieldColumnRender = (objectApiName: string, linkTarget?: string, nameFieldKey?: string) => {
     return (dom: any, record: any) => {
-        return (<Link target={linkTarget} to={getObjectRecordUrl(objectApiName, record._id)} className="text-blue-600 hover:text-blue-500 hover:underline">{dom}</Link>);
+        return (<Link title={record[nameFieldKey || 'name']} target={linkTarget} to={getObjectRecordUrl(objectApiName, record._id)} className="text-blue-600 hover:text-blue-500 hover:underline">{dom}</Link>);
     }
 }
 

@@ -143,7 +143,7 @@ export const getListViewColumnFields = (listViewColumns: any, props: any, nameFi
       }
       delete columnOption.field;
       if(fieldName === nameFieldKey){
-        columnOption.render = getNameFieldColumnRender(props.objectApiName, linkTarget);
+        columnOption.render = getNameFieldColumnRender(props.objectApiName, linkTarget, nameFieldKey);
       }
       columnFields.push(columnOption)
     })
@@ -237,7 +237,7 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
       if(item.fieldName === nameFieldKey && !item.render){
         // name字段默认应该显示为链接
         return Object.assign({}, item, {
-          render: getNameFieldColumnRender(props.objectApiName)
+          render: getNameFieldColumnRender(props.objectApiName, '_self', nameFieldKey)
         });
       }
       else{
