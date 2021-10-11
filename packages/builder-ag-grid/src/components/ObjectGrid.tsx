@@ -49,7 +49,8 @@ export type ObjectGridProps<T extends ObjectGridColumnProps> =
       isInfinite?: boolean//是否使用滚动翻页模式，即rowModelType是否为infinite
       autoFixHeight?: boolean//当isInfinite且记录总数量大于pageSize时，自动把Grid高度设置为pageSize行的总高度，即rowHeight*pageSize
       autoHideForEmptyData: boolean//当数据为空时自动隐藏整个Grid记录详细界面子表需要该属性
-      filtersTransform: Function//Datasource
+      filtersTransform: Function//DataSource的getRows最终过滤条件转换器
+      dataValueTransform: Function//DataSource的getRows最终返回数据转换器，可以变更记录字段值或过滤掉部分记录
       showSortNumber: boolean//显示第一列勾选框中的序号数值
       // filterableFields?: [string]
     } & {
@@ -239,7 +240,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     autoClearSelectedRows = true,
     autoFixHeight = false,
     autoHideForEmptyData = false,
-    filtersTransform, //DataSource的getRows最终过滤条件转换器
+    filtersTransform, 
+    dataValueTransform,
     showSortNumber: defaultShowSortNumber,
     ...rest
   } = props;
@@ -418,7 +420,12 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
               objectApiName,
               filters,
               fields,options).then((data)=>{
-                const dataLength = data["@odata.count"];
+                let dataLength = data["@odata.count"];
+                let dataValue = data.value;
+                if(isFunction(dataValueTransform)){
+                  dataValue = dataValueTransform(params, dataValue);
+                  dataLength -= data.value.length - dataValue.length;
+                }
                 if(isInfinite){
                   if(autoFixHeight && pageSize && pageSize < dataLength){
                     // const rowItemHeight = currentGridApi.getRowNode().rowHeight;
@@ -428,11 +435,11 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
                     // 这里故意不再重置为DEFAULT_GRID_HEIGHT，因为会重新渲染整个grid，比如正在过滤数据，会把打开的右侧过滤器自动隐藏了体验不好
                     // setGridHeight(DEFAULT_GRID_HEIGHT);
                   }
-                  params.successCallback(data.value, dataLength);
+                  params.successCallback(dataValue, dataLength);
                 }
                 else{
                   params.success({
-                    rowData: data.value,
+                    rowData: dataValue,
                     rowCount: dataLength
                   });
                 }

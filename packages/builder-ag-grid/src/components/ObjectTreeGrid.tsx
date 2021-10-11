@@ -77,6 +77,7 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
   const objectSchema = defaultObjectSchema ? defaultObjectSchema : object.schema;
  
   const nameFieldKey = getObjectNameFieldKey(objectSchema);
+  const idFieldName = objectSchema.idFieldName || "_id";
   const childrenFieldName = getObjectChildrenFieldName(objectSchema);
   columnFields = getColumnFieldsForTreeGrid(columnFields, nameFieldKey, childrenFieldName);
 
@@ -178,6 +179,32 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
     }
     return result;
   }
+
+  const dataValueTransform = (params: any, originalDataValue: any) => {
+    var groupKeys = params.request?.groupKeys;
+    let result = originalDataValue;
+    const isGroup = groupKeys && groupKeys.length;
+    if (isGroup) {
+      // 不用处理，直接返回结果即可，因为filtersTransform函数中子节点已经加了parent值作为过滤条件了
+    }
+    else {
+      // 根节点返回结果可能会有父子关系的记录，都保留的话，子节点展开会发现重复显示了，要去除子节点会重复显示的数据
+      result = result.filter((item: any) => {
+        let parentFieldValue = item[parentField];
+        if (parentFieldValue) {
+          // 有parent字段值时，check下该parent指向的记录是否已经在返回结果中，如果是说明子节点会重复应该去除
+          return !result.find((item2: any) => {
+            return parentFieldValue === item2[idFieldName];
+          });
+        }
+        else {
+          return true;
+        }
+      });
+    }
+    return result;
+  }
+
   return (
     <ObjectGrid 
       treeData={true}
@@ -193,6 +220,7 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
       }}
       autoGroupColumnDef={getAutoGroupColumn()}
       filtersTransform={filtersTransform}
+      dataValueTransform={dataValueTransform}
       {...props}
       columnFields={columnFields}
       isInfinite={false}
