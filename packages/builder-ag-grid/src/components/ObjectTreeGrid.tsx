@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite"
 import { Objects } from "@steedos/builder-store"
 import { Spin } from 'antd';
 import { concatFilters } from '@steedos/builder-sdk';
-import { getObjectNameFieldKey, getObjectChildrenFieldName } from '@steedos/builder-sdk';
+import { getObjectNameFieldKey, getObjectParentFieldName, getObjectChildrenFieldName } from '@steedos/builder-sdk';
 
 import { ObjectGrid, ObjectGridColumnProps, ObjectGridProps } from "./ObjectGrid";
 
@@ -18,11 +18,9 @@ export type ObjectTreeGridProps<T extends ObjectTreeGridColumnProps> =
     })
   | any
 
-const getColumnFieldsForTreeGrid = (columnFields: any, nameFieldKey: any, childrenFieldName: any)=>{
+const getColumnFieldsForTreeGrid = (columnFields: any, nameFieldKey: any, parentFieldName: string, childrenFieldName: string)=>{
   let result = [];
-  // const nameFieldKey = getObjectNameFieldKey(objectSchema);
-  // const childrenFieldName = getObjectChildrenFieldName(objectSchema);
-  let hasNameField = false, hasChildrenField = false;
+  let hasNameField = false, hasParentField = false, hasChildrenField = false;
   columnFields.forEach((item)=>{
     let fieldItem = item;
     if(item.fieldName === nameFieldKey){
@@ -30,6 +28,13 @@ const getColumnFieldsForTreeGrid = (columnFields: any, nameFieldKey: any, childr
       fieldItem = Object.assign({}, item, {
         hideInTable: true,
       });
+    }
+    else if(item.fieldName === parentFieldName){
+      hasParentField = true;
+      fieldItem = Object.assign({
+        hideInTable: true,
+        hideInSearch: true
+      }, item);
     }
     else if(item.fieldName === childrenFieldName){
       hasChildrenField = true;
@@ -45,6 +50,13 @@ const getColumnFieldsForTreeGrid = (columnFields: any, nameFieldKey: any, childr
       fieldName: 'name',
       hideInTable: true,
       width: 240
+    });
+  }
+  if(!hasParentField){
+    result.push({
+      fieldName: parentFieldName,
+      hideInTable: true,
+      hideInSearch: true,
     });
   }
   if(!hasChildrenField){
@@ -78,13 +90,12 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
  
   const nameFieldKey = getObjectNameFieldKey(objectSchema);
   const idFieldName = objectSchema.idFieldName || "_id";
-  const childrenFieldName = getObjectChildrenFieldName(objectSchema);
-  columnFields = getColumnFieldsForTreeGrid(columnFields, nameFieldKey, childrenFieldName);
-
-  let parentField = rest.parentField;
-  if(!parentField){
-    parentField = object.schema.parent_field || "parent";
+  let parentFieldName = rest.parentField;
+  if(!parentFieldName){
+    parentFieldName = getObjectParentFieldName(objectSchema);
   }
+  const childrenFieldName = getObjectChildrenFieldName(objectSchema);
+  columnFields = getColumnFieldsForTreeGrid(columnFields, nameFieldKey, parentFieldName, childrenFieldName);
 
   const getAutoGroupColumn = ()=>{
     // const { fieldName, ...columnItem } = columnFields[0];
@@ -154,7 +165,7 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
     let result = originalFilters;
     const isGroup = groupKeys && groupKeys.length;
     if(isGroup){
-      result = concatFilters(result, [parentField, "=", groupKeys[groupKeys.length - 1]])
+      result = concatFilters(result, [parentFieldName, "=", groupKeys[groupKeys.length - 1]])
     }
     else{
       // 根目录识别过滤条件逻辑
@@ -173,7 +184,7 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
       else{
         // 传入的filters也影响根目录过滤，未传入时取根节点
         if(!result || !result.length){
-          result = [parentField, "=", null];
+          result = [parentFieldName, "=", null];
         }
       }
     }
@@ -190,7 +201,7 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
     else {
       // 根节点返回结果可能会有父子关系的记录，都保留的话，子节点展开会发现重复显示了，要去除子节点会重复显示的数据
       result = result.filter((item: any) => {
-        let parentFieldValue = item[parentField];
+        let parentFieldValue = item[parentFieldName];
         if (parentFieldValue) {
           // 有parent字段值时，check下该parent指向的记录是否已经在返回结果中，如果是说明子节点会重复应该去除
           return !result.find((item2: any) => {
