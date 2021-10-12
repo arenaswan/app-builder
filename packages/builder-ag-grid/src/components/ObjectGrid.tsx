@@ -3,7 +3,7 @@ import { forEach, compact, filter, includes, keys, map, isEmpty, isFunction, isO
 import useAntdMediaQuery from 'use-media-antd-query';
 import { observer } from "mobx-react-lite"
 import { Objects, API } from "@steedos/builder-store"
-import { Spin } from 'antd';
+import { Spin, Alert } from 'antd';
 import { concatFilters } from '@steedos/builder-sdk';
 import {AgGridColumn, AgGridReact} from '@ag-grid-community/react';
 import { AllModules } from '@ag-grid-enterprise/all-modules';
@@ -323,7 +323,10 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   if (object && object.isLoading) return (<div><Spin/></div>)
 
   const objectSchema = defaultObjectSchema ? defaultObjectSchema : object.schema;
-
+  if(isEmpty(objectSchema) || objectSchema.permissions.allowRead !== true){
+    const errorWarning = isEmpty(objectSchema) ? translate('creator_odata_collection_query_fail') : translate('creator_odata_user_access_fail');
+    return (<Alert message={errorWarning} type="warning" showIcon style={{padding: '4px 15px'}}/>)
+  }
   const setSelectedRows = (params, gridApi?)=>{
       // 当前显示页中store中的初始值自动勾选。
       const selectedRowKeys = table.getSelectedRowKeys();

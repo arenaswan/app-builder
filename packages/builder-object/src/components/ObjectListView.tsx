@@ -1,5 +1,6 @@
 import React, { useContext, useRef, useEffect, useState } from "react"
-import { isFunction, forEach, isObject, filter, isString, each, includes, isBoolean, isArray } from 'lodash';
+import { Alert } from 'antd';
+import { isFunction, forEach, isObject, filter, isString, each, includes, isBoolean, isArray, isEmpty } from 'lodash';
 // import { ObjectExpandTable } from "./"
 import { ObjectGrid, ObjectTreeGrid } from '@steedos/builder-ag-grid';
 import {
@@ -8,6 +9,7 @@ import {
 import { observer } from "mobx-react-lite"
 import { Objects, API, Settings } from "@steedos/builder-store"
 import { getNameFieldColumnRender } from "@steedos/builder-form"
+import { translate } from '@steedos/builder-sdk';
 
 export type ObjectListViewColumnProps = {
   fieldName: string
@@ -220,6 +222,10 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
   const object = Objects.getObject(objectApiName);
   if (object.isLoading) return (<div>Loading object ...</div>)
   const schema = object.schema;
+  if(isEmpty(schema) || schema.permissions.allowRead !== true){
+    const errorWarning = isEmpty(schema) ? translate('creator_odata_collection_query_fail') : translate('creator_odata_user_access_fail');
+    return (<Alert message={errorWarning} type="warning" showIcon style={{padding: '4px 15px'}}/>)
+  }
   const suppressClickEdit = schema.enable_inline_edit === false ? true : false;
   let TableComponent = ObjectGrid;
   if(schema.enable_tree){

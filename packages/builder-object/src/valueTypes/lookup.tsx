@@ -66,8 +66,10 @@ export const LookupField = observer((props:any) => {
         }else{
             defaultReferenceTo = referenceTos[0];
         }
+    }else{
+        defaultReferenceTo = referenceTos;
     }
-    let [referenceTo, setReferenceTo] = useState(isArray(referenceTos) ? defaultReferenceTo : referenceTos);
+    let [referenceTo, setReferenceTo] = useState(defaultReferenceTo);
     // selectedValue 只有在reference_to 是数组的才用到， 值的格式为(value:xx, label:xx)
     const [selectedValue, setSelectedValue] = useState();
     // optionsFunction优先options
@@ -80,16 +82,24 @@ export const LookupField = observer((props:any) => {
     let referenceToObject,referenceToObjectSchema,referenceToLableField, referenceToObjectIcon, referenceParentField, isAllowCreate;
     if(referenceTo){
         referenceToObject = Objects.getObject(referenceTo);
-        if (referenceToObject.isLoading) return (<div><Spin/></div>);
-        if(isEmpty(referenceToObject.schema)){
-            if(fieldValue){
-                return <Link target='_blank' to={getObjectRecordUrl(referenceTo, fieldValue)} className="text-blue-600 hover:text-blue-500 hover:underline">[无此记录]</Link>
+        if (referenceToObject.isLoading && !isEmpty(referenceToObject.schema)) return (<div><Spin/></div>);
+        // 如果对象被删除，则schema为空。  ||  无权限查看
+        if(!isArray(referenceTos) && (isEmpty(referenceToObject.schema) || referenceToObject.schema.permissions?.allowRead !== true)){
+            if(fieldValue && fieldValue.length){
+                const tagsValue = isArray(fieldValue) ? fieldValue : [fieldValue];
+                return (<React.Fragment>{tagsValue.map((v, index)=>{return (
+                    <React.Fragment key={v}>
+                        {index > 0 && ', '}
+                        <Link target='_blank' to={getObjectRecordUrl(referenceTo, v)} className="text-blue-600 hover:text-blue-500 hover:underline">[无此记录]</Link>
+                    </React.Fragment>
+                )})}</React.Fragment>)
+            }else{
+                return null;
             }
-            return null;
             // return (<Alert message="未找到引用的对象" type="warning" showIcon style={{padding: '4px 15px'}}/>)
         }
         referenceToObjectSchema = referenceToObject.schema;
-        isAllowCreate = referenceToObject.getPermissions().allowCreate;
+        isAllowCreate = referenceToObject.getPermissions()?.allowCreate;
         referenceToLableField = referenceToObjectSchema["NAME_FIELD_KEY"] ? referenceToObjectSchema["NAME_FIELD_KEY"] : "name";
         // TODO: organizations.object.yml 文件里后续也要添加一个类似enable_tree属性 parent_field。
         referenceParentField = referenceToObjectSchema.parent_field || "parent"
@@ -117,9 +127,9 @@ export const LookupField = observer((props:any) => {
                     referenceTofilters = concatFilters(referenceTofilters,filters);
                 }
 
-                const recordList = referenceToObject.getRecordList(referenceTofilters, fields);
-                if (recordList.isLoading) return (<div><Spin/></div>);
-                recordListData = recordList.data;
+                const recordList =  !isEmpty(referenceToObjectSchema) && referenceToObject?.getRecordList(referenceTofilters, fields);
+                if (recordList?.isLoading) return (<div><Spin/></div>);
+                recordListData = recordList?.data;
                 if (recordListData && recordListData.value && recordListData.value.length > 0) {
                     let tagsValueField = reference_to_field;
                     if(reference_to_field && reference_to_field !== "_id"){
@@ -285,10 +295,10 @@ export const LookupField = observer((props:any) => {
             labelInValue=true;
             let defaultReferenceToValue:any = [];
             if(fieldValue){
-                const recordList = referenceToObject.getRecordList(referenceTofilters, fields);
+                const recordList = referenceToObject?.getRecordList(referenceTofilters, fields);
                 // 下拉框选中某个选项，获取其对应的lable。因为如果加下面的isloading判断，就会在重新选择其它选项时会有isLoading状态的效果， 所以不需要下面这行isloading判断。
                 // if (recordList.isLoading) return (<div><Spin/></div>);
-                recordListData = recordList.data;
+                recordListData = recordList?.data;
                 if (recordListData && recordListData.value && recordListData.value.length > 0) {
                     forEach(recordListData.value, (recordItem: any) => {
                         let valueLabel = { value: recordItem[reference_to_field], label: recordItem[referenceToLableField] };
@@ -440,7 +450,7 @@ export const LookupField = observer((props:any) => {
                 modalDom = (trigger: any)=>{
                     let ModalComponent = ObjectModal;
                     let modalPorps:any = {
-                        title: `选择 ${referenceToObjectLabel}`,
+                        title: `选择 ${referenceToObjectLabel || referenceTo}`,
                         modalProps: { className: modalClassName},
                         objectApiName: referenceTo,
                         multiple,
@@ -521,12 +531,20 @@ export const LookupField = observer((props:any) => {
                     referenceToObjectLeftIcon = referenceToObjectSchema.icon;
                 }
                 if (!referenceToObject.isLoading){
+                    let referenceTosLeftLabel = referenceToObjectSchema.label;
+                    if(referenceToObjectSchema.permissions?.allowRead !== true){
+                        referenceTosLeftLabel = '[无此记录]';
+                    }
                     if(referenceToObjectLeftIcon){
-                        referenceToOptions.push({label:referenceToObjectSchema.label,value:val,icon:referenceToObjectLeftIcon})
+                        referenceToOptions.push({label:referenceTosLeftLabel,value:val,icon:referenceToObjectLeftIcon})
                     }else{
-                        referenceToOptions.push({label:referenceToObjectSchema.label,value:val})
-                    }   
+                        referenceToOptions.push({label:referenceTosLeftLabel,value:val})
+                    }    
+                    
                 }
+                /* else{
+                    return (<div><Spin/></div>)
+                } */
             })
             isLoadingReferenceTosObject = referenceToOptions.length !== referenceTos.length;
         }

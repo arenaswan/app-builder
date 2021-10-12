@@ -49,6 +49,174 @@ export const SchemaForm = () => {
   )
 }
 
+export const SchemaFormError = () => {
+  const fields={
+    referencetoIsStringSingle: {
+      reference_to: 'tasks',
+      type: 'lookup',
+      label: '记录被删除-单选',
+      group: 'referenceto是字符串-记录被删除',
+    },
+    referencetoIsStringMultiple: {
+      reference_to: 'tasks',
+      type: 'lookup',
+      label: '记录被删除-多选',
+      group: 'referenceto是字符串-记录被删除',
+      multiple: true
+    },
+    referencetoIsStringNoObjSingle: {
+      reference_to: 'contracts',
+      type: 'lookup',
+      label: '记录所属对象被删除（无值）-单选',
+      group: 'referenceto是字符串-对象被删除',
+    },
+    referencetoIsStringNoObjMultiple: {
+      reference_to: 'contracts',
+      type: 'lookup',
+      label: '记录所属对象被删除（无值）-多选',
+      group: 'referenceto是字符串-对象被删除',
+      multiple: true
+    },
+    referencetoIsStringNoObjSingleHaveValue: {
+      reference_to: 'contracts',
+      type: 'lookup',
+      label: '记录所属对象被删除（有值）-单选',
+      group: 'referenceto是字符串-对象被删除',
+    },
+    referencetoIsStringNoObjMultipleHaveValue: {
+      reference_to: 'contracts',
+      type: 'lookup',
+      label: '记录所属对象被删除（有值）-多选',
+      group: 'referenceto是字符串-对象被删除',
+      multiple: true
+    },
+    referencetoIsStringNoPermission: {
+      reference_to: 'ppppp__c',
+      type: 'lookup',
+      label: '记录所属对象没权限查看（无值）-单选',
+      group: 'referenceto是字符串-对象没权限查看',
+    },
+    referencetoIsStringNoPermissionMultiple: {
+      reference_to: 'ppppp__c',
+      type: 'lookup',
+      label: '记录所属对象没权限查看（无值）-多选',
+      group: 'referenceto是字符串-对象没权限查看',
+      multiple: true
+    },
+    referencetoIsStringNoPermissionHaveValue: {
+      reference_to: 'ppppp__c',
+      type: 'lookup',
+      label: '记录所属对象没权限查看（有值）-单选',
+      group: 'referenceto是字符串-对象没权限查看',
+    },
+    referencetoIsStringNoPermissionMultipleHaveValue: {
+      reference_to: 'ppppp__c',
+      type: 'lookup',
+      label: '记录所属对象没权限查看（有值）-多选',
+      group: 'referenceto是字符串-对象没权限查看',
+      multiple: true
+    },
+    referencetoIsArrayOtherHaveValue: {
+      reference_to: ['contacts','accounts','test_object__c','anzhuang__c'],
+      type: 'lookup',
+      label: '记录所属对象（有值被删除-单选）',
+      group: 'referenceto是数组-记录被删除',
+    },
+    referencetoIsArrayOtherHaveValueMultiple: {
+      reference_to: ['contacts','accounts','test_object__c','anzhuang__c'],
+      type: 'lookup',
+      label: '记录所属对象（有值被删除-多选）',
+      group: 'referenceto是数组-记录被删除',
+      multiple: true
+    },
+    referencetoIsArray: {
+      reference_to: ['contracts','contacts','accounts','test_object__c'],
+      type: 'lookup',
+      label: '记录所属对象被删除（无值）',
+      group: 'referenceto是数组-对象被删除',
+    },
+    referencetoIsArrayHaveValue: {
+      reference_to: ['contracts','contacts','accounts','test_object__c'],
+      type: 'lookup',
+      label: '记录所属对象被删除（有值）',
+      group: 'referenceto是数组-对象被删除',
+    },
+    referencetoIsArrayNoPermission: {
+      reference_to: ['contacts','accounts','test_object__c','ppppp__c'],
+      type: 'lookup',
+      label: '记录所属对象没权限（无值-单选）',
+      group: 'referenceto是数组-对象没权限查看',
+    },
+    referencetoIsArrayNoPermissionMultiple: {
+      reference_to: ['contacts','accounts','test_object__c','ppppp__c'],
+      type: 'lookup',
+      label: '记录所属对象没权限（无值-多选）',
+      group: 'referenceto是数组-对象没权限查看',
+      multiple: true
+    },
+    referencetoIsArrayNoPermissionHaveValue: {
+      reference_to: ['contacts','accounts','test_object__c','ppppp__c'],
+      type: 'lookup',
+      label: '记录所属对象没权限（有值-单选）',
+      group: 'referenceto是数组-对象没权限查看',
+    },
+    referencetoIsArrayNoPermissionMultipleHaveValue: {
+      reference_to: ['contacts','accounts','test_object__c','ppppp__c'],
+      type: 'lookup',
+      label: '记录所属对象没权限（有值-多选）',
+      group: 'referenceto是数组-对象没权限查看',
+      multiple: true
+    }
+  };
+  const initialValues = {
+    referencetoIsStringSingle: '61551759d92b9816c33fb684',
+    referencetoIsStringMultiple: ["yzQitW7dmpLdR8t9J", "61556ab51f7d0c5189229812"],
+    referencetoIsStringNoObjSingleHaveValue: '60e1252fc697231347698d4f',
+    referencetoIsStringNoObjMultipleHaveValue: ['60e1252fc697231347698d4f','dfasdfdsfaf'],
+    referencetoIsStringNoPermissionHaveValue: '6154122bd1e3277053fff3d7',
+    referencetoIsStringNoPermissionMultipleHaveValue: ['6154122bd1e3277053fff3d7','dkafjsdkjfssdlfksf'],
+    referencetoIsArrayHaveValue: {
+      "o" : "contracts",
+      "ids" : [
+        "61556ab51f7d0c5189229812"
+      ]
+    },
+    referencetoIsArrayOtherHaveValue: {
+      "o" : "anzhuang__c",
+      "ids" : [
+        "61556ab51f7d0c5189229812"
+      ]
+    },
+    referencetoIsArrayOtherHaveValueMultiple: {
+      "o" : "anzhuang__c",
+      "ids" : [
+        "615557c71f7d0c5189229811",
+        "61556ab51f7d0c5189229812"
+      ]
+    },
+    referencetoIsArrayNoPermissionHaveValue: {
+      "o" : "ppppp__c",
+      "ids" : [
+        "61556ab51f7d0c5189229812"
+      ]
+    },
+    referencetoIsArrayNoPermissionMultipleHaveValue: {
+      "o" : "ppppp__c",
+      "ids" : [
+        "615557c71f7d0c5189229811",
+        "61556ab51f7d0c5189229812"
+      ]
+    }
+  };
+  const objectFormProps = {
+    objectSchema: {fields},
+    initialValues,
+  }
+  return (
+      <ObjectForm mode='read' layout='horizontal' {...objectFormProps}>
+      </ObjectForm>
+  )
+}
 
 export const FormAccounts = () => {
   const objectApiName = 'accounts';
