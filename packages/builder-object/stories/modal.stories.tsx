@@ -56,6 +56,31 @@ export const FormModal = () => {
       return true;
     }
   };
+  const schemaFormPropsMaskClosable = {
+    layout: 'horizontal',
+    title: `合同信息`,
+    modalProps: { 
+      className: 'showModalClassName', 
+      maskClosable: true,
+    },
+    objectSchema: {
+      fields:{
+        name: {
+          type: 'text',
+          label: "名称"
+        },
+        amount: {
+          type: 'currency',
+          label: "金额"
+        },
+      }
+    },
+    initialValues: {name:"合同", amount: "69000"},
+    onFinish: async (values)=>{
+      console.log("values:", values);
+      return true;
+    }
+  };
   const objectFormProps = {
     objectApiName: "accounts",
     // recordId: process.env.STEEDOS_CURRENT_RECORD_ID,
@@ -72,6 +97,13 @@ export const FormModal = () => {
       <ObjectForm 
         {...schemaFormProps}
         trigger={<Button type="primary" >弹出SchemaForm</Button>}
+      >
+      </ObjectForm>
+      <br />
+      <br />
+      <ObjectForm 
+        {...schemaFormPropsMaskClosable}
+        trigger={<Button type="primary" >弹出SchemaForm-自定义点击蒙层（弹框外部分）允许关闭</Button>}
       >
       </ObjectForm>
       <br />

@@ -89,6 +89,7 @@ export const Form = observer((props:any) => {
       // 默认加destroyOnClose这个是为了弹出Form时点击取消按钮能重置表单项值
       // 还有另一个可能的方案是设置modalProps?.onCancel属性，并在其中调用一次表单重围函数
       destroyOnClose: true,
+      maskClosable: false,
       ...modalProps,
     },
   }
