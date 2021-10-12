@@ -111,7 +111,16 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
       return item.fieldName === nameFieldKey ;
     });
     let fieldWidth = nameColumnField.width;
-    fieldWidth = fieldWidth ? fieldWidth : (field.is_wide ? 300 : 150);
+    if(!fieldWidth && field.is_wide){
+      fieldWidth = 220;
+    }
+    let columnFlex:any;
+    if(!fieldWidth){
+      columnFlex = 1;
+      if(field.is_wide){
+        columnFlex = 2;
+      }
+    }
     let fieldRender = null;
     if((nameColumnField as any).render){
       fieldRender = (nameColumnField as any).render
@@ -124,13 +133,14 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
       field: nameFieldKey,
       headerName: field.label ? field.label:nameFieldKey,
       width: fieldWidth,
+      minWidth: 150,
       // minWidth: fieldWidth ? fieldWidth : 60,
       resizable: true,
       // filter,
       // sort: fieldSort ? fieldSort.order : undefined,
       // filterParams,
       // rowGroup,
-      // flex: 1,
+      flex: columnFlex,
       sortable: true,
       cellRenderer: 'agGroupCellRenderer',
       cellRendererParams: {
