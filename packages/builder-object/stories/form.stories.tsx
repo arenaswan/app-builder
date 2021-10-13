@@ -218,6 +218,43 @@ export const SchemaFormError = () => {
   )
 }
 
+export const SchemaFormOnValuesChange = () => {
+  const initialValues = {
+    name: "张三"
+  };
+  const fields={
+    name: {
+      type: 'text',
+      label: '姓名'
+    },
+    email: {
+      type: 'email',
+      label: '邮箱'
+    },
+    sign: {
+      type: 'textarea',
+      label: '个性签名',
+      is_wide: true
+    }
+  };
+  const form = {
+    onValuesChange: (props)=>{
+      console.log("===props===", props);
+      if(props.changedValues.name){
+        props.form.setFieldsValue(Object.assign({}, props.values, {email:`${props.changedValues.name}@steedos.com`}));
+      }
+    }
+  };
+  const objectFormProps = {
+    objectSchema: {fields, form},
+    initialValues,
+  }
+  return (
+      <ObjectForm mode='read' layout='horizontal' {...objectFormProps}>
+      </ObjectForm>
+  )
+}
+
 export const FormAccounts = () => {
   const objectApiName = 'accounts';
   const initialValues = {
