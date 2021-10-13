@@ -256,8 +256,11 @@ const getListViewSchema = (listView: any)=>{
     return;
   }
   let form: any = safeEval(`(${objectConfig.form})`);
+  // 以function开头的即认为是函数表达式，转换成函数，允许前缀为空格或回车符
+  // 低代码过来的字符器一般以function anonymous开头，零代码要求以function开头前面允许空格回车
+  let regFunction = /^[\s]*function\b/;
   forEach(form, (value, key)=>{
-    if(value.startsWith("function ")){
+    if(regFunction.test(value)){
       form[key] = safeEval(`(${value})`);
     }
   });
