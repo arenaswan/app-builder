@@ -460,6 +460,7 @@ export const LookupField = observer((props:any) => {
                         value: fieldValue,
                         // 弹出框会返回rowKey对应的字段值，默认为_id，比如space_users要求返回user字段值
                         rowKey: reference_to_field,
+                        extraColumnFields: [reference_to_field],
                         // filtersFunction执行后可能返回空，如果返回空表示加载所有数据
                         filters: filtersFunction ? safeRunFunction(filtersFunction,[fieldFilters, optionsFunctionValues],BAD_FILTERS,optionsFunctionThis) : fieldFilters,
                         trigger,
