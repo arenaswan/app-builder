@@ -1,7 +1,7 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import * as PropTypes from 'prop-types';
-import { forEach, defaults, groupBy, filter, map, defaultsDeep, isObject, isEmpty, clone, isNil, compact, uniq, pick, isArray} from 'lodash';
+import { forEach, defaults, groupBy, filter, map, defaultsDeep, isObject, isEmpty, clone, isNil, compact, uniq, pick, isArray, keys} from 'lodash';
 import { useQuery } from 'react-query'
 // import { FooterToolbar } from '@ant-design/pro-layout';
 import { Form } from '@steedos/builder-form';
@@ -103,6 +103,7 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
   if (object && object.isLoading) return (<div><Spin/></div>)
 
   const mergedSchema = object? defaultsDeep({}, object.schema, objectSchema): objectSchema;
+  const schemaFields = mergedSchema.fields;
   fieldSchemaArray.length = 0
   forEach(mergedSchema.fields, (field, fieldName) => {
     if (!field.group || field.group == 'null' || field.group == '-')
@@ -152,7 +153,14 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
     let result; 
     if(!recordId){
       try {
-        let objectValues = Object.assign({},initialValues,values);
+        const fieldsKeys = keys(schemaFields);
+        let filtersInitialValues = {};
+        forEach(initialValues, (val, key) => {
+          if (fieldsKeys.indexOf(key) > -1 && schemaFields[key].omit !== true) {
+            filtersInitialValues[key] = val;
+          }
+        })
+        let objectValues = Object.assign({},filtersInitialValues,values);
         objectValues = pick(objectValues,fieldNames)
         result = await API.insertRecord(objectApiName,objectValues);
         if(afterInsert){

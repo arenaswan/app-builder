@@ -255,6 +255,23 @@ export const SchemaFormOnValuesChange = () => {
   )
 }
 
+export const FormInitialValues = () => {
+  const objectApiName = 'announcements';
+  // created 是 omit：true字段。 初始化值保存时应该去掉该类字段。
+  const initialValues = {
+    name: '公告VIP1',
+    created: "2021/06/27 08:00:00"
+  };
+  const objectFormProps = {
+    objectApiName,
+    initialValues,
+  }
+  return (
+      <ObjectForm mode='read' layout='horizontal' {...objectFormProps}>
+      </ObjectForm>
+  )
+}
+
 export const FormAccounts = () => {
   const objectApiName = 'accounts';
   const initialValues = {
