@@ -314,15 +314,17 @@ export const LookupField = observer((props:any) => {
                 value: selectedValue ? selectedValue : defaultReferenceToValue,
                 onChange:(values: any, option: any)=>{
                     let tempSelectedValue:any = undefined;
-                    if (multiple) {
-                        tempSelectedValue=[];
-                        forEach(values, (item) => {
-                            idsValue.push(item.value);
-                            tempSelectedValue.push({value: item.value, label: item.label})
-                        })
-                    } else {
-                        if(values.value){ idsValue = [values.value]; }
-                        tempSelectedValue = {value: values.value, label:values.label};
+                    if(!isEmpty(values)){
+                        if (multiple) {
+                            tempSelectedValue=[];
+                            forEach(values, (item) => {
+                                idsValue.push(item.value);
+                                tempSelectedValue.push({value: item.value, label: item.label})
+                            })
+                        } else {
+                            if(values.value){ idsValue = [values.value]; }
+                            tempSelectedValue = {value: values.value, label:values.label};
+                        }
                     }
                     setSelectedValue(tempSelectedValue)
                     onChange({o: referenceTo, ids: idsValue })
@@ -553,6 +555,7 @@ export const LookupField = observer((props:any) => {
 
         const lookupInput = isLookupTree ? (<ObjectFieldTreeSelect {...proFieldProps}  />) : (<FieldSelect {...proFieldProps} />);
         const onModalFinish = (selectedRowKeys: any, selectedRows: any)=>{
+            console.log('selectedRowKeys==>',selectedRowKeys, selectedRows)
             // ag-grid只传一个参数（rows）过来，这里获取其内部的value。
             if(!selectedRows){
                 selectedRowKeys = map(selectedRowKeys,reference_to_field)
