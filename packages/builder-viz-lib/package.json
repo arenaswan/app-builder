@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "Redash visualizations",
   "main": "dist/redash-visualizations.js",
-  "scripts": {
-    
-  },
+  "scripts": {},
   "repository": "https://github.com/steedos/app-builder/tree/master/packages/builder-viz-lib",
   "author": "",
   "license": "MIT",

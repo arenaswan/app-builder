@@ -410,7 +410,10 @@ const mapResults = data => ({ ...data, results: map(data.results, getQuery) });
 
 const QueryService = {
   query: params => axios.get("api/queries", { params }).then(mapResults),
-  get: data => axios.get(`api/queries/${data.id}`, data).then(getQuery),
+  get: (data) => {
+    console.log(`get query data`, data)
+    return axios.get(`/service/api/~packages-@steedos/service-charts/queries/${data.id}`).then(getQuery);
+  },
   save: data => axios.post(saveOrCreateUrl(data), data).then(getQuery),
   delete: data => axios.delete(`api/queries/${data.id}`),
   recent: params => axios.get(`api/queries/recent`, { params }).then(data => map(data, getQuery)),

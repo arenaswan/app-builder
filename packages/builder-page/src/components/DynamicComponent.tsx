@@ -29,7 +29,15 @@ export default class DynamicComponent extends React.Component {
     onLeave: PropTypes.func,
     openPageUrl: PropTypes.func,
     dashboard: PropTypes.object,
-    dashboardConfiguration: PropTypes.object
+    dashboardConfiguration: PropTypes.object,
+    query: PropTypes.any,
+    dataSourcesAvailable: PropTypes.any,
+    dataSources: PropTypes.any,
+    value: PropTypes.any,
+    disabled: PropTypes.any,
+    loading: PropTypes.any,
+    onChange: PropTypes.any,
+    dataSource: PropTypes.any
   };
 
   static defaultProps = {

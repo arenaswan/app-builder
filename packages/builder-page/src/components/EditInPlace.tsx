@@ -15,6 +15,7 @@ export default class EditInPlace extends React.Component {
     multiline: PropTypes.bool,
     editorProps: PropTypes.object,
     defaultEditing: PropTypes.bool,
+    markdown: PropTypes.any
   };
 
   static defaultProps = {

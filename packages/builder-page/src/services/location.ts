@@ -26,14 +26,14 @@ const location = {
   },
 
   confirmChange(handler) {
-    // if (isFunction(handler)) {
-    //   console.log(`history.block`, handler)
-    //   return history.block(nextLocation => {
-    //     return handler(normalizeLocation(nextLocation), location);
-    //   });
-    // } else {
-    //   return () => {};
-    // }
+    if (isFunction(handler) && false) {
+      console.log(`history.block`, handler)
+      return history.block(nextLocation => {
+        return handler(normalizeLocation(nextLocation), location);
+      });
+    } else {
+      return () => {};
+    }
   },
 
   update(newLocation: any, replace = false) {
