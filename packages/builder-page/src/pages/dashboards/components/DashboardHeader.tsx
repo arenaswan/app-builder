@@ -31,7 +31,7 @@ function DashboardPageTitle({ dashboardConfiguration }) {
   return (
     <div className="title-with-tags">
       <div className="page-title">
-        <FavoritesControl item={dashboard} />
+        {/* <FavoritesControl item={dashboard} /> */}
         <h3 className="h3">
           <EditInPlace
             isEditable={editingLayout}
@@ -40,19 +40,18 @@ function DashboardPageTitle({ dashboardConfiguration }) {
             ignoreBlanks
           />
         </h3>
-        <Tooltip title={dashboard.user.name} placement="bottom">
-          {/* TODO alt={dashboard.user.name}  */}
+        {/* <Tooltip title={dashboard.user.name} placement="bottom">
           <img src={dashboard.user.profile_image_url} className="profile-image" /> 
-        </Tooltip>
+        </Tooltip> */}
       </div>
-      <DashboardTagsControl
+      {/* <DashboardTagsControl
         tags={dashboard.tags}
         isDraft={dashboard.is_draft}
         isArchived={dashboard.is_archived}
         canEdit={canEditDashboard}
         getAvailableTags={getDashboardTags}
         onEdit={tags => updateDashboard({ tags })}
-      />
+      /> */}
     </div>
   );
 }

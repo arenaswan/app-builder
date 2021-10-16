@@ -29,7 +29,7 @@ export default function useDuplicateQuery(query) {
     setIsDuplicating(true);
     (Query as any).fork({ id: query.id })
       .then(newQuery => {
-        tab.location = keepCurrentUrlParams(newQuery.getUrl(true));
+        tab.location = (keepCurrentUrlParams(newQuery.getUrl(true)) as any);
       })
       .finally(() => {
         setIsDuplicating(false);
