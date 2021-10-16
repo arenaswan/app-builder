@@ -14,7 +14,7 @@ function WidgetDropdownButton({ extraOptions, showDeleteOption, onDelete }) {
   const WidgetMenu = (
     <Menu data-test="WidgetDropdownButtonMenu">
       {extraOptions}
-      {showDeleteOption && extraOptions && <Menu.Divider />}
+      {showDeleteOption && extraOptions && extraOptions.length > 0 &&<Menu.Divider />}
       {showDeleteOption && <Menu.Item onClick={onDelete}>Remove from Dashboard</Menu.Item>}
     </Menu>
   );

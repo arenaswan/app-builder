@@ -33,7 +33,7 @@ export default function QueryControlDropdown(props) {
           </PlainButton>
         </Menu.Item>
       )}
-      <Menu.Item>
+      {/* <Menu.Item>
         <QueryResultsLink
           fileType="csv"
           disabled={props.queryExecuting || !props.queryResult.getData || !props.queryResult.getData()}
@@ -65,7 +65,7 @@ export default function QueryControlDropdown(props) {
           apiKey={props.apiKey}>
           <FileExcelOutlinedIcon /> Download as Excel File
         </QueryResultsLink>
-      </Menu.Item>
+      </Menu.Item> */}
     </Menu>
   );
 

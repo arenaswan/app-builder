@@ -12,7 +12,7 @@ const filePatten = [
  * packages\builder-page\src\assets\less\inc\mixins.less、
  * packages\builder-page\src\assets\less\inc\variables.less
  * packages\builder-page\src\components\ApplicationArea\ApplicationLayout\index.less
- * inc 下所有都不加范围
+ * inc、redash 下所有都不加范围
  * packages\builder-page\src\assets\less\global.less
  * packages\builder-page\src\assets\less\ant.less
  */
@@ -22,6 +22,7 @@ _.each(matchedPaths, (matchedPath)=>{
     if(
         (parsePath.dir.endsWith('less-plugins') && parsePath.base === 'for.less')
       ||parsePath.dir.endsWith('inc')
+      ||parsePath.dir.endsWith('redash')
       ||parsePath.base === 'material-design-iconic-font.less'
       ||(parsePath.dir.endsWith('less') && parsePath.base === 'global.less')
       ||(parsePath.dir.endsWith('less') && parsePath.base === 'ant.less')

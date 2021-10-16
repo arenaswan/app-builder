@@ -38,7 +38,6 @@ export default function useQueryExecute(query) {
   }, []);
 
   const executeQuery = useImmutableCallback((maxAge = 0, queryExecutor) => {
-    console.log(`executeQuery`, 111111111111111111111)
     let newQueryResult;
     if (queryExecutor) {
       newQueryResult = queryExecutor();

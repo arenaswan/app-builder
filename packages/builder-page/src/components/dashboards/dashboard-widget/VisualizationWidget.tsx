@@ -26,40 +26,40 @@ import Widget from "./Widget";
 function visualizationWidgetMenuOptions({ widget, canEditDashboard, onParametersEdit }) {
   const canViewQuery = currentUser.hasPermission("view_query");
   const canEditParameters = canEditDashboard && !isEmpty(invoke(widget, "query.getParametersDefs"));
-  const widgetQueryResult = widget.getQueryResult();
-  const isQueryResultEmpty = !widgetQueryResult || !widgetQueryResult.isEmpty || widgetQueryResult.isEmpty();
+  // const widgetQueryResult = widget.getQueryResult();
+  // const isQueryResultEmpty = !widgetQueryResult || !widgetQueryResult.isEmpty || widgetQueryResult.isEmpty();
 
-  const downloadLink = fileType => widgetQueryResult.getLink(widget.getQuery().id, fileType);
-  const downloadName = fileType => widgetQueryResult.getName(widget.getQuery().name, fileType);
+  // const downloadLink = fileType => widgetQueryResult.getLink(widget.getQuery().id, fileType);
+  // const downloadName = fileType => widgetQueryResult.getName(widget.getQuery().name, fileType);
   return compact([
-    <Menu.Item key="download_csv" disabled={isQueryResultEmpty}>
-      {!isQueryResultEmpty ? (
-        <Link href={downloadLink("csv")} download={downloadName("csv")} target="_self">
-          Download as CSV File
-        </Link>
-      ) : (
-        "Download as CSV File"
-      )}
-    </Menu.Item>,
-    <Menu.Item key="download_tsv" disabled={isQueryResultEmpty}>
-      {!isQueryResultEmpty ? (
-        <Link href={downloadLink("tsv")} download={downloadName("tsv")} target="_self">
-          Download as TSV File
-        </Link>
-      ) : (
-        "Download as TSV File"
-      )}
-    </Menu.Item>,
-    <Menu.Item key="download_excel" disabled={isQueryResultEmpty}>
-      {!isQueryResultEmpty ? (
-        <Link href={downloadLink("xlsx")} download={downloadName("xlsx")} target="_self">
-          Download as Excel File
-        </Link>
-      ) : (
-        "Download as Excel File"
-      )}
-    </Menu.Item>,
-    (canViewQuery || canEditParameters) && <Menu.Divider key="divider" />,
+    // <Menu.Item key="download_csv" disabled={isQueryResultEmpty}>
+    //   {!isQueryResultEmpty ? (
+    //     <Link href={downloadLink("csv")} download={downloadName("csv")} target="_self">
+    //       Download as CSV File
+    //     </Link>
+    //   ) : (
+    //     "Download as CSV File"
+    //   )}
+    // </Menu.Item>,
+    // <Menu.Item key="download_tsv" disabled={isQueryResultEmpty}>
+    //   {!isQueryResultEmpty ? (
+    //     <Link href={downloadLink("tsv")} download={downloadName("tsv")} target="_self">
+    //       Download as TSV File
+    //     </Link>
+    //   ) : (
+    //     "Download as TSV File"
+    //   )}
+    // </Menu.Item>,
+    // <Menu.Item key="download_excel" disabled={isQueryResultEmpty}>
+    //   {!isQueryResultEmpty ? (
+    //     <Link href={downloadLink("xlsx")} download={downloadName("xlsx")} target="_self">
+    //       Download as Excel File
+    //     </Link>
+    //   ) : (
+    //     "Download as Excel File"
+    //   )}
+    // </Menu.Item>,
+    // (canViewQuery || canEditParameters) && <Menu.Divider key="divider" />,
     canViewQuery && (
       <Menu.Item key="view_query">
         <Link href={widget.getQuery().getUrl(true, widget.visualization.id)}>View Query</Link>
