@@ -38,6 +38,7 @@ export default function useQueryExecute(query) {
   }, []);
 
   const executeQuery = useImmutableCallback((maxAge = 0, queryExecutor) => {
+    console.log(`executeQuery`, 111111111111111111111)
     let newQueryResult;
     if (queryExecutor) {
       newQueryResult = queryExecutor();
@@ -115,7 +116,7 @@ export default function useQueryExecute(query) {
   useEffect(() => {
     // TODO: this belongs on the query page?
     // loadedInitialResults can be removed if so
-    if (queryRef.current.hasResult() || queryRef.current.paramsRequired()) {
+    if (true || queryRef.current.hasResult() || queryRef.current.paramsRequired()) {
       executeQuery(getMaxAge());
     } else {
       setExecutionState({ loadedInitialResults: true });

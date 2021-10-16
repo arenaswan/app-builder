@@ -152,13 +152,13 @@ export default function QueryPageHeader({
       <div className="title-with-tags">
         <div className="page-title">
           <div className="d-flex align-items-center">
-            {!queryFlags.isNew && <FavoritesControl item={query} />}
+            {/* {!queryFlags.isNew && <FavoritesControl item={query} />} */}
             <h3>
-              <EditInPlace isEditable={queryFlags.canEdit} onDone={updateName} ignoreBlanks value={query.name} />
+              <EditInPlace isEditable={queryFlags.canEdit} onDone={updateName} ignoreBlanks value={query.label} />
             </h3>
           </div>
         </div>
-        <div className="query-tags">
+        {/* <div className="query-tags">
           <QueryTagsControl
             tags={query.tags}
             isDraft={queryFlags.isDraft}
@@ -168,9 +168,9 @@ export default function QueryPageHeader({
             onEdit={updateTags}
             tagsExtra={tagsExtra}
           />
-        </div>
+        </div> */}
       </div>
-      <div className="header-actions">
+      {/* <div className="header-actions">
         {headerExtra}
         {isDesktop && queryFlags.isDraft && !queryFlags.isArchived && !queryFlags.isNew && queryFlags.canEdit && (
           <Button className="m-r-5" onClick={publishQuery}>
@@ -205,7 +205,7 @@ export default function QueryPageHeader({
             </Button>
           </Dropdown>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -218,7 +218,7 @@ QueryPageHeader.propTypes = {
   }).isRequired,
   dataSource: PropTypes.object,
   sourceMode: PropTypes.bool,
-  selectedVisualization: PropTypes.number,
+  selectedVisualization: PropTypes.any,
   headerExtra: PropTypes.node,
   tagsExtra: PropTypes.node,
   onChange: PropTypes.func,

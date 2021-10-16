@@ -132,7 +132,7 @@ export default function QueryVisualizationTabs({
       data-test="QueryPageVisualizationTabs"
       animated={false}
       tabBarGutter={0}
-      onChange={activeKey => onChangeTab(+activeKey)}
+      onChange={activeKey => onChangeTab(activeKey)}
       destroyInactiveTabPane>
       {orderedVisualizations.map(visualization => (
         <TabPane
@@ -141,7 +141,7 @@ export default function QueryVisualizationTabs({
             <TabWithDeleteButton
               data-test={`QueryPageVisualizationTab${visualization.id}`}
               canDelete={!isMobile && canDeleteVisualizations && !isFirstVisualization(visualization.id)}
-              visualizationName={visualization.name}
+              visualizationName={visualization.label}
               onDelete={() => onDeleteVisualization(visualization.id)}
             />
           }>
@@ -173,7 +173,7 @@ export default function QueryVisualizationTabs({
 QueryVisualizationTabs.propTypes = {
   queryResult: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   visualizations: PropTypes.arrayOf(PropTypes.object),
-  selectedTab: PropTypes.number,
+  selectedTab: PropTypes.any,
   showNewVisualizationButton: PropTypes.bool,
   canDeleteVisualizations: PropTypes.bool,
   onChangeTab: PropTypes.func,

@@ -32,7 +32,8 @@ export const currentUser = {
 
 export const clientConfig:any = {
   dashboardRefreshIntervals : "60,300,600,1800,3600,43200,86400".split(','),
-  displayModeBar: 'hover'
+  displayModeBar: 'hover',
+  disablePublicUrls: true
 };
 export const messages = [];
 

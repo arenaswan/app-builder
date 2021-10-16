@@ -90,7 +90,7 @@ QueryExecutionMetadata.propTypes = {
   query: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   queryResult: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   isQueryExecuting: PropTypes.bool,
-  selectedVisualization: PropTypes.number,
+  selectedVisualization: PropTypes.any,
   showEditVisualizationButton: PropTypes.bool,
   onEditVisualization: PropTypes.func,
   extraActions: PropTypes.node,

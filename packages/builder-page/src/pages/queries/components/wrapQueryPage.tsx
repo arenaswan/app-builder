@@ -9,7 +9,6 @@ export default function wrapQueryPage(WrappedComponent) {
     const [query, setQuery] = useState(null);
 
     const handleError = useImmutableCallback(onError);
-    console.log(`queryId`, queryId)
     useEffect(() => {
       let isCancelled = false;
       const promise = queryId ? (Query as any).get({ id: queryId }) : Promise.resolve((Query as any).newQuery());

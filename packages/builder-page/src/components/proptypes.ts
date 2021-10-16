@@ -32,7 +32,7 @@ export const RefreshScheduleDefault = {
 };
 
 export const UserProfile = PropTypes.shape({
-  id: PropTypes.number.isRequired,
+  id: PropTypes.any.isRequired,
   name: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
   profileImageUrl: PropTypes.string,
@@ -41,7 +41,7 @@ export const UserProfile = PropTypes.shape({
 });
 
 export const Destination = PropTypes.shape({
-  id: PropTypes.number.isRequired,
+  id: PropTypes.any.isRequired,
   name: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,

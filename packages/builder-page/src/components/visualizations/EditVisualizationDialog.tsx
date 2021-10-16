@@ -46,10 +46,11 @@ function saveVisualization(visualization) {
   return Visualization.save(visualization)
     .then(result => {
       notification.success("Visualization saved" as any);
-      return result;
+      result[0].id = result[0]._id;
+      return result[0];
     })
     .catch(error => {
-      notification.error("Visualization could not be saved" as any);
+      notification.error(error.message as any);
       return Promise.reject(error);
     });
 }
@@ -93,6 +94,7 @@ function EditVisualizationDialog({ dialog, visualization, query, queryResult }) 
     return {
       type: config.type,
       name: isNew ? config.name : visualization.name,
+      label: isNew ? config.name : visualization.label,
       options,
       originalOptions: options,
     };
@@ -100,7 +102,8 @@ function EditVisualizationDialog({ dialog, visualization, query, queryResult }) 
 
   const [type, setType] = useState(defaultState.type);
   const [name, setName] = useState(defaultState.name);
-  const [nameChanged, setNameChanged] = useState(false);
+  const [label, setLabel] = useState(defaultState.label);
+  const [labelChanged, setLabelChanged] = useState(false);
   const [options, setOptions] = useState(defaultState.options);
 
   const [saveInProgress, setSaveInProgress] = useState(false);
@@ -115,16 +118,16 @@ function EditVisualizationDialog({ dialog, visualization, query, queryResult }) 
     setType(newType);
 
     const config = registeredVisualizations[newType];
-    if (!nameChanged) {
-      setName(config.name);
+    if (!labelChanged) {
+      setLabel(config.name);
     }
 
     setOptions(config.getOptions(isNew ? {} : visualization.options, data));
   }
 
-  function onNameChanged(newName) {
-    setName(newName);
-    setNameChanged(newName !== name);
+  function onLabelChanged(newLabel) {
+    setLabel(newLabel);
+    setLabelChanged(newLabel !== label);
   }
 
   function onOptionsChanged(newOptions) {
@@ -141,18 +144,21 @@ function EditVisualizationDialog({ dialog, visualization, query, queryResult }) 
 
     const visualizationData = extend(newVisualization(type), visualization, {
       name,
+      label,
       options: visualizationOptions,
       query_id: query.id,
     });
     saveVisualization(visualizationData).then(savedVisualization => {
       updateQueryVisualizations(query, savedVisualization);
       dialog.close(savedVisualization);
+    }).catch(error=>{
+      setSaveInProgress(false);
     });
   }
 
   function dismiss() {
     const optionsChanged = !isEqual(options, defaultState.originalOptions);
-    confirmDialogClose(nameChanged || optionsChanged).then(dialog.dismiss);
+    confirmDialogClose(labelChanged || optionsChanged).then(dialog.dismiss);
   }
 
   // When editing existing visualization chart type selector is disabled, so add only existing visualization's
@@ -163,7 +169,7 @@ function EditVisualizationDialog({ dialog, visualization, query, queryResult }) 
 
   const vizTypeId = useUniqueId("visualization-type");
   const vizNameId = useUniqueId("visualization-name");
-
+  const vizLabelId = useUniqueId("visualization-label");
   return (
     <Modal
       {...dialog.props}
@@ -196,13 +202,23 @@ function EditVisualizationDialog({ dialog, visualization, query, queryResult }) 
             </Select>
           </div>
           <div className="m-b-15">
-            <label htmlFor={vizNameId}>Visualization Name</label>
+            <label htmlFor={vizNameId}>Visualization Api Name</label>
             <Input
               data-test="VisualizationName"
               id={vizNameId}
               className="w-100"
               value={name}
-              onChange={event => onNameChanged(event.target.value)}
+              onChange={event => setName(event.target.value)}
+            />
+          </div>
+          <div className="m-b-15">
+            <label htmlFor={vizLabelId}>Visualization Label</label>
+            <Input
+              data-test="VisualizationLabel"
+              id={vizLabelId}
+              className="w-100"
+              value={label}
+              onChange={event => onLabelChanged(event.target.value)}
             />
           </div>
           <div data-test="VisualizationEditor">

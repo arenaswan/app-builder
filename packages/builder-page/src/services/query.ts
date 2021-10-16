@@ -59,6 +59,7 @@ export class Query {
   queryResult: any;
   query: any;
   $parameters: any;
+  label: any;
   constructor(query) {
     extend(this, query);
     if(!query.id && query._id){
@@ -405,13 +406,12 @@ export class QueryResultError {
 }
 
 const getQuery = query => new Query(query);
-const saveOrCreateUrl = data => (data.id ? `api/queries/${data.id}` : "api/queries");
+const saveOrCreateUrl = data => (data.id ? `/service/api/~packages-@steedos/service-charts/queries/${data.id}` : "/service/api/~packages-@steedos/service-charts/queries");
 const mapResults = data => ({ ...data, results: map(data.results, getQuery) });
 
 const QueryService = {
   query: params => axios.get("api/queries", { params }).then(mapResults),
   get: (data) => {
-    console.log(`get query data`, data)
     return axios.get(`/service/api/~packages-@steedos/service-charts/queries/${data.id}`).then(getQuery);
   },
   save: data => axios.post(saveOrCreateUrl(data), data).then(getQuery),

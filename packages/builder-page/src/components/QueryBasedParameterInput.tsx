@@ -8,7 +8,7 @@ export default class QueryBasedParameterInput extends React.Component {
     parameter: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     mode: PropTypes.oneOf(["default", "multiple"]),
-    queryId: PropTypes.number,
+    queryId: PropTypes.any,
     onSelect: PropTypes.func,
     className: PropTypes.string,
     style: PropTypes.object

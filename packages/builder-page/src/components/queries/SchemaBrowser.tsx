@@ -211,7 +211,6 @@ export default function SchemaBrowser({
   onOptionsUpdate,
   ...props
 }) {
-  console.log(`SchemaBrowser`, 1);
   const [schema, isLoading, refreshSchema] = useDataSourceSchema(dataSource);
   const [filterString, setFilterString] = useState("");
   const filteredSchema = useMemo(() => applyFilterOnSchema(schema, filterString), [schema, filterString]);
@@ -224,7 +223,6 @@ export default function SchemaBrowser({
     setExpandedFlags({});
     handleSchemaUpdate(schema);
   }, [schema, handleSchemaUpdate]);
-  console.log(`SchemaBrowser`, schema, isLoading);
   if ((schema as any).length === 0 && !isLoading) {
     return null;
   }

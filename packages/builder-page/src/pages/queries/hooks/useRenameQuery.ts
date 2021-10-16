@@ -9,7 +9,7 @@ export default function useRenameQuery(query, onChange) {
   return useCallback(
     name => {
       recordEvent("edit_name", "query", query.id);
-      const changes: any = { name };
+      const changes: any = { label: name };
       const options: any = {};
 
       if (query.is_draft && clientConfig.autoPublishNamedQueries && name !== "New Query") {

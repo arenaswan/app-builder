@@ -21,7 +21,7 @@ class ParameterValueInput extends React.Component {
     type: PropTypes.string,
     value: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     enumOptions: PropTypes.string,
-    queryId: PropTypes.number,
+    queryId: PropTypes.any,
     parameter: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     onSelect: PropTypes.func,
     className: PropTypes.string,

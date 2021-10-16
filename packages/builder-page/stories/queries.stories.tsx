@@ -7,6 +7,6 @@ export default {
 export const QueriesSimple = () => {
   return (
     //   <Dashboard {...dashboard} layoutEditing={true}/>
-    <QuerySource queryId="616944df87a4e77bcc5eaf51" onError={(err)=>{console.log(`QuerySource error`, err)}}/>
+    <QuerySource queryId="test4" onError={(err)=>{console.log(`QuerySource error`, err)}}/>
   )
 }

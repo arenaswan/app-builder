@@ -26,7 +26,6 @@ const DataSource = {
     if (refresh) {
       params.refresh = true;
     }
-    console.log(`fetchSchema data`, data);
     return axios
       .get(`/service/api/~packages-@steedos/service-charts/data_sources/${data.id}/schema`, { params })
       .then((data: any) => {

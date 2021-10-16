@@ -19,7 +19,7 @@ var Data = _propTypes.default.shape({
 
 // @ts-expect-error ts-migrate(2322) FIXME: Type 'Requireable<InferProps<{ id: Requireable<num... Remove this comment to see the full error message
 var VisualizationType = _propTypes.default.shape({
-  id: _propTypes.default.number,
+  id: _propTypes.default.any,
   type: _propTypes.default.string.isRequired,
   name: _propTypes.default.string.isRequired,
   options: VisualizationOptions.isRequired
