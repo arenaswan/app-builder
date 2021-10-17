@@ -392,6 +392,15 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
               extraColumnFields.push("parent")
             }
             fields = uniq(compact(fields.concat(extraColumnFields).concat(["owner", "company_id", "company_ids", "locked"])));
+            let dependOnFields = [];
+            forEach(fields,(val)=>{
+              if(objectSchema && objectSchema.fields && objectSchema.fields[val] && objectSchema.fields[val].depend_on && objectSchema.fields[val].depend_on.length){
+                dependOnFields = dependOnFields.concat(objectSchema.fields[val].depend_on)
+              }
+            })
+            if(dependOnFields.length){
+              fields = uniq(compact(fields.concat(dependOnFields)));
+            }
             const sort = []
             forEach(sortModel, (sortField)=>{
               sort.push([sortField.colId, sortField.sort])
