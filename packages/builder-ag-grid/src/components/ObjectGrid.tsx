@@ -652,6 +652,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         cellRendererParams: {
           fieldSchema: Object.assign({}, { ...field }, { link_target: linkTarget }),
           valueType: field.type,
+          objectApiName: objectApiName,
           render: fieldRender
         },
         cellEditor: 'AgGridCellEditor',
