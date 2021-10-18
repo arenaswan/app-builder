@@ -392,10 +392,12 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
               extraColumnFields.push("parent")
             }
             fields = uniq(compact(fields.concat(extraColumnFields).concat(["owner", "company_id", "company_ids", "locked"])));
+            // 当查询的某个字段有depend_on属性时，接口返回的数据字段要包含depend_on的值。 
             let dependOnFields = [];
             forEach(fields,(val)=>{
-              if(objectSchema && objectSchema.fields && objectSchema.fields[val] && objectSchema.fields[val].depend_on && objectSchema.fields[val].depend_on.length){
-                dependOnFields = dependOnFields.concat(objectSchema.fields[val].depend_on)
+              const dependOnValues = objectSchema && objectSchema.fields && objectSchema.fields[val] && objectSchema.fields[val].depend_on;
+              if(dependOnValues && dependOnValues.length){
+                dependOnFields = dependOnFields.concat(dependOnValues)
               }
             })
             if(dependOnFields.length){
