@@ -36,7 +36,9 @@ export const AgGridCellRenderer = (props: any) => {
   let depend_field_values = {};
   if(fieldSchema && fieldSchema.depend_on && fieldSchema.depend_on.length){
     forEach(fieldSchema.depend_on,(val)=>{
-      depend_field_values[val] = props.data[val];
+      if(props.data[val] !== undefined){
+        depend_field_values[val] = props.data[val];
+      }
     })
   }
   return (

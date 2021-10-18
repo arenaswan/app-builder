@@ -55,7 +55,6 @@ export const LookupField = observer((props:any) => {
     let optionsFunctionValues:any = Object.assign({}, fieldsValues || {}, {
         _grid_row_id: _grid_row_id,
         space: Settings.tenantId,
-        ...dependFieldValues,
         _object_name: objectApiName
     });
     let tags:any[] = [];
