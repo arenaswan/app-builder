@@ -3,7 +3,8 @@ import React from 'react';
 import './App.css';
 import { SteedosProvider } from '@steedos/builder-object';
 import { Settings } from '@steedos/builder-store';
-import { QuerySource } from '@steedos/builder-page';
+import { Switch, HashRouter, Route, Redirect } from 'react-router-dom';
+import QuerySourcePage from './pages/QuerySource';
 // import { QuerySource } from '@steedos/builder-community';
 const initialStore = {
   rootUrl: Settings.rootUrl,
@@ -22,12 +23,15 @@ if(!isProd){
 }
 
 function App() {
+  console.log(`HashRouter`);
   return (
-    <div style={{height: '100%'}}>
-      <SteedosProvider {...initialStore}>
-        <QuerySource queryId="test4" onError={(err: any)=>{console.log(`QuerySource error`, err)}}/>
-      </SteedosProvider>
-    </div>
+    <SteedosProvider {...initialStore}>
+    <HashRouter basename="/">
+      <Switch>
+        <Route path="/:queryId" component={QuerySourcePage} />
+    </Switch>
+    </HashRouter>
+    </SteedosProvider>
   );
 }
 
