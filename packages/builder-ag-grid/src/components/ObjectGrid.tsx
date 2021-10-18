@@ -323,7 +323,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   if (object && object.isLoading) return (<div><Spin/></div>)
 
   const objectSchema = defaultObjectSchema ? defaultObjectSchema : object.schema;
-  if(isEmpty(objectSchema) || objectSchema.permissions.allowRead !== true){
+  if(isEmpty(objectSchema) || (objectSchema.permissions && objectSchema.permissions.allowRead !== true) ){
     const errorWarning = isEmpty(objectSchema) ? translate('creator_odata_collection_query_fail') : translate('creator_odata_user_access_fail');
     return (<Alert message={errorWarning} type="warning" showIcon style={{padding: '4px 15px'}}/>)
   }

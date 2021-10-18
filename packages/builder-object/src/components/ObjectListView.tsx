@@ -222,7 +222,7 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
   const object = Objects.getObject(objectApiName);
   if (object.isLoading) return (<div>Loading object ...</div>)
   const schema = object.schema;
-  if(isEmpty(schema) || schema.permissions.allowRead !== true){
+  if(isEmpty(schema) || (schema.permissions && schema.permissions.allowRead !== true) ){
     const errorWarning = isEmpty(schema) ? translate('creator_odata_collection_query_fail') : translate('creator_odata_user_access_fail');
     return (<Alert message={errorWarning} type="warning" showIcon style={{padding: '4px 15px'}}/>)
   }
