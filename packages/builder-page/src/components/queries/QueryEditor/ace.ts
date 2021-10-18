@@ -1,7 +1,7 @@
 import { capitalize, isNil, map, get } from "lodash";
 import AceEditor from "react-ace";
 import ace from "ace-builds";
-
+// import 'ace-builds/webpack-resolver'
 import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-json";
 // import "ace-builds/src-noconflict/mode-python";
@@ -22,7 +22,7 @@ function defineDummySnippets(mode) {
   });
 }
 
-defineDummySnippets("python");
+// defineDummySnippets("python");
 defineDummySnippets("sql");
 defineDummySnippets("json");
 defineDummySnippets("yaml");
