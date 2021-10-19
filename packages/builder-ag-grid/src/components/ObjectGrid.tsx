@@ -323,7 +323,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   if (object && object.isLoading) return (<div><Spin/></div>)
 
   const objectSchema = defaultObjectSchema ? defaultObjectSchema : object.schema;
-  if(isEmpty(objectSchema) || objectSchema.permissions.allowRead !== true){
+  if(isEmpty(objectSchema) || (objectSchema.permissions && objectSchema.permissions.allowRead !== true) ){
     const errorWarning = isEmpty(objectSchema) ? translate('creator_odata_collection_query_fail') : translate('creator_odata_user_access_fail');
     return (<Alert message={errorWarning} type="warning" showIcon style={{padding: '4px 15px'}}/>)
   }
@@ -392,6 +392,17 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
               extraColumnFields.push("parent")
             }
             fields = uniq(compact(fields.concat(extraColumnFields).concat(["owner", "company_id", "company_ids", "locked"])));
+            // 当查询的某个字段有depend_on属性时，接口返回的数据字段要包含depend_on的值。 
+            let dependOnFields = [];
+            forEach(fields,(val)=>{
+              const dependOnValues = objectSchema && objectSchema.fields && objectSchema.fields[val] && objectSchema.fields[val].depend_on;
+              if(dependOnValues && dependOnValues.length){
+                dependOnFields = dependOnFields.concat(dependOnValues)
+              }
+            })
+            if(dependOnFields.length){
+              fields = uniq(compact(fields.concat(dependOnFields)));
+            }
             const sort = []
             forEach(sortModel, (sortField)=>{
               sort.push([sortField.colId, sortField.sort])
@@ -652,6 +663,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         cellRendererParams: {
           fieldSchema: Object.assign({}, { ...field }, { link_target: linkTarget }),
           valueType: field.type,
+          objectApiName: objectApiName,
           render: fieldRender
         },
         cellEditor: 'AgGridCellEditor',

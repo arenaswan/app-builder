@@ -555,7 +555,6 @@ export const LookupField = observer((props:any) => {
 
         const lookupInput = isLookupTree ? (<ObjectFieldTreeSelect {...proFieldProps}  />) : (<FieldSelect {...proFieldProps} />);
         const onModalFinish = (selectedRowKeys: any, selectedRows: any)=>{
-            console.log('selectedRowKeys==>',selectedRowKeys, selectedRows)
             // ag-grid只传一个参数（rows）过来，这里获取其内部的value。
             if(!selectedRows){
                 selectedRowKeys = map(selectedRowKeys,reference_to_field)
