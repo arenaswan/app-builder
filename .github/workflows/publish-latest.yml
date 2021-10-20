@@ -32,6 +32,7 @@ jobs:
           cache: "yarn"
       - run: yarn --frozen-lockfile
       - run: yarn bootstrap
+      - run: yarn boot
       - name: Lerna version
         run: |
           lerna version patch --no-git-tag-version --force-publish --exact --yes
