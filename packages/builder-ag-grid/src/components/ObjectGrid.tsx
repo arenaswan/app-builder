@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react"
 import { forEach, compact, filter, includes, keys, map, isEmpty, isFunction, isObject, uniq, find, sortBy, reverse, clone, isArray, isString, isBoolean } from 'lodash';
 import useAntdMediaQuery from 'use-media-antd-query';
 import { observer } from "mobx-react-lite"
-import { Objects, API } from "@steedos/builder-store"
+import { Objects, API } from "@steedos-ui/builder-store"
 import { Spin, Alert } from 'antd';
-import { concatFilters } from '@steedos/builder-sdk';
+import { concatFilters } from '@steedos-ui/builder-sdk';
 import {AgGridColumn, AgGridReact} from '@ag-grid-community/react';
 import { AllModules } from '@ag-grid-enterprise/all-modules';
 import { ServerSideStoreType } from '@ag-grid-enterprise/all-modules';
-import { getNameFieldColumnRender } from "@steedos/builder-form"
+import { getNameFieldColumnRender } from "@steedos-ui/builder-form"
 import { AgGridCellEditor } from "./CellEditor";
 import { AgGridCellRenderer } from "./CellRender";
 import { AgGridCellFilter } from "./CellFilter";
@@ -19,10 +19,10 @@ import { AgGridCellBooleanFilter } from './CellBooleanFilter';
 import { AgGridRowActions } from './RowActions';
 import { Modal, Drawer, Button, Space } from 'antd';
 import { AG_GRID_LOCALE_ZH_CN } from '../locales/locale.zh-CN'
-import { Tables } from '@steedos/builder-store';
+import { Tables } from '@steedos-ui/builder-store';
 import { message } from 'antd';
-import { translate } from '@steedos/builder-sdk';
-import { getObjectNameFieldKey } from '@steedos/builder-sdk';
+import { translate } from '@steedos-ui/builder-sdk';
+import { getObjectNameFieldKey } from '@steedos-ui/builder-sdk';
 
 import './ObjectGrid.less'
 

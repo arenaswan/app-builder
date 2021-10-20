@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Renderer, updateVisualizationsSettings } from "@steedos/builder-viz-lib";
+import { Renderer, updateVisualizationsSettings } from "@steedos-ui/builder-viz-lib";
 import { observer } from "mobx-react-lite";
-import { Queries, Objects } from "@steedos/builder-store";
+import { Queries, Objects } from "@steedos-ui/builder-store";
 import './chart.less'
 
 const CHART_OBJECT_APINAME = 'charts';

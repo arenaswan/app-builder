@@ -1,4 +1,4 @@
-import { API, Objects } from '@steedos/builder-store';
+import { API, Objects } from '@steedos-ui/builder-store';
 import { } from 'lodash';
 const CHART_OBJECT_APINAME ='charts';
 

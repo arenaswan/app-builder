@@ -3,15 +3,15 @@ import { formatFiltersToODataQuery } from '@steedos/filters';
 import { Select, Spin, Alert } from 'antd';
 import "antd/es/tree-select/style/index.css";
 import { isFunction, isArray, isObject, uniq, filter, map, forEach, isString, isEmpty, concat, isBoolean, find, isNil } from 'lodash';
-import { concatFilters } from '@steedos/builder-sdk';
-import { Objects, API, Settings } from '@steedos/builder-store';
+import { concatFilters } from '@steedos-ui/builder-sdk';
+import { Objects, API, Settings } from '@steedos-ui/builder-store';
 import { observer } from "mobx-react-lite";
 import FieldSelect from '@ant-design/pro-field/es/components/Select';
-import { getObjectRecordUrl , Link } from "@steedos/builder-form"
-import { SteedosIcon } from '@steedos/builder-lightning';
+import { getObjectRecordUrl , Link } from "@steedos-ui/builder-form"
+import { SteedosIcon } from '@steedos-ui/builder-lightning';
 import "./lookup.less"
 import { PlusOutlined } from "@ant-design/icons";
-import { safeRunFunction } from '@steedos/builder-sdk';
+import { safeRunFunction } from '@steedos-ui/builder-sdk';
 import { ObjectForm, ObjectTable, ObjectExpandTable,ObjectListView, 
     ObjectModal, ObjectTableModal, SpaceUsersModal, OrganizationsModal, ObjectFieldTreeSelect } from "../components";
 import { BAD_FILTERS } from '../utils';

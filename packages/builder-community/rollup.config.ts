@@ -37,12 +37,12 @@ const options = {
     svg(),
     // alias({
     //   entries: {
-    //     "@steedos/builder-sdk": "../../packages/builder-sdk/src/index.ts",
-    //     "@steedos/builder-store": "../../packages/builder-store/src/index.tsx",
-    //     "@steedos/builder-ant-design": "../../packages/builder-ant-design/src/index.tsx",
-    //     "@steedos/builder-form": "../../packages/builder-form/src/index.tsx",
-    //     "@steedos/builder-object": "../../packages/builder-object/src/index.tsx",
-    //     "@steedos/builder-locale": "../../packages/builder-locale/src/index.tsx",
+    //     "@steedos-ui/builder-sdk": "../../packages/builder-sdk/src/index.ts",
+    //     "@steedos-ui/builder-store": "../../packages/builder-store/src/index.tsx",
+    //     "@steedos-ui/builder-ant-design": "../../packages/builder-ant-design/src/index.tsx",
+    //     "@steedos-ui/builder-form": "../../packages/builder-form/src/index.tsx",
+    //     "@steedos-ui/builder-object": "../../packages/builder-object/src/index.tsx",
+    //     "@steedos-ui/builder-locale": "../../packages/builder-locale/src/index.tsx",
     //     "@emotion/core": "../../node_modules/@emotion/react",
     //     "emotion-theming": "../../node_modules/@emotion/react",
     //   }
@@ -153,7 +153,7 @@ export default [
   //       format: 'umd',
   //       sourcemap: false,
   //       amd: {
-  //         id: '@steedos/builder-community',
+  //         id: '@steedos-ui/builder-community',
   //       },
   //       intro: 'const global = window;',
   //     },

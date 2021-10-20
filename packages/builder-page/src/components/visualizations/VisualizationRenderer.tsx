@@ -5,7 +5,7 @@ import useQueryResultData from "../../lib/useQueryResultData";
 import useImmutableCallback from "../../lib/hooks/useImmutableCallback";
 import Filters, { FiltersType, filterData } from "../Filters";
 // import { VisualizationType } from "@redash/viz/lib";
-import { VisualizationType } from "@steedos/builder-viz-lib/lib";
+import { VisualizationType } from "@steedos-ui/builder-viz-lib/lib";
 import { Renderer } from "./visualizationComponents";
 
 function combineFilters(localFilters, globalFilters) {

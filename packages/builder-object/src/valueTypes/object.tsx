@@ -5,7 +5,7 @@ import { Grid, GridItem, Flex, Box } from '@chakra-ui/layout'
 import { ObjectField } from '../components/ObjectField';
 import BaseForm from '@ant-design/pro-form/es/BaseForm';
 import { Form as AntForm } from 'antd';
-import { FieldSection } from '@steedos/builder-form';
+import { FieldSection } from '@steedos-ui/builder-form';
 
 /**
  * 对象字段类型组件

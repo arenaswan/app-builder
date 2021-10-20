@@ -16,7 +16,7 @@ import useFullscreenHandler from "../../../lib/hooks/useFullscreenHandler";
 import useRefreshRateHandler from "./useRefreshRateHandler";
 import useEditModeHandler from "./useEditModeHandler";
 import { policy } from "../../../services/policy";
-import { ObjectTable } from '@steedos/builder-object';
+import { ObjectTable } from '@steedos-ui/builder-object';
 
 export { DashboardStatusEnum } from "./useEditModeHandler";
 //TODO 处理当前用户信息

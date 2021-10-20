@@ -1,5 +1,5 @@
 import * as React from "react"
-import { QuerySource } from '@steedos/builder-page';
+import { QuerySource } from '@steedos-ui/builder-page';
 export default {
   title: "Queries",
 }

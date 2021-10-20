@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Page, PublicPage } from '@steedos/builder-page';
+import { Page, PublicPage } from '@steedos-ui/builder-page';
 export default {
   title: "Page",
 }

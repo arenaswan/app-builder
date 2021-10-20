@@ -14,7 +14,7 @@ import ProForm, {
 import { observer } from "mobx-react-lite"
 import { isBoolean, assignIn } from 'lodash'
 
-import { Forms } from '@steedos/builder-store';
+import { Forms } from '@steedos-ui/builder-store';
 
 // 在 ProForm的基础上扩展属性
 // colSpan: 每一列默认占几栅格，总共12栅格

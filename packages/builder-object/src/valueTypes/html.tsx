@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import { observer } from "mobx-react-lite";
 import Editor from "rich-markdown-editor";
-import { Settings, API } from '@steedos/builder-store';
+import { Settings, API } from '@steedos-ui/builder-store';
 import Video from '../embeds/Video'
 import { VideoCameraOutlined } from "@ant-design/icons"
 import "./html.less"

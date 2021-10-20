@@ -1,4 +1,4 @@
-import { ObjectForm, ObjectModal, ObjectTree, SpaceUsers, OrganizationsModal, SpaceUsersModal, Organizations, ObjectTable } from "@steedos/builder-object";
+import { ObjectForm, ObjectModal, ObjectTree, SpaceUsers, OrganizationsModal, SpaceUsersModal, Organizations, ObjectTable } from "@steedos-ui/builder-object";
 import * as React from "react"
 import ReactDOM from "react-dom";
 import { Modal, TreeSelect, Select, Input, Button } from "antd"

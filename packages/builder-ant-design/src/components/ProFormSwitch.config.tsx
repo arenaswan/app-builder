@@ -1,5 +1,5 @@
 export const configProFormSwitch = {
-  name: '@steedos/builder-form:Switch',
+  name: '@steedos-ui/builder-form:Switch',
   inputs: [
     { name: 'name', type: 'string', defaultValue: 'switch', required: true},
     { name: 'label', type: 'string', defaultValue: 'Switch', required: true},
@@ -21,7 +21,7 @@ export const configProFormSwitch = {
   requiresParent: {
     message: 'This block must be inside a "Form" or "FormSection" or "FormList" or "Table" block',
     query: {
-      'component.name': { $in: ['@steedos/builder-form:Form', '@steedos/builder-form:FormSection', '@steedos/builder-form:FormList', '@steedos/builder-form:Table'] }
+      'component.name': { $in: ['@steedos-ui/builder-form:Form', '@steedos-ui/builder-form:FormSection', '@steedos-ui/builder-form:FormList', '@steedos-ui/builder-form:Table'] }
     }
   }
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, Button,  Spin, message} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { Settings , Objects } from '@steedos/builder-store';
+import { Settings , Objects } from '@steedos-ui/builder-store';
 import { observer } from "mobx-react-lite";
 import { forEach, isArray } from 'lodash';
 import './file.less'

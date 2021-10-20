@@ -1,6 +1,6 @@
-import { ObjectTable, render } from "@steedos/builder-object";
-import { PublicPage } from "@steedos/builder-page";
-import { ChartDesignModal, ChartDesign } from '@steedos/builder-charts';
+import { ObjectTable, render } from "@steedos-ui/builder-object";
+import { PublicPage } from "@steedos-ui/builder-page";
+import { ChartDesignModal, ChartDesign } from '@steedos-ui/builder-charts';
 import * as React from "react"
 import { Button, Tabs } from "antd"
 const { TabPane } = Tabs;

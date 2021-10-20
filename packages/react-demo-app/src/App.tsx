@@ -5,11 +5,11 @@ import 'antd/es/alert/style/index.css';
 // import logo from "./logo.svg"
 import "./App.less"
 
-import { SteedosProvider } from "@steedos/builder-object"
-import { ObjectExpandTable } from "@steedos/builder-object"
+import { SteedosProvider } from "@steedos-ui/builder-object"
+import { ObjectExpandTable } from "@steedos-ui/builder-object"
 import { observer } from "mobx-react-lite";
-import { Settings, User } from '@steedos/builder-store';
-import { Form,Field } from '@steedos/builder-form';
+import { Settings, User } from '@steedos-ui/builder-store';
+import { Form,Field } from '@steedos-ui/builder-form';
 
 import { Button } from "antd"
 import ProCard from "@ant-design/pro-card"

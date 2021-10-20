@@ -1,5 +1,5 @@
 import React,{ useState, useMemo, useRef, useEffect } from "react"
-import { Form,Field } from '@steedos/builder-form';
+import { Form,Field } from '@steedos-ui/builder-form';
 import { formatFiltersToODataQuery } from '@steedos/filters';
 import { SpaceUsers, SpaceUsersProps, ObjectModal, ObjectModalProps, Organizations } from ".."
 import { omit, isArray } from "lodash"

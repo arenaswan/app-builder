@@ -4,9 +4,9 @@ import { isFunction, forEach, isObject, filter, isString, each, includes, isBool
 import { ObjectListViewProps, getListviewColumns, getListViewColumnFields, getListViewFilters } from "."
 import { ObjectExpandTable } from "."
 import { observer } from "mobx-react-lite"
-import { Objects, API, Settings } from "@steedos/builder-store"
-import { ObjectGrid, ObjectTreeGrid } from '@steedos/builder-ag-grid';
-import { translate } from '@steedos/builder-sdk';
+import { Objects, API, Settings } from "@steedos-ui/builder-store"
+import { ObjectGrid, ObjectTreeGrid } from '@steedos-ui/builder-ag-grid';
+import { translate } from '@steedos-ui/builder-sdk';
 
 export const ObjectTable = observer((props: ObjectListViewProps<any>) => {
   // console.log("===ObjectTable===props==", props);

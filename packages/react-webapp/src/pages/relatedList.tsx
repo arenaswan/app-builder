@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
-import { ObjectForm } from '@steedos/builder-object';
+import { ObjectForm } from '@steedos-ui/builder-object';
 import { Button, message } from 'antd';
-import { Objects } from '@steedos/builder-store';
+import { Objects } from '@steedos-ui/builder-store';
 import * as _ from 'lodash';
 import { observer } from "mobx-react-lite";
 import ProSkeleton from '@ant-design/pro-skeleton';
@@ -9,7 +9,7 @@ import {
   ActionType,
 } from "@ant-design/pro-table"
 
-import { ObjectListView } from '@steedos/builder-object';
+import { ObjectListView } from '@steedos-ui/builder-object';
 
 export const RelatedList = observer((props: any) => {
   const ref = useRef<ActionType>();

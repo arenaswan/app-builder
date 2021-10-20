@@ -1,8 +1,8 @@
-import { ObjectForm, ObjectField, Iframe } from "@steedos/builder-object";
-import { FieldSection } from "@steedos/builder-form";
+import { ObjectForm, ObjectField, Iframe } from "@steedos-ui/builder-object";
+import { FieldSection } from "@steedos-ui/builder-form";
 import * as React from "react"
 import ReactDOM from "react-dom";
-import { API } from '@steedos/builder-store';
+import { API } from '@steedos-ui/builder-store';
 import { Link } from "react-router-dom";
 import { Modal, TreeSelect, Select, Input, Button } from "antd"
 import ProCard from "@ant-design/pro-card"

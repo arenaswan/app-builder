@@ -1,6 +1,6 @@
 import * as React from "react"
-import { Form,Field } from '@steedos/builder-form';
-import { FilterForm } from "@steedos/builder-object";
+import { Form,Field } from '@steedos-ui/builder-form';
+import { FilterForm } from "@steedos-ui/builder-object";
 
 export default {
   title: "Filter",

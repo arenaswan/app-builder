@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo, useRef } from "react"
 import { Modal, ConfigProvider , Button, Spin} from "antd"
-import { Objects, Tables } from '@steedos/builder-store';
+import { Objects, Tables } from '@steedos-ui/builder-store';
 import { 
   ObjectProTable, ObjectProTableProps, 
   ObjectExpandTable, ObjectExpandTableProps, 

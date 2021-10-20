@@ -3,7 +3,7 @@ import { isArray } from "lodash"
 import { observer } from "mobx-react-lite"
 import React, { useContext, useEffect, useState } from "react"
 import { useQuery } from "react-query"
-import { Objects, API } from "@steedos/builder-store"
+import { Objects, API } from "@steedos-ui/builder-store"
 import { formatFiltersToODataQuery } from '@steedos/filters';
 import { getTreeDataFromRecords } from '../utils';
 import "./ObjectTree.less"

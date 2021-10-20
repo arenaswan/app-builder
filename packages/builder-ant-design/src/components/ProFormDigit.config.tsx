@@ -1,5 +1,5 @@
 export const configProFormDigit = {
-  name: '@steedos/builder-form:Digit',
+  name: '@steedos-ui/builder-form:Digit',
   inputs: [
     { name: 'name', type: 'text', defaultValue: 'digit', required: true},
     { name: 'label', type: 'text', defaultValue: 'Digit Field', required: true},
@@ -29,7 +29,7 @@ export const configProFormDigit = {
   requiresParent: {
     message: 'This block must be inside a "Form" or "FormSection" or "FormList" or "Table" block',
     query: {
-      'component.name': { $in: ['@steedos/builder-form:Form', '@steedos/builder-form:FormSection', '@steedos/builder-form:FormList', '@steedos/builder-form:Table'] }
+      'component.name': { $in: ['@steedos-ui/builder-form:Form', '@steedos-ui/builder-form:FormSection', '@steedos-ui/builder-form:FormList', '@steedos-ui/builder-form:Table'] }
     }
   }
 };

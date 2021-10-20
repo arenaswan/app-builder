@@ -1,6 +1,6 @@
 import React from "react"
 import { Alert, Spin } from 'antd';
-import { User } from '@steedos/builder-store';
+import { User } from '@steedos-ui/builder-store';
 import { ObjectExpandTable, ObjectExpandTableProps, ObjectListView, ObjectTable } from ".."
 import { observer } from "mobx-react-lite"
 import { omit } from "lodash"

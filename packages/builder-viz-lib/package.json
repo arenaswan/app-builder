@@ -1,5 +1,5 @@
 {
-  "name": "@steedos/builder-viz-lib",
+  "name": "@steedos-ui/builder-viz-lib",
   "version": "1.0.0",
   "description": "Redash visualizations",
   "main": "dist/redash-visualizations.js",

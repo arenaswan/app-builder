@@ -1,5 +1,5 @@
 import * as modal from './modal'
-import { Tables, Objects } from '@steedos/builder-store';
+import { Tables, Objects } from '@steedos-ui/builder-store';
 import * as render from './render'
 export * from './modal'
 export * from './render'

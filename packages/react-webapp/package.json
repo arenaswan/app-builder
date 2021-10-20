@@ -1,5 +1,5 @@
 {
-  "name": "@steedos/react-webapp",
+  "name": "@steedos-ui/react-webapp",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

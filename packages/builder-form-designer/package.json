@@ -1,5 +1,5 @@
 {
-  "name": "@steedos/builder-form-designer",
+  "name": "@steedos-ui/builder-form-designer",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",

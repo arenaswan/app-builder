@@ -6,7 +6,7 @@ import "@/assets/images/avatar.svg";
 
 // Register visualizations
 // import "@redash/viz/lib";
-import "@steedos/builder-viz-lib/lib";
+import "@steedos-ui/builder-viz-lib/lib";
 
 // Register routes before registering extensions as they may want to override some
 import "@/pages";

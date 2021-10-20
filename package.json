@@ -1,5 +1,5 @@
 {
-  "name": "@steedos/app-builder",
+  "name": "@steedos-ui/app-builder",
   "version": "0.0.1",
   "workspaces": [
     "packages/**",

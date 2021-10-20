@@ -2,7 +2,7 @@
 
 import { types, Instance, onSnapshot } from "mobx-state-tree";
 
-import { SteedosClient } from '@steedos/builder-sdk';
+import { SteedosClient } from '@steedos-ui/builder-sdk';
 import { convertObjectSchema } from './utils';
 import { Settings } from './Settings';
 import _ from 'lodash';

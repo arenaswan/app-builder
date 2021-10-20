@@ -20,7 +20,7 @@ import {
   getDefaultVisualization,
   newVisualization,
   VisualizationType,
-} from "@steedos/builder-viz-lib/lib";
+} from "@steedos-ui/builder-viz-lib/lib";
 import { Renderer, Editor } from "../visualizations/visualizationComponents";
 
 import "./EditVisualizationDialog.less";

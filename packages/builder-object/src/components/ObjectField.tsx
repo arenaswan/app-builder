@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 
-import { Field } from '@steedos/builder-form'
+import { Field } from '@steedos-ui/builder-form'
 import _ from 'lodash';
 import { useQuery } from "react-query";
 import { observer } from "mobx-react-lite"
 import { FormContext } from "antd/es/form/context";
 import { ProFormDependency } from '@ant-design/pro-form';
 import useAntdMediaQuery from 'use-media-antd-query';
-import { Forms } from '@steedos/builder-store';
+import { Forms } from '@steedos-ui/builder-store';
 
 export type ObjectFieldProps = {
   objectApiName?: string,

@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { Modal, Button, Form } from 'antd';
 import { ChartDesign, ChartDesignProps, CHART_OBJECT_APINAME } from './chartDesign'
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { API, Objects } from '@steedos/builder-store';
+import { API, Objects } from '@steedos-ui/builder-store';
 import { isEmpty } from 'lodash';
 import './chartDesignModal.less';
 export const ChartDesignModal = observer((props: ChartDesignProps) => {

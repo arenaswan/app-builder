@@ -1,6 +1,6 @@
 import ProField from "@ant-design/pro-field";
 import type { InputProps } from 'antd';
-import { API } from "@steedos/builder-store"
+import { API } from "@steedos-ui/builder-store"
 import { isFunction, isNil } from 'lodash';
 
 import React, { useContext, useState } from "react";
@@ -10,11 +10,11 @@ import { FormContext } from "antd/es/form/context";
 import createField from '@ant-design/pro-form/es/BaseForm/createField'
 
 import { ProFormItemProps } from "@ant-design/pro-form/es/interface";
-import { Forms } from '@steedos/builder-store';
+import { Forms } from '@steedos-ui/builder-store';
 
 import { observer } from "mobx-react-lite"
 import Button from '@salesforce/design-system-react/components/button'; 
-import { safeRunFunction } from '@steedos/builder-sdk';
+import { safeRunFunction } from '@steedos-ui/builder-sdk';
 
 import './Field.less'
 

@@ -2,11 +2,11 @@
 import React from "react";
 
 import { getSnapshot } from "mobx-state-tree";
-import { SteedosClient } from '@steedos/builder-sdk';
-import { FormProvider } from "@steedos/builder-form";
+import { SteedosClient } from '@steedos-ui/builder-sdk';
+import { FormProvider } from "@steedos-ui/builder-form";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Settings, API, ComponentRegistry } from "@steedos/builder-store";
-import { SteedosIconSettings } from "@steedos/builder-lightning";
+import { Settings, API, ComponentRegistry } from "@steedos-ui/builder-store";
+import { SteedosIconSettings } from "@steedos-ui/builder-lightning";
 import { SteedosContext } from './SteedosContext';
 import { observer } from "mobx-react-lite";
 

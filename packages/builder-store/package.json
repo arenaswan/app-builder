@@ -1,5 +1,5 @@
 {
-  "name": "@steedos/builder-store",
+  "name": "@steedos-ui/builder-store",
   "version": "1.0.0",
   "license": "MIT",
   "main": "dist/cjs/index.js",
@@ -30,7 +30,7 @@
     "lint:types": "tsc --noEmit"
   },
   "dependencies": {
-    "@steedos/builder-sdk": "^1.0.0",
+    "@steedos-ui/builder-sdk": "^1.0.0",
     "mobx": "^6.1.8",
     "mobx-react-lite": "^3.2.0",
     "mobx-state-tree": "^5.0.1"

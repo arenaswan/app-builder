@@ -15,7 +15,7 @@ import antd_enUS from 'antd/es/locale/zh_CN';
 
 import { IntlType } from "@ant-design/pro-table";
 
-import { en_US, zh_CN } from '@steedos/builder-locale';
+import { en_US, zh_CN } from '@steedos-ui/builder-locale';
 
 /* 通过 valueTypeMap，支持给Form传入第三方自定义控件 */
 type FormProviderProps = {

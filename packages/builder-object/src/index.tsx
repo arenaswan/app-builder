@@ -7,5 +7,5 @@ export * from './utils/';
 export * from './valueTypes/';
 export * from './functions/';
 export { BrowserRouter as SteedosRouter } from "react-router-dom";
-export { API, Forms } from '@steedos/builder-store';
+export { API, Forms } from '@steedos-ui/builder-store';
 // export { FooterToolbar as SteedosFormFooterToolbar} from '@ant-design/pro-layout';

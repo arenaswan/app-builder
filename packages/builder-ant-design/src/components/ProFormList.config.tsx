@@ -1,5 +1,5 @@
 export const configProFormList = {
-  name: '@steedos/builder-form:FormList',
+  name: '@steedos-ui/builder-form:FormList',
   image:
     'https://cdn.builder.io/api/v1/image/assets%2FIsxPKMo2gPRRKeakUztj1D6uqed2%2F682efef23ace49afac61748dd305c70a',
   inputs: [
@@ -16,7 +16,7 @@ export const configProFormList = {
   requiresParent: {
     message: 'This block must be inside a "Form" block',
     query: {
-      'component.name': { $in: ['@steedos/builder-form:Form'] }
+      'component.name': { $in: ['@steedos-ui/builder-form:Form'] }
     }
   }
 };

@@ -4,7 +4,7 @@ import ProField from "@ant-design/pro-field";
 import Dropdown from '@salesforce/design-system-react/components/menu-dropdown'; 
 import Button from '@salesforce/design-system-react/components/button'; 
 import Popover from '@salesforce/design-system-react/components/popover'; 
-import { ComponentRegistry } from "@steedos/builder-store";
+import { ComponentRegistry } from "@steedos-ui/builder-store";
 import {AgGridColumn, AgGridReact} from '@ag-grid-community/react';
 import {AllCommunityModules} from '@ag-grid-community/all-modules';
 

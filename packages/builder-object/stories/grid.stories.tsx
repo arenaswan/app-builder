@@ -1,7 +1,7 @@
-import { ObjectProTable, ObjectTree, ObjectListView, ObjectExpandTable, ObjectTable } from "@steedos/builder-object";
-import { FieldSection } from "@steedos/builder-form";
+import { ObjectProTable, ObjectTree, ObjectListView, ObjectExpandTable, ObjectTable } from "@steedos-ui/builder-object";
+import { FieldSection } from "@steedos-ui/builder-form";
 import * as React from "react"
-import { API } from '@steedos/builder-store';
+import { API } from '@steedos-ui/builder-store';
 import { Link } from "react-router-dom";
 import { Modal, TreeSelect, Select, Input, Button } from "antd"
 import ProCard from "@ant-design/pro-card"

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Renderer, Editor } from "@steedos/builder-viz-lib";
+import { Renderer, Editor } from "@steedos-ui/builder-viz-lib";
 import { Select } from 'antd';
 import { observer } from "mobx-react-lite";
-import { Queries } from "@steedos/builder-store";
+import { Queries } from "@steedos-ui/builder-store";
 import { Row, Col, Form, Input } from 'antd';
-import { Objects } from '@steedos/builder-store';
+import { Objects } from '@steedos-ui/builder-store';
 
 const { Option } = Select;
 export const CHART_OBJECT_APINAME = 'charts';

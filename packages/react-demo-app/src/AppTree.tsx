@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { API } from '@steedos/builder-store';
+import { API } from '@steedos-ui/builder-store';
 import queryString from "querystring"
 import { OrgChartComponent } from './OrgChart';
 import * as d3 from 'd3';

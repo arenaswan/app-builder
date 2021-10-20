@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from '../components/index'
-import { Apps } from '@steedos/builder-store';
+import { Apps } from '@steedos-ui/builder-store';
 
 export const getNameFieldColumnRender = (objectApiName: string, linkTarget?: string, nameFieldKey?: string) => {
     return (dom: any, record: any) => {

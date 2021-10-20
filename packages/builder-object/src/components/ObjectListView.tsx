@@ -2,14 +2,14 @@ import React, { useContext, useRef, useEffect, useState } from "react"
 import { Alert } from 'antd';
 import { isFunction, forEach, isObject, filter, isString, each, includes, isBoolean, isArray, isEmpty } from 'lodash';
 // import { ObjectExpandTable } from "./"
-import { ObjectGrid, ObjectTreeGrid } from '@steedos/builder-ag-grid';
+import { ObjectGrid, ObjectTreeGrid } from '@steedos-ui/builder-ag-grid';
 import {
   ProColumnType
 } from "@ant-design/pro-table"
 import { observer } from "mobx-react-lite"
-import { Objects, API, Settings } from "@steedos/builder-store"
-import { getNameFieldColumnRender } from "@steedos/builder-form"
-import { translate } from '@steedos/builder-sdk';
+import { Objects, API, Settings } from "@steedos-ui/builder-store"
+import { getNameFieldColumnRender } from "@steedos-ui/builder-form"
+import { translate } from '@steedos-ui/builder-sdk';
 
 export type ObjectListViewColumnProps = {
   fieldName: string

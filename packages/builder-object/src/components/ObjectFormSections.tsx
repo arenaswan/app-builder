@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState, useImperativeHandle } from "rea
 import { forEach, defaults, groupBy, filter, map, defaultsDeep, isObject, isBoolean, cloneDeep, sortBy, has} from 'lodash';
 import { ObjectField } from "./ObjectField";
 import { observer } from "mobx-react-lite"
-import stores, { Objects, Forms, User, Settings } from '@steedos/builder-store';
-import { FieldSection } from "@steedos/builder-form";
+import stores, { Objects, Forms, User, Settings } from '@steedos-ui/builder-store';
+import { FieldSection } from "@steedos-ui/builder-form";
 import { Spin } from 'antd';
 import { isDeepEqual, parseAllExpression, schemaContainsExpression } from "../utils/utils";
 

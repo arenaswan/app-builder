@@ -1,11 +1,11 @@
 import React from 'react';
 // import logo from './logo.svg';
 import './App.css';
-import { SteedosProvider } from '@steedos/builder-object';
-import { Settings } from '@steedos/builder-store';
+import { SteedosProvider } from '@steedos-ui/builder-object';
+import { Settings } from '@steedos-ui/builder-store';
 import { Switch, HashRouter, Route, Redirect } from 'react-router-dom';
 import QuerySourcePage from './pages/QuerySource';
-// import { QuerySource } from '@steedos/builder-community';
+// import { QuerySource } from '@steedos-ui/builder-community';
 const initialStore = {
   rootUrl: Settings.rootUrl,
   tenantId: Settings.tenantId,

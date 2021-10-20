@@ -16,8 +16,8 @@ import { ActionType } from "react-table"
 import { formatFiltersToODataQuery } from '@steedos/filters';
 import "./ObjectExpandTable.less"
 import useAntdMediaQuery from 'use-media-antd-query';
-import { ObjectGrid } from '@steedos/builder-ag-grid';
-import { Objects } from '@steedos/builder-store';
+import { ObjectGrid } from '@steedos-ui/builder-ag-grid';
+import { Objects } from '@steedos-ui/builder-store';
 import { Spin } from 'antd';
 
 import {

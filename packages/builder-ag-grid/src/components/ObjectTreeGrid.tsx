@@ -1,10 +1,10 @@
 import React from "react"
 import { find } from 'lodash';
 import { observer } from "mobx-react-lite"
-import { Objects } from "@steedos/builder-store"
+import { Objects } from "@steedos-ui/builder-store"
 import { Spin } from 'antd';
-import { concatFilters } from '@steedos/builder-sdk';
-import { getObjectNameFieldKey, getObjectParentFieldName, getObjectChildrenFieldName } from '@steedos/builder-sdk';
+import { concatFilters } from '@steedos-ui/builder-sdk';
+import { getObjectNameFieldKey, getObjectParentFieldName, getObjectChildrenFieldName } from '@steedos-ui/builder-sdk';
 
 import { ObjectGrid, ObjectGridColumnProps, ObjectGridProps } from "./ObjectGrid";
 

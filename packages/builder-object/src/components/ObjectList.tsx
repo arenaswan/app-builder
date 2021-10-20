@@ -6,7 +6,7 @@
  * @Last Modified time: 2021-03-26 20:52:23
  */
 
-import { API } from "@steedos/builder-store"
+import { API } from "@steedos-ui/builder-store"
 import { List, Button, Checkbox } from "antd"
 import _ from "lodash"
 import { observer } from "mobx-react-lite"

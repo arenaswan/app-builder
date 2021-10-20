@@ -2,7 +2,7 @@ import { get, includes } from "lodash";
 import axiosLib from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import qs from "query-string";
-import { API } from '@steedos/builder-store';
+import { API } from '@steedos-ui/builder-store';
 
 axiosLib.defaults.withCredentials = true;
 

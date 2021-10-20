@@ -1,10 +1,10 @@
 import { Button, Result } from 'antd';
 import React from 'react';
 import { useHistory } from "react-router-dom";
-import { Iframe } from '@steedos/builder-object';
+import { Iframe } from '@steedos-ui/builder-object';
 import { observer } from "mobx-react-lite";
 import ProLayout, { FooterToolbar, PageContainer } from '@ant-design/pro-layout';
-import { Apps } from '@steedos/builder-store';
+import { Apps } from '@steedos-ui/builder-store';
 import _ from 'lodash';
 import { Dropdown, Menu, Card, message, Space } from 'antd';
 export const TabIframe = observer((props: any) => {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Upload, Button, message } from 'antd';
 import { Image } from "antd";
-import { Settings , API} from '@steedos/builder-store';
+import { Settings , API} from '@steedos-ui/builder-store';
 import FieldImage from '@ant-design/pro-field/es/components/Image';
 import { observer } from "mobx-react-lite";
 import { forEach, isArray } from 'lodash';

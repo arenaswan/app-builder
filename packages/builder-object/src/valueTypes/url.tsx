@@ -1,5 +1,5 @@
 import React from 'react'
-import { Field } from "@steedos/builder-form";
+import { Field } from "@steedos-ui/builder-form";
 import QRCode from "qrcode.react";
 
 export const url = {

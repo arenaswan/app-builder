@@ -1,15 +1,15 @@
 import React, { useRef, useState } from 'react';
 import ProLayout, { FooterToolbar, PageContainer } from '@ant-design/pro-layout';
-import { ObjectForm } from '@steedos/builder-object';
+import { ObjectForm } from '@steedos-ui/builder-object';
 import { Button, Dropdown, Menu, Card, message, Space, Modal } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
-import { Forms, Objects } from '@steedos/builder-store';
+import { Forms, Objects } from '@steedos-ui/builder-store';
 import { each, isString, isBoolean, includes, find} from 'lodash';
 import { observer } from "mobx-react-lite";
 import { Link, useHistory, useParams } from "react-router-dom";
 import ProSkeleton from '@ant-design/pro-skeleton';
 import { RelatedList } from './relatedList';
-import { ChartDesignModal } from '@steedos/builder-charts';
+import { ChartDesignModal } from '@steedos-ui/builder-charts';
 
 function getRelatedList(objectSchema){
   const detailsInfo = objectSchema.details;

@@ -9,10 +9,10 @@ import { clientConfig } from "../../services/auth";
 // // import usaDataUrl from "@redash/viz/lib/visualizations/choropleth/maps/usa-albers.geo.json";
 // import subdivJapanDataUrl from "@redash/viz/lib/visualizations/choropleth/maps/japan.prefectures.geo.json";
 // const usaDataUrl = {};
-import { Renderer as VisRenderer, Editor as VisEditor, updateVisualizationsSettings } from "@steedos/builder-viz-lib/lib/";
-import countriesDataUrl from "@steedos/builder-viz-lib/lib/visualizations/choropleth/maps/countries.geo.json";
-import usaDataUrl from "@steedos/builder-viz-lib/lib/visualizations/choropleth/maps/usa-albers.geo.json";
-import subdivJapanDataUrl from "@steedos/builder-viz-lib/lib/visualizations/choropleth/maps/japan.prefectures.geo.json";
+import { Renderer as VisRenderer, Editor as VisEditor, updateVisualizationsSettings } from "@steedos-ui/builder-viz-lib/lib/";
+import countriesDataUrl from "@steedos-ui/builder-viz-lib/lib/visualizations/choropleth/maps/countries.geo.json";
+import usaDataUrl from "@steedos-ui/builder-viz-lib/lib/visualizations/choropleth/maps/usa-albers.geo.json";
+import subdivJapanDataUrl from "@steedos-ui/builder-viz-lib/lib/visualizations/choropleth/maps/japan.prefectures.geo.json";
 
 function wrapComponentWithSettings(WrappedComponent) {
   return function VisualizationComponent(props) {

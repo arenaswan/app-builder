@@ -26,7 +26,7 @@ import { summary } from './summary';
 import { autonumber } from './autonumber';
 import { code } from './code';
 import { password } from './password';
-import { ComponentRegistry } from "@steedos/builder-store";
+import { ComponentRegistry } from "@steedos-ui/builder-store";
 import { defaultsDeep } from 'lodash';
 
 export const StandardValueTypes = {

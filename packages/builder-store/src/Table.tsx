@@ -1,6 +1,6 @@
 import { types, flow } from "mobx-state-tree";
 import { pullAllBy, differenceBy, remove, isObject, clone, map, isArray, uniq } from "lodash";
-import { concatFilters } from '@steedos/builder-sdk';
+import { concatFilters } from '@steedos-ui/builder-sdk';
 import { API } from './API';
 
 export const TableModel = types.model({

@@ -5,7 +5,7 @@ import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import { observer } from "mobx-react-lite";
 import { useHistory } from "react-router-dom";
-import { API, Settings, User } from '@steedos/builder-store';
+import { API, Settings, User } from '@steedos-ui/builder-store';
 export const AvatarDropdown = observer((props: any) => {
   let history = useHistory();
   const onMenuClick = (event: {

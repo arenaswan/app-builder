@@ -1,9 +1,9 @@
 import React, { useState ,useEffect } from 'react'
 import { isFunction, filter } from 'lodash';
 import FieldSelect from '@ant-design/pro-field/es/components/Select';
-import { safeRunFunction } from '@steedos/builder-sdk';
+import { safeRunFunction } from '@steedos-ui/builder-sdk';
 import { observer } from "mobx-react-lite";
-import { SteedosIcon } from '@steedos/builder-lightning';
+import { SteedosIcon } from '@steedos-ui/builder-lightning';
 import styled from 'styled-components'
 import "./select.less"
 

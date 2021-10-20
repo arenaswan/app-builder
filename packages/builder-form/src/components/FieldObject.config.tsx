@@ -16,7 +16,7 @@ export const configFieldObject = {
   // requiresParent: {
   //   message: 'This block must be inside a "Form" block',
   //   query: {
-  //     'component.name': { $in: ['@steedos/builder-form:Form'] }
+  //     'component.name': { $in: ['@steedos-ui/builder-form:Form'] }
   //   }
   // }
 };

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-import { Apps } from "@steedos/builder-store";
+import { Apps } from "@steedos-ui/builder-store";
 import { Route, Switch, useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { ObjectDetail } from '../pages/objectDetail';

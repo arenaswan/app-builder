@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import * as PropTypes from 'prop-types';
 import { forEach, defaults, groupBy, filter, map, defaultsDeep, isObject, isBoolean} from 'lodash';
-import { convertFormToFilters, getFilterFormSchema } from '@steedos/builder-sdk';
+import { convertFormToFilters, getFilterFormSchema } from '@steedos-ui/builder-sdk';
 import { ObjectField } from "./ObjectField";
 import { ObjectForm, ObjectFormProps } from "./ObjectForm";
 import { observer } from "mobx-react-lite"
-import stores, { Objects, Forms, API, Settings } from '@steedos/builder-store';
+import stores, { Objects, Forms, API, Settings } from '@steedos-ui/builder-store';
 import { Spin } from 'antd';
 import { clone } from 'lodash';
 

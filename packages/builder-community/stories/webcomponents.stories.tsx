@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import stores from '@steedos/builder-store';
+import stores from '@steedos-ui/builder-store';
 
 require('../src/webcomponents');
 

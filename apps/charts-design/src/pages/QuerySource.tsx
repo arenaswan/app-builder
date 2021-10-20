@@ -1,4 +1,4 @@
-import { QuerySource } from '@steedos/builder-page';
+import { QuerySource } from '@steedos-ui/builder-page';
 export default function QuerySourcePage({match}){
     const { queryId } = match.params
     return (

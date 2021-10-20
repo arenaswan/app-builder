@@ -3,9 +3,9 @@ import { formatFiltersToODataQuery } from '@steedos/filters';
 import { Spin, TreeSelect } from 'antd';
 import "antd/es/tree-select/style/index.css";
 import { isArray } from 'lodash';
-import { Objects, API } from '@steedos/builder-store';
+import { Objects, API } from '@steedos-ui/builder-store';
 import { observer } from "mobx-react-lite";
-import { safeRunFunction } from '@steedos/builder-sdk';
+import { safeRunFunction } from '@steedos-ui/builder-sdk';
 import { getTreeDataFromRecords } from '../utils';
 import { BAD_FILTERS } from '../utils';
 

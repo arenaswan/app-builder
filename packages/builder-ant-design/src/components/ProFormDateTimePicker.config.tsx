@@ -1,5 +1,5 @@
 export const configProFormDateTimePicker = {
-  name: '@steedos/builder-form:DatetimePicker',
+  name: '@steedos-ui/builder-form:DatetimePicker',
   inputs: [
     { name: 'name', type: 'text', defaultValue: 'dateTime', required: true },
     { name: 'label', type: 'text', defaultValue: 'DateTime Picker', required: true },
@@ -26,7 +26,7 @@ export const configProFormDateTimePicker = {
   requiresParent: {
     message: 'This block must be inside a "Form" or "FormSection" or "FormList" or "Table" block',
     query: {
-      'component.name': { $in: ['@steedos/builder-form:Form', '@steedos/builder-form:FormSection', '@steedos/builder-form:FormList', '@steedos/builder-form:Table'] }
+      'component.name': { $in: ['@steedos-ui/builder-form:Form', '@steedos-ui/builder-form:FormSection', '@steedos-ui/builder-form:FormList', '@steedos-ui/builder-form:Table'] }
     }
   }
 };

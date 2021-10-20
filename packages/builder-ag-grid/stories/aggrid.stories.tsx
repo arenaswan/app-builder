@@ -1,7 +1,7 @@
-import { ObjectGrid, ObjectTreeGrid } from "@steedos/builder-ag-grid";
+import { ObjectGrid, ObjectTreeGrid } from "@steedos-ui/builder-ag-grid";
 import React, { useState, useRef } from 'react';
 import { Button, Input } from "antd"
-import { Form,Field } from '@steedos/builder-form';
+import { Form,Field } from '@steedos-ui/builder-form';
 export default {
   title: "Object Table AG Grid",
 }
