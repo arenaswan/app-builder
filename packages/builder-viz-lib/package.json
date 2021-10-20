@@ -1,6 +1,6 @@
 {
   "name": "@steedos-ui/builder-viz-lib",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Redash visualizations",
   "main": "dist/redash-visualizations.js",
   "scripts": {},
@@ -34,7 +34,8 @@
     "tinycolor2": "^1.4.1",
     "use-debounce": "^3.4.1",
     "use-media": "^1.4.0"
-  },"private": false,
+  },
+  "private": false,
   "publishConfig": {
     "access": "public"
   }
