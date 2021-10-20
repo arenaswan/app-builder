@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@steedos-ui/builder-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "client lib for steedos",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

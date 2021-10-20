@@ -1,6 +1,6 @@
 {
   "name": "@steedos-ui/builder-form",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -37,8 +37,8 @@
     "@emotion/styled": "^11.1.5",
     "@jsx-lite/core": "^0.0.17",
     "@salesforce/design-system-react": "^0.10.32",
-    "@steedos-ui/builder-locale": "1.0.0",
-    "@steedos-ui/builder-store": "1.0.0",
+    "@steedos-ui/builder-locale": "1.0.1",
+    "@steedos-ui/builder-store": "1.0.1",
     "classnames": "^2.2.6",
     "from": "^0.1.7",
     "fs-extra-promise": "^1.0.1",
