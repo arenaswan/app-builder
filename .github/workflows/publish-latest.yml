@@ -32,7 +32,6 @@ jobs:
           cache: "yarn"
       - run: yarn --frozen-lockfile
       - run: yarn bootstrap
-      - run: yarn boot
       - name: Lerna version
         run: |
           lerna version patch --no-git-tag-version --force-publish --exact --yes
@@ -64,7 +63,7 @@ jobs:
       - name: Lerna publish
         run: |
           npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
-          lerna publish from-package --yes --dist-tag next
+          lerna publish from-package --yes
         env:
           CI: true
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

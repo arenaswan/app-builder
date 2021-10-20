@@ -35,5 +35,9 @@
     "mobx-react-lite": "^3.2.0",
     "mobx-state-tree": "^5.0.1"
   },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": "https://github.com/steedos/app-builder/tree/master/packages/builder-store"
 }

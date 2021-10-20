@@ -34,5 +34,8 @@
     "tinycolor2": "^1.4.1",
     "use-debounce": "^3.4.1",
     "use-media": "^1.4.0"
+  },"private": false,
+  "publishConfig": {
+    "access": "public"
   }
 }

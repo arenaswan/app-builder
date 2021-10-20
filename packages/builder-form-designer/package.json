@@ -1,6 +1,7 @@
 {
   "name": "@steedos-ui/builder-form-designer",
   "version": "1.0.1",
+  "private": true,
   "main": "index.js",
   "license": "MIT",
   "dependencies": {

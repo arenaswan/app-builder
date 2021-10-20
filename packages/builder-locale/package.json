@@ -15,9 +15,6 @@
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
     "prebuild": "rimraf dist",
     "start": "nodemon --watch src --exec yarn build -e ts,tsx",
@@ -34,6 +31,10 @@
   },
   "dependencies": {
     "typescript": "^4.2.2"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
   },
   "repository": "https://github.com/steedos/app-builder/tree/master/packages/builder-locale"
 }
