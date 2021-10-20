@@ -47,7 +47,10 @@
     "docs:build": "yarn avatars:gen && yarn search-meta:gen && yarn docs build",
     "docs:dev": "yarn avatars:gen && yarn docs dev",
     "docs:start": "yarn docs start",
-    "dedup": "yarn-deduplicate --strategy highest yarn.lock"
+    "dedup": "yarn-deduplicate --strategy highest yarn.lock",
+    "ver": "lerna version --no-git-tag-version --force-publish --exact",
+    "pub": "lerna publish from-package --registry https://registry.npmjs.org",
+    "pub_next": "lerna publish from-package --registry https://registry.npmjs.org --dist-tag next"
   },
   "resolutions": {
     "**/react": "17.0.2",
