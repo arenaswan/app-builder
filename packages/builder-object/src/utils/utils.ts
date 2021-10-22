@@ -393,6 +393,7 @@ export function isExpression(func) {
   // }
   // 不再允许函数式的表达式了！
   if (typeof func !== 'string') return false;
+  func = func.replace(/\r|\n/g, " ")
   // 这样的pattern {{.....}}
   const pattern = /^{{(.+)}}$/;
   const reg1 = /^{{(function.+)}}$/;
@@ -412,7 +413,7 @@ export function parseSingleExpression(func, formData = {}, dataPath, global?) {
   const parentPath = getParentPath(dataPath);
   const parent = getValueByPath(formData, parentPath) || {};
   if (typeof func === 'string') {
-    const funcBody = func.substring(2, func.length - 2);
+    const funcBody = func.substring(2, func.length - 2).replace(/\r|\n/g, " ");
     // 以下增加globalTag逻辑是因为formData的字段值中可能会正好有global字眼，
     // 这会造成把formData中的global字符替换成global变量值了，这样的话，会造成所有字段上的公式表达式都失效
     const globalTag = "__G_L_O_B_A_L__";
