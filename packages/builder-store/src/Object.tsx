@@ -100,9 +100,9 @@ export const ObjectModel = types.model({
     try {
       self.schema = yield API.requestObject(self.id)
       self.isLoading = false
+      // TODO: 可能会有隐藏的bug。
       const Creator = window.Creator;
       Creator.Objects[self.id] = self.schema;
-      Creator.objectsByName[self.id] = self.schema;
       return self
     } catch (err) {
       self.isLoading = false
