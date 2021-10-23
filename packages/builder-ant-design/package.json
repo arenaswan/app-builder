@@ -1,6 +1,6 @@
 {
   "name": "@steedos-ui/builder-ant-design",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -41,7 +41,7 @@
     "@emotion/core": ">=10",
     "@emotion/styled": "^11.1.5",
     "@jsx-lite/core": "^0.0.17",
-    "@steedos-ui/builder-locale": "1.0.3",
+    "@steedos-ui/builder-locale": "1.0.4",
     "antd": "^4.15.0",
     "classnames": "^2.2.6",
     "fs-extra-promise": "^1.0.1",
