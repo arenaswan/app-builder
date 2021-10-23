@@ -101,7 +101,8 @@ export const ObjectModel = types.model({
       self.schema = yield API.requestObject(self.id)
       self.isLoading = false
       const Creator = window.Creator;
-      Creator.Objects[self.id] = self.schema
+      Creator.Objects[self.id] = self.schema;
+      Creator.objectsByName[self.id] = self.schema;
       return self
     } catch (err) {
       self.isLoading = false
