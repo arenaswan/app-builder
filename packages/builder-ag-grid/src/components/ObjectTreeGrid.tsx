@@ -175,7 +175,9 @@ export const ObjectTreeGrid = observer((props: ObjectTreeGridProps<any>) => {
     let result = originalFilters;
     const isGroup = groupKeys && groupKeys.length;
     if(isGroup){
-      result = concatFilters(result, [parentFieldName, "=", groupKeys[groupKeys.length - 1]])
+      // result = concatFilters(result, [parentFieldName, "=", groupKeys[groupKeys.length - 1]])
+      // TODO: tree列表，先不支持children节点过滤功能 #2366， 以后要放开
+      result = [parentFieldName, "=", groupKeys[groupKeys.length - 1]];
     }
     else{
       // 根目录识别过滤条件逻辑
