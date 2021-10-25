@@ -124,7 +124,7 @@ function AddWidgetDialog({ dialog, dashboard }) {
         ...dialog.props.okButtonProps,
         disabled: !selectedQuery || dialog.props.okButtonProps.disabled,
       }}
-      okText="Add to Dashboard"
+      okText="Add to Page"
       width={700}>
       <div data-test="AddWidgetDialog">
         <QuerySelector onChange={query => selectQuery(query ? query.id : null)} />

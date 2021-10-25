@@ -51,7 +51,7 @@ function AddToDashboardDialog({ dialog, visualization }) {
           .toString(36)
           .substr(2, 10)}`;
         (notification as any).success(
-          "Widget added to dashboard",
+          "Widget added to page",
           <React.Fragment>
             <Link href={`${dashboard.url}`} onClick={() => notification.close(key)}>
               {dashboard.name}
@@ -74,11 +74,11 @@ function AddToDashboardDialog({ dialog, visualization }) {
   return (
     <Modal
       {...dialog.props}
-      title="Add to Dashboard"
+      title="Add to Page"
       okButtonProps={{ disabled: !selectedDashboard || saveInProgress, loading: saveInProgress }}
       cancelButtonProps={{ disabled: saveInProgress }}
       onOk={addWidgetToDashboard}>
-      <label htmlFor="add-to-dashboard-dialog-dashboard">Choose the dashboard to add this query to:</label>
+      <label htmlFor="add-to-dashboard-dialog-dashboard">Choose the page to add this query to:</label>
 
       {!selectedDashboard && (
         <Input
@@ -86,7 +86,7 @@ function AddToDashboardDialog({ dialog, visualization }) {
           className="w-100"
           autoComplete="off"
           autoFocus
-          placeholder="Search a dashboard by name"
+          placeholder="Search a page by name"
           value={searchTerm}
           onChange={event => setSearchTerm(event.target.value)}
           suffix={

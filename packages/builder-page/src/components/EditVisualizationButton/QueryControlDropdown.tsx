@@ -20,7 +20,7 @@ export default function QueryControlDropdown(props) {
       {!props.query.isNew() && (!props.query.is_draft || !props.query.is_archived) && (
         <Menu.Item>
           <PlainButton onClick={() => props.openAddToDashboardForm(props.selectedTab)}>
-            <PlusCircleFilledIcon /> Add to Dashboard
+            <PlusCircleFilledIcon /> Add to Page
           </PlainButton>
         </Menu.Item>
       )}
