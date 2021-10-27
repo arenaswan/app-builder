@@ -7,7 +7,7 @@ export default {
 export const QueriesSimple = () => {
   return (
     //   <Dashboard {...dashboard} layoutEditing={true}/>
-    <div style={{height: '670px'}}>
+    <div style={{ height: '770px' }}>
       <QuerySource queryId="test4" onError={(err)=>{console.log(`QuerySource error`, err)}}/>
     </div>
   )
