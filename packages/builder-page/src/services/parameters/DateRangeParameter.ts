@@ -180,21 +180,16 @@ export function getDynamicDateRangeFromString(value) {
 }
 
 class DateRangeParameter extends Parameter {
-  value: any;
-  type: any;
-  $$value: any;
-  urlPrefix: any;
-  name: any;
   constructor(parameter, parentQueryId) {
     super(parameter, parentQueryId);
     this.setValue(parameter.value);
   }
 
   get hasDynamicValue() {
-    return isDynamicDateRange(this.normalizedValue);
+    return isDynamicDateRange((this as any).normalizedValue);
   }
 
-  // eslint-disable-next-line class-methods-use-this
+  // eslint-disable-next-line class-methods-use-(this as any)
   normalizeValue(value) {
     if (isDynamicDateRangeString(value)) {
       return getDynamicDateRangeFromString(value);
@@ -218,65 +213,73 @@ class DateRangeParameter extends Parameter {
   }
 
   setValue(value) {
-    const normalizedValue = this.normalizeValue(value);
+    const normalizedValue = (this as any).normalizeValue(value);
     if (isDynamicDateRange(normalizedValue)) {
-      this.value = DYNAMIC_PREFIX + findKey(DYNAMIC_DATE_RANGES, normalizedValue);
+      (this as any).value =
+        DYNAMIC_PREFIX + findKey(DYNAMIC_DATE_RANGES, normalizedValue);
     } else if (isArray(normalizedValue)) {
-      this.value = {
-        start: normalizedValue[0].format(DATETIME_FORMATS[this.type]),
-        end: normalizedValue[1].format(DATETIME_FORMATS[this.type]),
+      (this as any).value = {
+        start: normalizedValue[0].format(DATETIME_FORMATS[(this as any).type]),
+        end: normalizedValue[1].format(DATETIME_FORMATS[(this as any).type]),
       };
     } else {
-      this.value = normalizedValue;
+      (this as any).value = normalizedValue;
     }
-    this.$$value = normalizedValue;
+    (this as any).$$value = normalizedValue;
 
-    this.updateLocals();
-    this.clearPendingValue();
-    return this;
+    (this as any).updateLocals();
+    (this as any).clearPendingValue();
+    return this as any;
   }
 
   getExecutionValue() {
-    if (this.hasDynamicValue) {
-      const format = date => date.format(DATETIME_FORMATS[this.type]);
-      const [start, end] = this.normalizedValue.value().map(format);
+    if ((this as any).hasDynamicValue) {
+      const format = (date) =>
+        date.format(DATETIME_FORMATS[(this as any).type]);
+      const [start, end] = (this as any).normalizedValue.value().map(format);
       return { start, end };
     }
-    return this.value;
+    return (this as any).value;
   }
 
   toUrlParams() {
-    const prefix = this.urlPrefix;
-    if (isObject(this.value) && (this.value as any).start && (this.value as any).end) {
+    const prefix = (this as any).urlPrefix;
+    if (
+      isObject((this as any).value) &&
+      ((this as any).value as any).start &&
+      ((this as any).value as any).end
+    ) {
       return {
-        [`${prefix}${this.name}`]: `${(this.value as any).start}--${(this.value as any).end}`,
+        [`${prefix}${(this as any).name}`]: `${
+          ((this as any).value as any).start
+        }--${((this as any).value as any).end}`,
       };
     }
     return super.toUrlParams();
   }
 
   fromUrlParams(query) {
-    const prefix = this.urlPrefix;
-    const key = `${prefix}${this.name}`;
+    const prefix = (this as any).urlPrefix;
+    const key = `${prefix}${(this as any).name}`;
 
     // backward compatibility
-    const keyStart = `${prefix}${this.name}.start`;
-    const keyEnd = `${prefix}${this.name}.end`;
+    const keyStart = `${prefix}${(this as any).name}.start`;
+    const keyEnd = `${prefix}${(this as any).name}.end`;
 
     if (has(query, key)) {
       const dates = query[key].split("--");
       if (dates.length === 2) {
-        this.setValue(dates);
+        (this as any).setValue(dates);
       } else {
-        this.setValue(query[key]);
+        (this as any).setValue(query[key]);
       }
     } else if (has(query, keyStart) && has(query, keyEnd)) {
-      this.setValue([query[keyStart], query[keyEnd]]);
+      (this as any).setValue([query[keyStart], query[keyEnd]]);
     }
   }
 
   toQueryTextFragment() {
-    return `{{ ${this.name}.start }} {{ ${this.name}.end }}`;
+    return `{{ ${(this as any).name}.start }} {{ ${(this as any).name}.end }}`;
   }
 }
 

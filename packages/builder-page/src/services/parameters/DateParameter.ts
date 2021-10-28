@@ -41,12 +41,9 @@ export function getDynamicDateFromString(value) {
 }
 
 class DateParameter extends Parameter {
-  useCurrentDateTime: any;
-  value: string;
-  type: any;
   constructor(parameter, parentQueryId) {
     super(parameter, parentQueryId);
-    this.useCurrentDateTime = parameter.useCurrentDateTime;
+    (this as any).useCurrentDateTime = parameter.useCurrentDateTime;
     this.setValue(parameter.value);
   }
 
@@ -71,13 +68,16 @@ class DateParameter extends Parameter {
   setValue(value) {
     const normalizedValue = this.normalizeValue(value);
     if (isDynamicDate(normalizedValue)) {
-      this.value = DYNAMIC_PREFIX + findKey(DYNAMIC_DATES, normalizedValue);
+      (this as any).value =
+        DYNAMIC_PREFIX + findKey(DYNAMIC_DATES, normalizedValue);
     } else if (moment.isMoment(normalizedValue)) {
-      this.value = normalizedValue.format(DATETIME_FORMATS[this.type]);
+      (this as any).value = normalizedValue.format(
+        DATETIME_FORMATS[(this as any).type]
+      );
     } else {
-      this.value = normalizedValue;
+      (this as any).value = normalizedValue;
     }
-    this.value = normalizedValue;
+    (this as any).value = normalizedValue;
 
     this.updateLocals();
     this.clearPendingValue();
@@ -86,12 +86,14 @@ class DateParameter extends Parameter {
 
   getExecutionValue() {
     if (this.hasDynamicValue) {
-      return this.normalizedValue.value().format(DATETIME_FORMATS[this.type]);
+      return this.normalizedValue
+        .value()
+        .format(DATETIME_FORMATS[(this as any).type]);
     }
-    if (isNull(this.value) && this.useCurrentDateTime) {
-      return moment().format(DATETIME_FORMATS[this.type]);
+    if (isNull((this as any).value) && (this as any).useCurrentDateTime) {
+      return moment().format(DATETIME_FORMATS[(this as any).type]);
     }
-    return this.value;
+    return (this as any).value;
   }
 }
 

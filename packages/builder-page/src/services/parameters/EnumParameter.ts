@@ -2,22 +2,20 @@ import { isArray, isEmpty, includes, intersection, get, map, join, has } from "l
 import Parameter from "./Parameter";
 
 class EnumParameter extends Parameter {
-  multiValuesOptions: any;
-  enumOptions: any;
   constructor(parameter, parentQueryId) {
     super(parameter, parentQueryId);
-    this.enumOptions = parameter.enumOptions;
-    this.multiValuesOptions = parameter.multiValuesOptions;
-    this.setValue(parameter.value);
+    (this as any).enumOptions = parameter.enumOptions;
+    (this as any).multiValuesOptions = parameter.multiValuesOptions;
+    (this as any).setValue(parameter.value);
   }
 
   normalizeValue(value) {
-    if (isEmpty(this.enumOptions)) {
+    if (isEmpty((this as any).enumOptions)) {
       return null;
     }
 
-    const enumOptionsArray = this.enumOptions.split("\n") || [];
-    if (this.multiValuesOptions) {
+    const enumOptionsArray = (this as any).enumOptions.split("\n") || [];
+    if ((this as any).multiValuesOptions) {
       if (!isArray(value)) {
         value = [value];
       }
@@ -33,43 +31,50 @@ class EnumParameter extends Parameter {
   }
 
   getExecutionValue(extra = {}) {
-    const { joinListValues } = (extra as any);
-    if (joinListValues && isArray(this.value)) {
-      const separator = get(this.multiValuesOptions, "separator", ",");
-      const prefix = get(this.multiValuesOptions, "prefix", "");
-      const suffix = get(this.multiValuesOptions, "suffix", "");
-      const parameterValues = map(this.value, v => `${prefix}${v}${suffix}`);
+    const { joinListValues } = extra as any;
+    if (joinListValues && isArray((this as any).value)) {
+      const separator = get((this as any).multiValuesOptions, "separator", ",");
+      const prefix = get((this as any).multiValuesOptions, "prefix", "");
+      const suffix = get((this as any).multiValuesOptions, "suffix", "");
+      const parameterValues = map(
+        (this as any).value,
+        (v) => `${prefix}${v}${suffix}`
+      );
       return join(parameterValues, separator);
     }
-    return this.value;
+    return (this as any).value;
   }
 
   toUrlParams() {
-    const prefix = this.urlPrefix;
+    const prefix = (this as any).urlPrefix;
 
-    let urlParam = this.value;
-    if (this.multiValuesOptions && isArray(this.value)) {
-      urlParam = JSON.stringify(this.value);
+    let urlParam = (this as any).value;
+    if ((this as any).multiValuesOptions && isArray((this as any).value)) {
+      urlParam = JSON.stringify((this as any).value);
     }
 
     return {
-      [`${prefix}${this.name}`]: !this.isEmpty ? urlParam : null,
+      [`${prefix}${(this as any).name}`]: !(this as any).isEmpty
+        ? urlParam
+        : null,
     };
   }
 
   fromUrlParams(query) {
-    const prefix = this.urlPrefix;
-    const key = `${prefix}${this.name}`;
+    const prefix = (this as any).urlPrefix;
+    const key = `${prefix}${(this as any).name}`;
     if (has(query, key)) {
-      if (this.multiValuesOptions) {
+      if ((this as any).multiValuesOptions) {
         try {
           const valueFromJson = JSON.parse(query[key]);
-          this.setValue(isArray(valueFromJson) ? valueFromJson : query[key]);
+          (this as any).setValue(
+            isArray(valueFromJson) ? valueFromJson : query[key]
+          );
         } catch (e) {
-          this.setValue(query[key]);
+          (this as any).setValue(query[key]);
         }
       } else {
-        this.setValue(query[key]);
+        (this as any).setValue(query[key]);
       }
     }
   }

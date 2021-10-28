@@ -4,12 +4,12 @@ import { axios } from "./axios";
 import { QueryResultError } from "./query";
 // import { Auth } from "./auth";
 import { isString, uniqBy, each, isNumber, includes, extend, forOwn, get } from "lodash";
-const Auth: any = {}
+const Auth: any = {};
 const logger = debug("redash:services:QueryResult");
 const filterTypes = ["filter", "multi-filter", "multiFilter"];
 
 function defer() {
-  const result:any = { onStatusChange: status => {} };
+  const result: any = { onStatusChange: (status) => {} };
   result.promise = new Promise((resolve, reject) => {
     result.resolve = resolve;
     result.reject = reject;
@@ -40,13 +40,16 @@ function getColumnNameWithoutType(column) {
 }
 
 function getColumnFriendlyName(column) {
-  return getColumnNameWithoutType(column).replace(/(?:^|\s)\S/g, a => a.toUpperCase());
+  return getColumnNameWithoutType(column).replace(/(?:^|\s)\S/g, (a) =>
+    a.toUpperCase()
+  );
 }
 
-const createOrSaveUrl = data => (data.id ? `api/query_results/${data.id}` : "api/query_results");
+const createOrSaveUrl = (data) =>
+  data.id ? `api/query_results/${data.id}` : "api/query_results";
 const QueryResultResource = {
   get: ({ id }) => axios.get(`api/query_results/${id}`),
-  post: data => axios.post(createOrSaveUrl(data), data),
+  post: (data) => axios.post(createOrSaveUrl(data), data),
 };
 
 export const ExecutionStatus = {
@@ -90,20 +93,27 @@ function handleErrorResponse(queryResult, error) {
   logger("Unknown error", error);
   queryResult.update({
     job: {
-      error: get(error, "response.data.message", "Unknown error occurred. Please try again later."),
+      error: get(
+        error,
+        "response.data.message",
+        "Unknown error occurred. Please try again later."
+      ),
       status: 4,
     },
   });
 }
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export function fetchDataFromJob(jobId, interval = 1000) {
-  return axios.get(`api/jobs/${jobId}`).then(data => {
+  return axios.get(`api/jobs/${jobId}`).then((data) => {
     const status = statuses[(data as any).job.status];
-    if (status === ExecutionStatus.WAITING || status === ExecutionStatus.PROCESSING) {
+    if (
+      status === ExecutionStatus.WAITING ||
+      status === ExecutionStatus.PROCESSING
+    ) {
       return sleep(interval).then(() => fetchDataFromJob((data as any).job.id));
     } else if (status === ExecutionStatus.DONE) {
       return (data as any).job.result;
@@ -150,7 +160,7 @@ class QueryResult {
       // TODO: we should stop manipulating incoming data, and switch to relaying
       // on the column type set by the backend. This logic is prone to errors,
       // and better be removed. Kept for now, for backward compatability.
-      each((this.query_result as any).data.rows, row => {
+      each((this.query_result as any).data.rows, (row) => {
         forOwn(row, (v, k) => {
           let newType = null;
           if (isNumber(v)) {
@@ -177,7 +187,7 @@ class QueryResult {
         });
       });
 
-      each(this.query_result.data.columns, column => {
+      each(this.query_result.data.columns, (column) => {
         column.name = "" + column.name;
         if (columnTypes[column.name]) {
           if (column.type == null || column.type === "string") {
@@ -208,7 +218,7 @@ class QueryResult {
   }
 
   cancelExecution() {
-    axios.delete(`api/jobs/${this.job.id}`);
+    // axios.delete(`api/jobs/${this.job.id}`);
   }
 
   getStatus() {
@@ -228,7 +238,11 @@ class QueryResult {
   }
 
   getLog() {
-    if (!this.query_result.data || !this.query_result.data.log || this.query_result.data.log.length === 0) {
+    if (
+      !this.query_result.data ||
+      !this.query_result.data.log ||
+      this.query_result.data.log.length === 0
+    ) {
       return null;
     }
 
@@ -236,7 +250,11 @@ class QueryResult {
   }
 
   getUpdatedAt() {
-    return this.query_result.retrieved_at || this.job.updated_at * 1000.0 || this.updatedAt;
+    return (
+      this.query_result.retrieved_at ||
+      this.job.updated_at * 1000.0 ||
+      this.updatedAt
+    );
   }
 
   getRuntime() {
@@ -269,14 +287,14 @@ class QueryResult {
 
   getColumnNames() {
     if (this.columnNames === undefined && this.query_result.data) {
-      this.columnNames = this.query_result.data.columns.map(v => v.name);
+      this.columnNames = this.query_result.data.columns.map((v) => v.name);
     }
 
     return this.columnNames;
   }
 
   getColumnFriendlyNames() {
-    return this.getColumnNames().map(col => getColumnFriendlyName(col));
+    return this.getColumnNames().map((col) => getColumnFriendlyName(col));
   }
 
   getTruncated() {
@@ -290,7 +308,7 @@ class QueryResult {
 
     const filters = [];
 
-    this.getColumns().forEach(col => {
+    this.getColumns().forEach((col) => {
       const name = col.name;
       const type = name.split("::")[1] || name.split("__")[1];
       if (includes(filterTypes, type)) {
@@ -306,8 +324,8 @@ class QueryResult {
       }
     }, this);
 
-    this.getRawData().forEach(row => {
-      filters.forEach(filter => {
+    this.getRawData().forEach((row) => {
+      filters.forEach((filter) => {
         filter.values.push(row[filter.name]);
         if (filter.values.length === 1) {
           if (filter.multiple) {
@@ -319,8 +337,8 @@ class QueryResult {
       });
     });
 
-    filters.forEach(filter => {
-      filter.values = uniqBy(filter.values, v => {
+    filters.forEach((filter) => {
+      filter.values = uniqBy(filter.values, (v) => {
         if (moment.isMoment(v)) {
           return v.unix();
         }
@@ -346,12 +364,12 @@ class QueryResult {
 
     axios
       .get(`api/queries/${queryId}/results/${id}.json`)
-      .then(response => {
+      .then((response) => {
         // Success handler
         queryResult.isLoadingResult = false;
         queryResult.update(response);
       })
-      .catch(error => {
+      .catch((error) => {
         // Error handler
         queryResult.isLoadingResult = false;
         handleErrorResponse(queryResult, error);
@@ -362,11 +380,14 @@ class QueryResult {
 
   loadLatestCachedResult(queryId, parameters) {
     axios
-      .post(`/service/api/~packages-@steedos/service-charts/queries/${queryId}/results`, { queryId, parameters })
-      .then(response => {
+      .post(
+        `/service/api/~packages-@steedos/service-charts/queries/${queryId}/results`,
+        { queryId, parameters }
+      )
+      .then((response) => {
         this.update(response);
       })
-      .catch(error => {
+      .catch((error) => {
         handleErrorResponse(this, error);
       });
   }
@@ -376,11 +397,11 @@ class QueryResult {
     this.deferred.onStatusChange(ExecutionStatus.LOADING_RESULT);
 
     QueryResultResource.get({ id: this.job.query_result_id })
-      .then(response => {
+      .then((response) => {
         this.update(response);
         this.isLoadingResult = false;
       })
-      .catch(error => {
+      .catch((error) => {
         if (tryCount === undefined) {
           tryCount = 0;
         }
@@ -389,7 +410,8 @@ class QueryResult {
           logger("Connection error while trying to load result", error);
           this.update({
             job: {
-              error: "failed communicating with server. Please check your Internet connection and try again.",
+              error:
+                "failed communicating with server. Please check your Internet connection and try again.",
               status: 4,
             },
           });
@@ -403,18 +425,25 @@ class QueryResult {
   }
 
   refreshStatus(query, parameters, tryNumber = 1) {
+    console.log(`refreshStatus==================================`);
     const loadResult = () =>
-      Auth.isAuthenticated() ? this.loadResult() : this.loadLatestCachedResult(query, parameters);
+      Auth.isAuthenticated()
+        ? this.loadResult()
+        : this.loadLatestCachedResult(query, parameters);
 
     const request = Auth.isAuthenticated()
       ? axios.get(`api/jobs/${this.job.id}`)
       : axios.get(`api/queries/${query}/jobs/${this.job.id}`);
 
     request
-      .then(jobResponse => {
+      .then((jobResponse) => {
         this.update(jobResponse);
 
-        if (this.getStatus() === "processing" && this.job.query_result_id && this.job.query_result_id !== "None") {
+        if (
+          this.getStatus() === "processing" &&
+          this.job.query_result_id &&
+          this.job.query_result_id !== "None"
+        ) {
           loadResult();
         } else if (this.getStatus() !== "failed") {
           const waitTime = tryNumber > 10 ? 3000 : 500;
@@ -423,12 +452,13 @@ class QueryResult {
           }, waitTime);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         logger("Connection error", error);
         // TODO: use QueryResultError, or better yet: exception/reject of promise.
         this.update({
           job: {
-            error: "failed communicating with server. Please check your Internet connection and try again.",
+            error:
+              "failed communicating with server. Please check your Internet connection and try again.",
             status: 4,
           },
         });
@@ -444,22 +474,28 @@ class QueryResult {
   }
 
   getName(queryName, fileType) {
-    return `${queryName.replace(/ /g, "_") + moment(this.getUpdatedAt()).format("_YYYY_MM_DD")}.${fileType}`;
+    return `${
+      queryName.replace(/ /g, "_") +
+      moment(this.getUpdatedAt()).format("_YYYY_MM_DD")
+    }.${fileType}`;
   }
 
   static getByQueryId(id, parameters, applyAutoLimit, maxAge) {
     const queryResult = new QueryResult();
 
     axios
-      .post(`/service/api/~packages-@steedos/service-charts/queries/${id}/results`, { id, parameters, apply_auto_limit: applyAutoLimit, max_age: maxAge })
-      .then(response => {
+      .post(
+        `/service/api/~packages-@steedos/service-charts/queries/${id}/results`,
+        { id, parameters, apply_auto_limit: applyAutoLimit, max_age: maxAge }
+      )
+      .then((response) => {
         queryResult.update(response);
 
         if ("job" in response) {
           queryResult.refreshStatus(id, parameters);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         handleErrorResponse(queryResult, error);
       });
 
@@ -482,14 +518,14 @@ class QueryResult {
     }
 
     QueryResultResource.post(params)
-      .then(response => {
+      .then((response) => {
         queryResult.update(response);
 
         if ("job" in response) {
           queryResult.refreshStatus(query, parameters);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         handleErrorResponse(queryResult, error);
       });
 

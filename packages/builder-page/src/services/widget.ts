@@ -273,7 +273,7 @@ class Widget {
       filter(params, param => localTypes.indexOf(mappings[param.name].type) >= 0),
       param => {
         const mapping = mappings[param.name];
-        const result = cloneParameter(param);
+        const result: any = cloneParameter(param);
         result.title = mapping.title || param.title;
         result.locals = [param];
         result.urlPrefix = `p_w${this.id}_`;

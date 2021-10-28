@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import cx from "classnames";
 import { Moment } from "../../../components/proptypes";
 import TimeAgo from "../../../components/TimeAgo";
-// import SchedulePhrase from "../../../components/queries/SchedulePhrase";
+import SchedulePhrase from "../../../components/queries/SchedulePhrase";
 // import { IMG_ROOT } from "../../../services/data-source";
 
 import "./QueryMetadata.less";
@@ -50,7 +50,7 @@ export default function QueryMetadata({ query, dataSource, layout, onEditSchedul
           </div>
         </div>
       )}
-      {/* <div className="query-metadata-item">
+      <div className="query-metadata-item">
         <div className="query-metadata-property">
           <span className="query-metadata-label">
             <span className="zmdi zmdi-refresh m-r-5" />
@@ -65,7 +65,7 @@ export default function QueryMetadata({ query, dataSource, layout, onEditSchedul
             />
           </span>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }
