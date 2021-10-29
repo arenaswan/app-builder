@@ -99,7 +99,7 @@ export const ImageField = observer((props: any) => {
             multiple,
             type: 'file',
             method: 'post',
-            accept: 'image/png, image/jpeg, image/jpg, image/gif',
+            accept: 'image/*',
             // maxCount: '1',
             data: {
                 space: Settings.tenantId,
