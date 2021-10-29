@@ -3,7 +3,17 @@ import moment from "moment";
 import { axios } from "./axios";
 import { QueryResultError } from "./query";
 // import { Auth } from "./auth";
-import { isString, uniqBy, each, isNumber, includes, extend, forOwn, get } from "lodash";
+import { API } from "@steedos-ui/builder-store";
+import {
+  isString,
+  uniqBy,
+  each,
+  isNumber,
+  includes,
+  extend,
+  forOwn,
+  get,
+} from "lodash";
 const Auth: any = {};
 const logger = debug("redash:services:QueryResult");
 const filterTypes = ["filter", "multi-filter", "multiFilter"];
@@ -466,7 +476,9 @@ class QueryResult {
   }
 
   getLink(queryId, fileType, apiKey) {
-    let link = `api/queries/${queryId}/results/${this.getId()}.${fileType}`;
+    console.log(`this.query_result`, this.query_result);
+    const query_hash = this.query_result?.query_hash;
+    let link = `${API.client.getUrl()}/service/api/~packages-@steedos/service-charts/queries/${this.getId()}/results/${query_hash}.${fileType}`;
     if (apiKey) {
       link = `${link}?api_key=${apiKey}`;
     }

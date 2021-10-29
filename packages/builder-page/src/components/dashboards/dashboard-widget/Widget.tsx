@@ -15,7 +15,7 @@ function WidgetDropdownButton({ extraOptions, showDeleteOption, onDelete }) {
     <Menu data-test="WidgetDropdownButtonMenu">
       {extraOptions}
       {showDeleteOption && extraOptions && extraOptions.length > 0 &&<Menu.Divider />}
-      {showDeleteOption && <Menu.Item onClick={onDelete}>Remove from Dashboard</Menu.Item>}
+      {showDeleteOption && <Menu.Item onClick={onDelete}>Remove from Page</Menu.Item>}
     </Menu>
   );
 
@@ -47,7 +47,7 @@ function WidgetDeleteButton({ onClick }) {
     <div className="widget-menu-remove">
       <PlainButton
         className="action"
-        title="Remove From Dashboard"
+        title="Remove From Page"
         onClick={onClick}
         data-test="WidgetDeleteButton"
         aria-label="Close">

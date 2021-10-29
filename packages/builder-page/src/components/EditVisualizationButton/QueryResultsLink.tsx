@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Link from "../Link";
+import { API } from '@steedos-ui/builder-store';
 
 export default function QueryResultsLink(props) {
   let href = "";
@@ -11,7 +12,8 @@ export default function QueryResultsLink(props) {
 
   if (resultId && resultData && query.name) {
     if (query.id) {
-      href = `api/queries/${query.id}/results/${resultId}.${fileType}${props.embed ? `?api_key=${props.apiKey}` : ""}`;
+      const query_hash = queryResult.query_result?.query_hash
+      href = `${API.client.getUrl()}/service/api/~packages-@steedos/service-charts/queries/${query.id}/results/${query_hash}.${fileType}${props.embed ? `?api_key=${props.apiKey}` : ""}`;
     } else {
       href = `api/query_results/${resultId}.${fileType}`;
     }
