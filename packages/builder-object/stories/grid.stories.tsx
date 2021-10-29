@@ -238,9 +238,9 @@ export const ListViewTree = () => {
   return (
     <div style={{height:'500px'}}>
       <ObjectListView objectApiName='organizations' 
+        // pagination={false}
         sort="created desc,name desc"
         // rowSelection="single"
-        pagination={false}
         columnFields={
           [
             {

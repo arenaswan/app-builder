@@ -3,6 +3,7 @@ import { Alert } from 'antd';
 import { isFunction, forEach, isObject, filter, isString, each, includes, isBoolean, isArray, isEmpty } from 'lodash';
 // import { ObjectExpandTable } from "./"
 import { ObjectGrid, ObjectTreeGrid } from '@steedos-ui/builder-ag-grid';
+import { OrganizationsListView } from "./";
 import {
   ProColumnType
 } from "@ant-design/pro-table"
@@ -229,7 +230,12 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
   const suppressClickEdit = schema.enable_inline_edit === false ? true : false;
   let TableComponent = ObjectGrid;
   if(schema.enable_tree){
-    TableComponent = ObjectTreeGrid;
+    if(objectApiName === "organizations"){
+      TableComponent = OrganizationsListView;
+    }
+    else{
+      TableComponent = ObjectTreeGrid;
+    }
   }
   let listView = listSchema ? listSchema : getListView(schema, listName);
   const listViewColumns = listView && listView.columns ? listView.columns : getListviewColumns(schema, listName);
