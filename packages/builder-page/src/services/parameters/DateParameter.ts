@@ -77,7 +77,7 @@ class DateParameter extends Parameter {
     } else {
       (this as any).value = normalizedValue;
     }
-    (this as any).value = normalizedValue;
+    (this as any).$$value = normalizedValue;
 
     this.updateLocals();
     this.clearPendingValue();
@@ -98,3 +98,4 @@ class DateParameter extends Parameter {
 }
 
 export default DateParameter;
+

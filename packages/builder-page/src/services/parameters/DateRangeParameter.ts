@@ -186,10 +186,10 @@ class DateRangeParameter extends Parameter {
   }
 
   get hasDynamicValue() {
-    return isDynamicDateRange((this as any).normalizedValue);
+    return isDynamicDateRange(this.normalizedValue);
   }
 
-  // eslint-disable-next-line class-methods-use-(this as any)
+  // eslint-disable-next-line class-methods-use-this
   normalizeValue(value) {
     if (isDynamicDateRangeString(value)) {
       return getDynamicDateRangeFromString(value);
@@ -213,10 +213,9 @@ class DateRangeParameter extends Parameter {
   }
 
   setValue(value) {
-    const normalizedValue = (this as any).normalizeValue(value);
+    const normalizedValue = this.normalizeValue(value);
     if (isDynamicDateRange(normalizedValue)) {
-      (this as any).value =
-        DYNAMIC_PREFIX + findKey(DYNAMIC_DATE_RANGES, normalizedValue);
+      (this as any).value = DYNAMIC_PREFIX + findKey(DYNAMIC_DATE_RANGES, normalizedValue);
     } else if (isArray(normalizedValue)) {
       (this as any).value = {
         start: normalizedValue[0].format(DATETIME_FORMATS[(this as any).type]),
@@ -227,16 +226,15 @@ class DateRangeParameter extends Parameter {
     }
     (this as any).$$value = normalizedValue;
 
-    (this as any).updateLocals();
-    (this as any).clearPendingValue();
-    return this as any;
+    this.updateLocals();
+    this.clearPendingValue();
+    return this;
   }
 
   getExecutionValue() {
-    if ((this as any).hasDynamicValue) {
-      const format = (date) =>
-        date.format(DATETIME_FORMATS[(this as any).type]);
-      const [start, end] = (this as any).normalizedValue.value().map(format);
+    if (this.hasDynamicValue) {
+      const format = date => date.format(DATETIME_FORMATS[(this as any).type]);
+      const [start, end] = this.normalizedValue.value().map(format);
       return { start, end };
     }
     return (this as any).value;
@@ -244,15 +242,9 @@ class DateRangeParameter extends Parameter {
 
   toUrlParams() {
     const prefix = (this as any).urlPrefix;
-    if (
-      isObject((this as any).value) &&
-      ((this as any).value as any).start &&
-      ((this as any).value as any).end
-    ) {
+    if (isObject((this as any).value) && (this as any).value.start && (this as any).value.end) {
       return {
-        [`${prefix}${(this as any).name}`]: `${
-          ((this as any).value as any).start
-        }--${((this as any).value as any).end}`,
+        [`${prefix}${(this as any).name}`]: `${(this as any).value.start}--${(this as any).value.end}`,
       };
     }
     return super.toUrlParams();
@@ -269,12 +261,12 @@ class DateRangeParameter extends Parameter {
     if (has(query, key)) {
       const dates = query[key].split("--");
       if (dates.length === 2) {
-        (this as any).setValue(dates);
+        this.setValue(dates);
       } else {
-        (this as any).setValue(query[key]);
+        this.setValue(query[key]);
       }
     } else if (has(query, keyStart) && has(query, keyEnd)) {
-      (this as any).setValue([query[keyStart], query[keyEnd]]);
+      this.setValue([query[keyStart], query[keyEnd]]);
     }
   }
 
