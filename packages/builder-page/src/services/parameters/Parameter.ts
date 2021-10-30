@@ -2,7 +2,6 @@ import { isNull, isObject, isFunction, isUndefined, isEqual, has, omit, isArray,
 
 class Parameter {
   constructor(parameter, parentQueryId) {
-    console.log(`start parameter, parentQueryId`, parameter, parentQueryId);
     (this as any).title = parameter.title;
     (this as any).name = parameter.name;
     (this as any).type = parameter.type;
@@ -14,11 +13,6 @@ class Parameter {
 
     // Used for URL serialization
     (this as any).urlPrefix = "p_";
-    console.log(
-      `Parameter end。。。。`,
-      (this as any).title,
-      (this as any).type
-    );
   }
 
   static getExecutionValue(param: any, extra = {}) {

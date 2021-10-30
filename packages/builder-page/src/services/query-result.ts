@@ -435,7 +435,6 @@ class QueryResult {
   }
 
   refreshStatus(query, parameters, tryNumber = 1) {
-    console.log(`refreshStatus==================================`);
     const loadResult = () =>
       Auth.isAuthenticated()
         ? this.loadResult()
@@ -476,7 +475,6 @@ class QueryResult {
   }
 
   getLink(queryId, fileType, apiKey) {
-    console.log(`this.query_result`, this.query_result);
     const query_hash = this.query_result?.query_hash;
     let link = `${API.client.getUrl()}/service/api/~packages-@steedos/service-charts/queries/${this.getId()}/results/${query_hash}.${fileType}`;
     if (apiKey) {

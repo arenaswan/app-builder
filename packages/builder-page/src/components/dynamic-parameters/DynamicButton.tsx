@@ -1,8 +1,7 @@
 import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import { isFunction, get, findIndex } from "lodash";
-import Dropdown from "antd/lib/dropdown";
-import Menu from "antd/lib/menu";
+import { Modal, Menu, Dropdown, Button } from 'antd';
 import Typography from "antd/lib/typography";
 import { DynamicDateType } from "../../services/parameters/DateParameter";
 import { DynamicDateRangeType } from "../../services/parameters/DateRangeParameter";
@@ -48,6 +47,7 @@ function DynamicButton({ options, selectedDynamicValue, onSelect, enabled, stati
           className="dynamic-button"
           placement="bottomRight"
           trigger={["click"]}
+          type="dashed"
           icon={
             enabled ? (
               <ThunderboltTwoToneIcon className="dynamic-icon" />
