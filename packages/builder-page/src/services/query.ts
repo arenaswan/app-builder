@@ -44,10 +44,10 @@ function collectParams(parts) {
 }
 
 export class Query {
-  static associatedDropdown(arg0: { queryId: any; dropdownQueryId: any; }) : any{
+  static associatedDropdown(arg0: { queryId: any; dropdownQueryId: any }): any {
     throw new Error("Method not implemented.");
   }
-  static asDropdown(arg0: { id: any; }) : any {
+  static asDropdown(arg0: { id: any }): any {
     throw new Error("Method not implemented.");
   }
   options: any;
@@ -62,11 +62,11 @@ export class Query {
   label: any;
   constructor(query) {
     extend(this, query);
-    if(!query.id && query._id){
+    if (!query.id && query._id) {
       this.id = query._id;
     }
 
-    if (!has(this, "options")) {
+    if (!has(this, "options") || this.options == null) {
       this.options = {};
     }
     this.options.apply_auto_limit = !!this.options.apply_auto_limit;
@@ -86,12 +86,7 @@ export class Query {
 
   scheduleInLocalTime() {
     const parts = this.schedule.split(":");
-    return moment
-      .utc()
-      .hour(parts[0])
-      .minute(parts[1])
-      .local()
-      .format("HH:mm");
+    return moment.utc().hour(parts[0]).minute(parts[1]).local().format("HH:mm");
   }
 
   hasResult() {
@@ -120,7 +115,9 @@ export class Query {
 
       return new QueryResult({
         job: {
-          error: `missing ${valuesWord} for ${missingParams.join(", ")} ${paramsWord}.`,
+          error: `missing ${valuesWord} for ${missingParams.join(
+            ", "
+          )} ${paramsWord}.`,
           status: 4,
         },
       });
@@ -140,7 +137,10 @@ export class Query {
       }
     } else if (this.latest_query_data_id && maxAge !== 0) {
       if (!this.queryResult) {
-        this.queryResult = QueryResult.getById(this.id, this.latest_query_data_id);
+        this.queryResult = QueryResult.getById(
+          this.id,
+          this.latest_query_data_id
+        );
       }
     } else {
       this.queryResult = execute();
@@ -151,7 +151,12 @@ export class Query {
 
   getQueryResult(maxAge?) {
     const execute = () =>
-      QueryResult.getByQueryId(this.id, this.getParameters().getExecutionValues(), this.getAutoLimit(), maxAge);
+      QueryResult.getByQueryId(
+        this.id,
+        this.getParameters().getExecutionValues(),
+        this.getAutoLimit(),
+        maxAge
+      );
     return this.prepareQueryResultExecution(execute, maxAge);
   }
 
@@ -161,12 +166,28 @@ export class Query {
       return new QueryResultError("Can't execute empty query.");
     }
 
-    const parameters = this.getParameters().getExecutionValues({ joinListValues: true });
+    const parameters = this.getParameters().getExecutionValues({
+      joinListValues: true,
+    });
     const execute = () =>
-      QueryResult.get(this.data_source_id, queryText, parameters, this.getAutoLimit(), maxAge, this.id);
+      QueryResult.get(
+        this.data_source_id,
+        queryText,
+        parameters,
+        this.getAutoLimit(),
+        maxAge,
+        this.id
+      );
     return this.prepareQueryResultExecution(execute, maxAge);
   }
-  data_source_id(data_source_id: any, queryText: any, parameters: any, arg3: any, maxAge: any, id: any) {
+  data_source_id(
+    data_source_id: any,
+    queryText: any,
+    parameters: any,
+    arg3: any,
+    maxAge: any,
+    id: any
+  ) {
     throw new Error("Method not implemented.");
   }
 
@@ -179,12 +200,18 @@ export class Query {
 
     let params = {};
     if (this.getParameters().isRequired()) {
-      this.getParametersDefs().forEach(param => {
+      this.getParametersDefs().forEach((param) => {
         extend(params, param.toUrlParams());
       });
     }
-    Object.keys(params).forEach(key => params[key] == null && delete params[key]);
-    params = map(params, (value, name) => `${encodeURIComponent(name)}=${encodeURIComponent(value)}`).join("&");
+    Object.keys(params).forEach(
+      (key) => params[key] == null && delete params[key]
+    );
+    params = map(
+      params,
+      (value, name) =>
+        `${encodeURIComponent(name)}=${encodeURIComponent(value)}`
+    ).join("&");
 
     if (params !== "") {
       url += `?${params}`;
@@ -249,7 +276,7 @@ class Parameters {
   }
 
   parseQuery() {
-    const fallback = () => map(this.query.options.parameters, i => i.name);
+    const fallback = () => map(this.query.options.parameters, (i) => i.name);
 
     let parameters = [];
     if (this.query.query !== undefined) {
@@ -271,9 +298,12 @@ class Parameters {
   updateParameters(update?) {
     if (this.query.query === this.cachedQueryText) {
       const parameters = this.query.options.parameters;
-      const hasUnprocessedParameters = find(parameters, p => !(p instanceof Parameter));
+      const hasUnprocessedParameters = find(
+        parameters,
+        (p) => !(p instanceof Parameter)
+      );
       if (hasUnprocessedParameters) {
-        this.query.options.parameters = map(parameters, p =>
+        this.query.options.parameters = map(parameters, (p) =>
           p instanceof Parameter ? p : createParameter(p, this.query.id)
         );
       }
@@ -281,16 +311,18 @@ class Parameters {
     }
 
     this.cachedQueryText = this.query.query;
-    const parameterNames = update ? this.parseQuery() : map(this.query.options.parameters, p => p.name);
+    const parameterNames = update
+      ? this.parseQuery()
+      : map(this.query.options.parameters, (p) => p.name);
 
     this.query.options.parameters = this.query.options.parameters || [];
 
     const parametersMap = {};
-    this.query.options.parameters.forEach(param => {
+    this.query.options.parameters.forEach((param) => {
       parametersMap[param.name] = param;
     });
 
-    parameterNames.forEach(param => {
+    parameterNames.forEach((param) => {
       if (!has(parametersMap, param)) {
         this.query.options.parameters.push(
           createParameter({
@@ -304,15 +336,17 @@ class Parameters {
       }
     });
 
-    const parameterExists = p => includes(parameterNames, p.name);
+    const parameterExists = (p) => includes(parameterNames, p.name);
     const parameters = this.query.options.parameters;
     this.query.options.parameters = parameters
       .filter(parameterExists)
-      .map(p => (p instanceof Parameter ? p : createParameter(p, this.query.id)));
+      .map((p) =>
+        p instanceof Parameter ? p : createParameter(p, this.query.id)
+      );
   }
 
   initFromQueryString(query) {
-    this.get().forEach(param => {
+    this.get().forEach((param) => {
       param.fromUrlParams(query);
     });
   }
@@ -323,7 +357,9 @@ class Parameters {
   }
 
   add(parameterDef) {
-    this.query.options.parameters = this.query.options.parameters.filter(p => p.name !== parameterDef.name);
+    this.query.options.parameters = this.query.options.parameters.filter(
+      (p) => p.name !== parameterDef.name
+    );
     const param = createParameter(parameterDef);
     this.query.options.parameters.push(param);
     return param;
@@ -331,8 +367,8 @@ class Parameters {
 
   getMissing() {
     return map(
-      filter(this.get(), p => p.isEmpty),
-      i => i.title
+      filter(this.get(), (p) => p.isEmpty),
+      (i) => i.title
     );
   }
 
@@ -343,28 +379,30 @@ class Parameters {
   getExecutionValues(extra = {}) {
     const params = this.get();
     return zipObject(
-      map(params, i => i.name),
-      map(params, i => i.getExecutionValue(extra))
+      map(params, (i) => i.name),
+      map(params, (i) => i.getExecutionValue(extra))
     );
   }
 
   hasPendingValues() {
-    return some(this.get(), p => p.hasPendingValue);
+    return some(this.get(), (p) => p.hasPendingValue);
   }
 
   applyPendingValues() {
-    each(this.get(), p => p.applyPendingValue());
+    each(this.get(), (p) => p.applyPendingValue());
   }
 
   toUrlParams() {
     if (this.get().length === 0) {
       return "";
     }
-    const res:any = this.get().map(p => p.toUrlParams());
+    const res: any = this.get().map((p) => p.toUrlParams());
     const params = Object.assign({}, ...res);
-    Object.keys(params).forEach(key => params[key] == null && delete params[key]);
+    Object.keys(params).forEach(
+      (key) => params[key] == null && delete params[key]
+    );
     return Object.keys(params)
-      .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
+      .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
       .join("&");
   }
 }
@@ -405,28 +443,55 @@ export class QueryResultError {
   }
 }
 
-const getQuery = query => new Query(query);
-const saveOrCreateUrl = data => (data.id ? `/service/api/~packages-@steedos/service-charts/queries/${data.id}` : "/service/api/~packages-@steedos/service-charts/queries");
-const mapResults = data => ({ ...data, results: map(data.results, getQuery) });
+const getQuery = (query) => new Query(query);
+const saveOrCreateUrl = (data) =>
+  data.id
+    ? `/service/api/~packages-@steedos/service-charts/queries/${data.id}`
+    : "/service/api/~packages-@steedos/service-charts/queries";
+const mapResults = (data) => ({
+  ...data,
+  results: map(data.results, getQuery),
+});
 
 const QueryService = {
-  query: params => axios.get("api/queries", { params }).then(mapResults),
+  query: (params) =>
+    axios
+      .get("/service/api/~packages-@steedos/service-charts/queries", { params })
+      .then(mapResults),
   get: (data) => {
-    return axios.get(`/service/api/~packages-@steedos/service-charts/queries/${data.id}`).then(getQuery);
+    return axios
+      .get(`/service/api/~packages-@steedos/service-charts/queries/${data.id}`)
+      .then(getQuery);
   },
-  save: data => axios.post(saveOrCreateUrl(data), data).then(getQuery),
-  delete: data => axios.delete(`api/queries/${data.id}`),
-  recent: params => axios.get(`api/queries/recent`, { params }).then(data => map(data, getQuery)),
-  archive: params => axios.get(`api/queries/archive`, { params }).then(mapResults),
-  myQueries: params => axios.get("api/queries/my", { params }).then(mapResults),
+  save: (data) => axios.post(saveOrCreateUrl(data), data).then(getQuery),
+  delete: (data) => axios.delete(`api/queries/${data.id}`),
+  recent: (params) =>
+    axios
+      .get(`/service/api/~packages-@steedos/service-charts/queries/recent`, {
+        params,
+      })
+      .then((data) => {
+        const _data = map(data, getQuery);
+        return _data;
+      })
+      .catch((reason) => {
+        console.log(`reason`, reason);
+      }),
+  archive: (params) =>
+    axios.get(`api/queries/archive`, { params }).then(mapResults),
+  myQueries: (params) =>
+    axios.get("api/queries/my", { params }).then(mapResults),
   fork: ({ id }) => axios.post(`api/queries/${id}/fork`, { id }).then(getQuery),
-  resultById: data => axios.get(`api/queries/${data.id}/results.json`),
-  asDropdown: data => axios.get(`api/queries/${data.id}/dropdown`),
+  resultById: (data) => axios.get(`api/queries/${data.id}/results.json`),
+  asDropdown: (data) => axios.get(`api/queries/${data.id}/dropdown`),
   associatedDropdown: ({ queryId, dropdownQueryId }) =>
-    axios.get(`api/queries/${queryId}/dropdowns/${dropdownQueryId}`),
-  favorites: params => axios.get("api/queries/favorites", { params }).then(mapResults),
-  favorite: data => axios.post(`api/queries/${data.id}/favorite`),
-  unfavorite: data => axios.delete(`api/queries/${data.id}/favorite`),
+    axios.get(
+      `/service/api/~packages-@steedos/service-charts/queries/${queryId}/dropdowns/${dropdownQueryId}`
+    ),
+  favorites: (params) =>
+    axios.get("api/queries/favorites", { params }).then(mapResults),
+  favorite: (data) => axios.post(`api/queries/${data.id}/favorite`),
+  unfavorite: (data) => axios.delete(`api/queries/${data.id}/favorite`),
 };
 
 (QueryService as any).newQuery = function newQuery() {

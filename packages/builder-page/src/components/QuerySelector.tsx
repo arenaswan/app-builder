@@ -18,11 +18,15 @@ function search(term) {
 
   // get recent
   if (!term) {
-    return (Query as any).recent().then(results => results.filter(item => !item.is_draft)); // filter out draft
+    return (Query as any).recent().then(results => {
+      return results.filter(item => !item.is_draft)
+    }); // filter out draft
   }
 
   // search by query
-  return (Query as any).query({ q: term }).then(({ results }) => results);
+  return (Query as any).query({ q: term }).then(({ results }) => {
+    return results;
+  });
 }
 
 export default function QuerySelector(props) {
@@ -99,11 +103,9 @@ export default function QuerySelector(props) {
       <Input value={selectedQuery && (selectedQuery as any).name} aria-label="Tied query" placeholder={placeholder} disabled />
     );
   }
-
   if (props.type === "select") {
     const suffixIcon = selectedQuery ? clearIcon : null;
     const value = selectedQuery ? (selectedQuery as any).name : searchTerm;
-
     return (
       <Select
         showSearch
@@ -128,7 +130,7 @@ export default function QuerySelector(props) {
                 disabled={disabled}
                 className="query-selector-result"
                 data-test={`QueryId${q.id}`}>
-                {q.name}{" "}
+                {q.label}{" "}
                 <QueryTagsControl
                   isDraft={q.is_draft}
                   isArchived={false}
