@@ -27,6 +27,7 @@ _.each(matchedPaths, (matchedPath)=>{
       ||(parsePath.dir.endsWith('less') && parsePath.base === 'global.less')
       ||(parsePath.dir.endsWith('less') && parsePath.base === 'ant.less')
       ||(parsePath.dir.endsWith('ApplicationLayout') && parsePath.base === 'index.less')
+        || (parsePath.dir.endsWith('components') && parsePath.base === 'ParameterMappingInput.less')
     ){
         console.log(`fix less ignore`, matchedPath);
     }else{

@@ -177,12 +177,12 @@ export class ParameterMappingInput extends React.Component {
     return (
       <Radio.Group value={(this.props as any).mapping.type} onChange={e => this.updateSourceType(e.target.value)}>
         <Radio className="radio" value={MappingType.DashboardAddNew} data-test="NewDashboardParameterOption">
-          New dashboard parameter
+          New Page parameter
         </Radio>
         <Radio className="radio" value={MappingType.DashboardMapToExisting} disabled={noExisting}>
-          Existing dashboard parameter{" "}
+          Existing page parameter{" "}
           {noExisting ? (
-            <Tooltip title="There are no dashboard parameters corresponding to this data type">
+            <Tooltip title="There are no page parameters corresponding to this data type">
               <QuestionCircleFilledIcon />
             </Tooltip>
           ) : null}
@@ -548,7 +548,7 @@ export class ParameterMappingListInput extends React.Component {
       case MappingType.DashboardMapToExisting:
         return (
           <Fragment>
-            Dashboard <Tag className="tag">{mapTo}</Tag>
+            Page <Tag className="tag">{mapTo}</Tag>
           </Fragment>
         );
       case MappingType.WidgetLevel:
