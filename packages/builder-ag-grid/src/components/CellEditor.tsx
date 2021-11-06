@@ -1,8 +1,8 @@
 import React, { useContext, useRef, useEffect, useState, useImperativeHandle, forwardRef, useCallback, useMemo } from "react"
-import _ from "lodash"
 import ProField from "@ant-design/pro-field";
 import { Checkbox, Button, Space } from 'antd';
 import { CellMultipleUpdatePanel, getIsMultipleUpdatable } from './CellMultipleUpdatePanel';
+import { forEach } from "lodash"
 
 function getParentsClassName(element, classNames=[]){
   if(element){
@@ -64,6 +64,7 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
   const { 
     valueType = 'text',
     fieldSchema,
+    objectApiName,
     form,
     context
   } = props;
@@ -95,7 +96,18 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
   //     props.api.stopEditing(false);
   //     clearInterval(IntervalID);
   //   }
-  // }, 300)
+  // }, 300)  let depend_field_values = {};
+  let depend_field_values = {};
+  if(!form){
+    // ObjectGrid的form为undefined, 依赖了depend_field_values；   aggrid的form有表单值，且此时传入的值可能会覆盖外面同名的字段值，所以目前不需要depend_field_values；
+    if(fieldSchema && fieldSchema.depend_on && fieldSchema.depend_on.length){
+      forEach(fieldSchema.depend_on,(val)=>{
+        if(props.data[val] !== undefined){
+          depend_field_values[val] = props.data[val];
+        }
+      })
+    }
+  }
   return (
     <section className="slds-popover slds-popover slds-popover_edit" role="dialog" ref={refEditor}>
       <div className="slds-popover__body">
@@ -129,11 +141,11 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
             if(fieldSchema.multiple != true){
               if(element?.target && document.activeElement === element.target){
               // if(element?.target && document.activeElement.closest('.ag-popup-editor.ag-popup-child')){
-                console.log("==document.activeElement,element.target===1===", document.activeElement,element.target);
+                // console.log("==document.activeElement,element.target===1===", document.activeElement,element.target);
                 const IntervalID = setInterval(()=>{
                   if(document.activeElement != element.target){
                   // if(!document.activeElement.closest('.ag-popup-editor.ag-popup-child')){
-                    console.log("==document.activeElement,element.target====2===", document.activeElement,element.target);
+                    // console.log("==document.activeElement,element.target====2===", document.activeElement,element.target);
                     // if(document.activeElement.closest('.ag-grid-multiple-update-chckbox')){
                     //   return;
                     // }
@@ -154,10 +166,12 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
           }}
           fieldProps={{
             _grid_row_id: props.data._id,
-            field_schema: fieldSchema
+            depend_field_values,
+            field_schema: fieldSchema,
           }}
           form={form}
           allowClear={false}
+          object_api_name={objectApiName}
         />
         <CellMultipleUpdatePanel cellProps={props} value={value} setValue={setValue} context={context} />
       </div>

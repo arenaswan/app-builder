@@ -670,6 +670,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         cellEditorParams: {
           fieldSchema: field,
           valueType: field.type,
+          objectApiName: objectApiName
         },
         // key: fieldName,
         // dataIndex: fieldName,
