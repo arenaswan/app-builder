@@ -34,12 +34,14 @@ export const AgGridCellRenderer = (props: any) => {
   // 当emptyText={false}时，boolean或toggle字段，数据库中无值，会进入valueTypes中自定义render（只读）。
   const emptyText = ['boolean', 'toggle'].indexOf(valueType) > -1 ? false : '';
   let depend_field_values = {};
+  let allValues = {};
   if(!form){
     // ObjectGrid的form为undefined, 依赖了depend_field_values；   aggrid的form有表单值，且此时传入的值可能会覆盖外面同名的字段值，所以目前不需要depend_field_values；
     if(fieldSchema && fieldSchema.depend_on && fieldSchema.depend_on.length){
       forEach(fieldSchema.depend_on,(val)=>{
         if(props.data[val] !== undefined){
           depend_field_values[val] = props.data[val];
+          allValues = props.data;
         }
       })
     }
@@ -52,6 +54,7 @@ export const AgGridCellRenderer = (props: any) => {
       valueType={valueType} 
       fieldProps={{
         _grid_row_id: props.data._id,
+        allValues,
         depend_field_values,
         field_schema: fieldSchema
       }}

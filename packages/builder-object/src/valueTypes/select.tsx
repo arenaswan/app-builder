@@ -54,7 +54,7 @@ let ColorSpan = styled.span`
 export const SelectField = observer((props: any) => {
   const { valueType, mode, fieldProps = {}, form, ...rest } = props;
   const [params, setParams] = useState({ open: false, openTag: null });
-  const { field_schema: fieldSchema = {}, depend_field_values: dependFieldValues = {} } = fieldProps;
+  const { field_schema: fieldSchema = {}, depend_field_values: dependFieldValues = {} , allValues = {} } = fieldProps;
   const { multiple , optionsFunction } = fieldSchema;
   let options = optionsFunction ? optionsFunction : fieldSchema.options;
   const value = fieldProps.value || props.text;//ProTable那边fieldProps.value没有值，只能用text
@@ -74,7 +74,7 @@ export const SelectField = observer((props: any) => {
   //   setFieldsValue(form?.getFieldsValue());
   //   setParams({ open: params.open, openTag: new Date() });
   // }, [dependFieldValues])
-  const fieldsValues = Object.assign({}, form?.getFieldsValue() , dependFieldValues);
+  const fieldsValues = Object.assign({}, allValues, form?.getFieldsValue() , dependFieldValues);
   let optionsFunctionValues:any = Object.assign({}, fieldsValues || {}, {
     // space: Settings.tenantId,
     _object_name: objectApiName

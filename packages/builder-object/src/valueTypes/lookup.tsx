@@ -29,7 +29,7 @@ export const LookupField = observer((props:any) => {
     const [params, setParams] = useState({open: false,openTag: null});
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { valueType, mode, fieldProps, request, form, ...rest } = props;
-    const { field_schema: fieldSchema = {},onChange, _grid_row_id, depend_field_values: dependFieldValues={} } = fieldProps;
+    const { field_schema: fieldSchema = {},onChange, _grid_row_id, depend_field_values: dependFieldValues={}, allValues = {} } = fieldProps;
     const { reference_to, reference_sort,reference_limit, showIcon = true, multiple, reference_to_field = "_id", filters: fieldFilters = [],filtersFunction, create = true, modal_mode, table_schema, link_target, modalClassName } = fieldSchema;
     // TODO: 添加 fieldProps.defaultValue 修复lookup字段默认值显示value 而不显示label的bug。 select字段一直是正常了，lookup字段一开始是正常的，后面就出问题了。
     let fieldValue = fieldProps.defaultValue || fieldProps.value || props.text;//ProTable那边fieldProps.value没有值，只能用text
@@ -51,7 +51,7 @@ export const LookupField = observer((props:any) => {
     //     setFieldsValue(form?.getFieldsValue());
     //     setParams({ open: params.open, openTag: new Date() });
     // }, [dependFieldValues])
-    const fieldsValues = Object.assign({}, form?.getFieldsValue() , dependFieldValues);
+    const fieldsValues = Object.assign({},allValues, form?.getFieldsValue() , dependFieldValues);
     let optionsFunctionValues:any = Object.assign({}, fieldsValues || {}, {
         _grid_row_id: _grid_row_id,
         space: Settings.tenantId,
