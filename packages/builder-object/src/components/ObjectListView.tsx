@@ -241,7 +241,7 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
   const listViewColumns = listView && listView.columns ? listView.columns : getListviewColumns(schema, listName);
   const listViewExtraColumns = listSchema && listSchema.extra_columns ? listSchema.extra_columns : getListviewExtraColumns(schema, listName);
   const nameFieldKey = getListviewNameFieldKey(schema);
-  const isBlank = Settings.isNameFieldLinkToBlank ? '_blank' : '_self';
+  const isBlank = Settings.hrefPopup ? '_blank' : '_self';
   if(!columnFields || columnFields.length==0){
     columnFields = getListViewColumnFields(listViewColumns, props, nameFieldKey, isBlank);
   }
