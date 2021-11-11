@@ -241,15 +241,16 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
   const listViewColumns = listView && listView.columns ? listView.columns : getListviewColumns(schema, listName);
   const listViewExtraColumns = listSchema && listSchema.extra_columns ? listSchema.extra_columns : getListviewExtraColumns(schema, listName);
   const nameFieldKey = getListviewNameFieldKey(schema);
+  const isBlank = Settings.isNameFieldLinkToBlank ? '_blank' : '_self';
   if(!columnFields || columnFields.length==0){
-    columnFields = getListViewColumnFields(listViewColumns, props, nameFieldKey);
+    columnFields = getListViewColumnFields(listViewColumns, props, nameFieldKey, isBlank);
   }
   else{
     columnFields = columnFields.map((item: any)=>{
       if(item.fieldName === nameFieldKey && !item.render){
         // name字段默认应该显示为链接
         return Object.assign({}, item, {
-          render: getNameFieldColumnRender(props.objectApiName, '_self', nameFieldKey)
+          render: getNameFieldColumnRender(props.objectApiName, isBlank, nameFieldKey)
         });
       }
       else{

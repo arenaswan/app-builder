@@ -15,12 +15,14 @@ tenantId = config.tenantId || tenantId;
 userId = config.userId || userId;
 authToken = config.authToken || authToken;
 locale = config.locale || locale;
+const isNameFieldLinkToBlank = config.isNameFieldLinkToBlank || false;
 let env = config.env;
 
 export const Settings = types
 .model('Settings', {
   isProd,
   rootUrl,
+  isNameFieldLinkToBlank: types.maybeNull(types.boolean),
   tenantId: types.maybeNull(types.string),
   userId: types.maybeNull(types.string),
   authToken: types.maybeNull(types.string),
@@ -33,6 +35,9 @@ export const Settings = types
   return {
     setRootUrl: (rootUrl) => {
         self.rootUrl = rootUrl
+    },
+    setIsNameFieldLinkToBlank: (isNameFieldLinkToBlank) => {
+        self.isNameFieldLinkToBlank = isNameFieldLinkToBlank
     },
     setTenantId: (tenantId) => {
         self.tenantId = tenantId
@@ -68,6 +73,7 @@ export const Settings = types
 })
 .create({
   rootUrl,
+  isNameFieldLinkToBlank,
   tenantId,
   userId,
   authToken,
