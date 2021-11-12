@@ -170,10 +170,15 @@ export const LookupField = observer((props:any) => {
                 tags = [{value: fieldValue, label: '[无此记录]'}];
             }
         }
+        let linkProps: any = {};
+        const targetValue = link_target ? link_target : (Settings.hrefPopup ? '_blank' : '');
+        if(targetValue){
+            linkProps.target = targetValue;
+        }
         return (<React.Fragment>{tags.map((tagItem, index)=>{return (
             <React.Fragment key={tagItem.value}>
                 {index > 0 && ', '}
-                { referenceTo ? (<Link target={link_target} to={getObjectRecordUrl(referenceTo, tagItem.value)} className="text-blue-600 hover:text-blue-500 hover:underline">{tagItem.label}</Link>) : (tagItem.label) }
+                { referenceTo ? (<Link to={getObjectRecordUrl(referenceTo, tagItem.value)} {...linkProps} className="text-blue-600 hover:text-blue-500 hover:underline">{tagItem.label}</Link>) : (tagItem.label) }
             </React.Fragment>
         )})}</React.Fragment>)
     }else{
