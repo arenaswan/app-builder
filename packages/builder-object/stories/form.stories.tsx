@@ -42,6 +42,9 @@ export const SchemaForm = () => {
   const objectFormProps = {
     objectSchema: TestObject,
     initialValues,
+    onFinish: (values)=>{
+      console.log("SchemaForm values:", values);
+    }
   }
   return (
       <ObjectForm mode='read' layout='horizontal' {...objectFormProps}>

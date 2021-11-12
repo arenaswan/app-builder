@@ -22,6 +22,31 @@ export default {
       type: 'text',
       defaultValue: "{{formData.test1+global.userId}}"
     },
+    selectNumber: {
+      type: 'select',
+      label: '下拉值为number',
+      options:[
+        { label: '八折',   value: 0.8 },
+        { label: '七折', value: 0.7 },
+        { label: '六折', value: 0.6 },
+        { label: '五折', value: 0.5 }
+      ],
+      data_type: 'number',
+      defaultValue: 0.6
+    },
+    selectNumberMultiple: {
+      type: 'select',
+      label: '下拉值为number多选',
+      options:[
+        { label: '八折',   value: 0.8 },
+        { label: '七折', value: 0.7 },
+        { label: '六折', value: 0.6 },
+        { label: '五折', value: 0.5 }
+      ],
+      data_type: 'number',
+      multiple: true,
+      defaultValue: [0.6,0.8]
+    },
     /*
     testImage: {
       type: 'image',
