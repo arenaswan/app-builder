@@ -59,6 +59,7 @@ export const SelectField = observer((props: any) => {
   let options = optionsFunction ? optionsFunction : fieldSchema.options;
   const data_type = fieldSchema.data_type;
   if (!isFunction(options) && data_type && data_type !== "text") {
+    // 零代码界面配置options选项值只支持字符串，所以当data_type为数值或boolean时，只能强行把选项值先转换为对应的类型
     options.forEach((optionItem: any)=>{
       if(typeof optionItem.value !== "string"){
         return;
