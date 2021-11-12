@@ -57,6 +57,21 @@ export const SelectField = observer((props: any) => {
   const { field_schema: fieldSchema = {}, depend_field_values: dependFieldValues = {} , allValues = {} } = fieldProps;
   const { multiple , optionsFunction } = fieldSchema;
   let options = optionsFunction ? optionsFunction : fieldSchema.options;
+  const data_type = fieldSchema.data_type;
+  if (!isFunction(options) && data_type && data_type !== "text") {
+    options.forEach((optionItem: any)=>{
+      if(typeof optionItem.value !== "string"){
+        return;
+      }
+      if(["number", "currency", "percent"].indexOf(data_type) > -1){
+        optionItem.value = Number(optionItem.value);
+      }
+      else if(data_type === "boolean"){
+        // 只有为true才为真
+        optionItem.value = optionItem.value === "true";
+      }
+    });
+  }
   const value = fieldProps.value || props.text;//ProTable那边fieldProps.value没有值，只能用text
   let [ fieldsValue ,setFieldsValue ] = useState({});
   // 按原来lookup控件的设计，this.template.data._value为原来数据库中返回的选项值，this.template.data.value为当前用户选中的选项

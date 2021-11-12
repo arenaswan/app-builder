@@ -26,10 +26,10 @@ export default {
       type: 'select',
       label: '下拉值为number',
       options:[
-        { label: '八折',   value: 0.8 },
-        { label: '七折', value: 0.7 },
-        { label: '六折', value: 0.6 },
-        { label: '五折', value: 0.5 }
+        { label: '八折',   value: "0.8" },
+        { label: '七折', value: "0.7" },
+        { label: '六折', value: "0.6" },
+        { label: '五折', value: "0.5" }
       ],
       data_type: 'number',
       defaultValue: 0.6
@@ -46,6 +46,27 @@ export default {
       data_type: 'number',
       multiple: true,
       defaultValue: [0.6,0.8]
+    },
+    selectBoolean: {
+      type: 'select',
+      label: '下拉值为boolean',
+      options:[
+        { label: '是',   value: "true" },
+        { label: '不是', value: "false" }
+      ],
+      data_type: 'boolean',
+      defaultValue: false
+    },
+    selectBooleanMultiple: {
+      type: 'select',
+      label: '下拉值为number多选',
+      options:[
+        { label: '是',   value: true },
+        { label: '不是', value: false }
+      ],
+      data_type: 'boolean',
+      multiple: true,
+      defaultValue: [true, false]
     },
     /*
     testImage: {
