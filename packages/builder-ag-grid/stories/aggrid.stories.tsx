@@ -541,11 +541,15 @@ export const SchemaGrid = () => {
     _id:"1", 
     name:"A", 
     tags:["1"], 
+    discount: 0.5,
+    discount_multiple: [0.5,0.6],
     contract:"C25heacKZD9uy2EAj"
   },{
     _id:"2", 
     name:"B", 
     tags:["2"], 
+    discount: 0.6,
+    count: 6,
     contract:"C25heacKZD9uy2EAj"
   },{
     _id:"3", 
@@ -581,6 +585,15 @@ export const SchemaGrid = () => {
               fieldName: 'tags'
             },
             {
+              fieldName: 'discount'
+            },
+            {
+              fieldName: 'discount_multiple'
+            },
+            {
+              fieldName: 'count'
+            },
+            {
               fieldName: 'contract'
             }
           ]
@@ -601,6 +614,33 @@ export const SchemaGrid = () => {
                 { label: '孩童', value: '4' }
               ],
               multiple: true
+            },
+            discount: {
+              type: 'select',
+              label: '折扣',
+              options:[
+                { label: '八折',   value: 0.8 },
+                { label: '七折', value: 0.7 },
+                { label: '六折', value: 0.6 },
+                { label: '五折', value: 0.5 }
+              ],
+              data_type: 'number'
+            },
+            discount_multiple: {
+              type: 'select',
+              label: '折扣多选',
+              options:[
+                { label: '八折',   value: 0.8 },
+                { label: '七折', value: 0.7 },
+                { label: '六折', value: 0.6 },
+                { label: '五折', value: 0.5 }
+              ],
+              data_type: 'number',
+              multiple: true
+            },
+            count: {
+              type: 'number',
+              label: '数量'
             },
             contract: {
               reference_to: 'contracts',

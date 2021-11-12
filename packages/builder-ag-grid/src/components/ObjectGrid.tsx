@@ -180,10 +180,23 @@ const getCellValueFromClipboard = (event: any, forceFieldType?: string)=>{
       value = value.split(',');
     }
     if(["number", "currency", "percent"].indexOf(fileType) > -1){
-      value = Number(value);
+      if(fieldSchema && fieldSchema.multiple){
+        if(value instanceof Array && value.length){
+          value = value.map((item)=>{
+            return Number(item)
+          });
+        }
+      }
+      else{
+        value = Number(value);
+      }
     }
     else if(["boolean", "toggle"].indexOf(fileType) > -1){
       value = value === "true";
+    }
+    else if(["select"].indexOf(fileType) > -1){
+      // select字段类型可能配置了data_type，如果配置了则以其配置的为准
+      value = getCellValueFromClipboard(event, fieldSchema.data_type || "text");
     }
     else if(["formula", "summary"].indexOf(fileType) > -1){
       // 公式和汇总字段是只读的，不需要处理
@@ -205,6 +218,16 @@ const getSortModel = (objectSchema: any, sortModel: any)=>{
       return model;
     }
   });
+}
+
+const getGridColumnFieldType = (fieldSchema: any)=>{
+  if(["formula", "summary"].indexOf(fieldSchema.type) > -1){
+    // 只有公式和汇总字段类型需要按data_type显示，其他比如select中的data_type只是保存数据类型，显示控制类型不需要换
+    return fieldSchema.data_type ? fieldSchema.data_type : fieldSchema.type
+  }
+  else{
+    return fieldSchema.type;
+  }
 }
 
 export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
@@ -595,7 +618,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         else{
           filterParams = {
             fieldSchema: field,
-            valueType: field.data_type ? field.data_type : field.type,
+            valueType: getGridColumnFieldType(field),
             objectApiName: objectApiName
           }
         }
