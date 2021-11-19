@@ -199,10 +199,16 @@ function getRowButtons(objectSchema) {
   return buttons
 }
 
+function getObjectName(schema){
+  // 附件上传新版本后，没有更新当前版本 #2138
+  // https://github.com/steedos/steedos-platform/issues/2138
+  return schema.name === "cfs_files_filerecord" ? "cfs.files.filerecord" : schema.name;
+}
+
 function getListView(schema, listName){
   const Creator = (window as any).Creator;
   if(Creator && Creator.getListView){
-    return Creator.getListView(schema.table_name || schema.name, listName, true)
+    return Creator.getListView(getObjectName(schema), listName, true)
   }
   else{
     return API.client.listview.find(schema.list_views, listName);
