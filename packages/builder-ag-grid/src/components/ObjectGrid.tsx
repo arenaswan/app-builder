@@ -23,6 +23,7 @@ import { Tables } from '@steedos-ui/builder-store';
 import { message } from 'antd';
 import { translate } from '@steedos-ui/builder-sdk';
 import { getObjectNameFieldKey } from '@steedos-ui/builder-sdk';
+import { getObjectBaseFieldNames } from '@steedos-ui/builder-sdk';
 
 import './ObjectGrid.less'
 
@@ -414,7 +415,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
               // 附件列表需要这个字段判断权限
               extraColumnFields.push("parent")
             }
-            fields = uniq(compact(fields.concat(extraColumnFields).concat(["owner", "company_id", "company_ids", "locked"])));
+            const baseExtraFields = getObjectBaseFieldNames(objectSchema);
+            fields = uniq(compact(fields.concat(extraColumnFields).concat(baseExtraFields)));
             // 当查询的某个字段有depend_on属性时，接口返回的数据字段要包含depend_on的值。 
             let dependOnFields = [];
             forEach(fields,(val)=>{

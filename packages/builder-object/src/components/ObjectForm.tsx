@@ -14,7 +14,7 @@ import { Spin } from 'antd';
 import moment from 'moment';
 import { ObjectFormSections } from './ObjectFormSections';
 import { message } from 'antd';
-import { translate, BASE_FIELDNAMES_FOR_PERMISSIONS } from '@steedos-ui/builder-sdk';
+import { translate, getObjectBaseFieldNames } from '@steedos-ui/builder-sdk';
 
 import './ObjectForm.less'
 
@@ -127,7 +127,8 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
   })
   let record: any;
   if (object && recordId) {
-    const fieldsForFetch = uniq(compact(fieldNames.concat(BASE_FIELDNAMES_FOR_PERMISSIONS)));
+    const baseExtraFields = getObjectBaseFieldNames(mergedSchema);
+    const fieldsForFetch = uniq(compact(fieldNames.concat(baseExtraFields)));
     const recordCache = object.getRecord(recordId, fieldsForFetch)
     if (recordCache.isLoading)
       return (<div><Spin/></div>)
