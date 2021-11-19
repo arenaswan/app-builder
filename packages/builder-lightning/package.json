@@ -1,6 +1,6 @@
 {
   "name": "@steedos-ui/builder-lightning",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
