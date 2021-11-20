@@ -406,7 +406,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
             setSelectedRows(params, currentGridApi);
           }
           else{
-            let nameFieldKey = objectSchema.NAME_FIELD_KEY || "name";
+            let nameFieldKey = objectSchema.NAME_FIELD_KEY;
             let fields = [nameFieldKey];
             forEach(columnFields, ({ fieldName, ...columnItem }: ObjectGridColumnProps) => {
               fields.push(fieldName)
