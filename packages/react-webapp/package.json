@@ -1,6 +1,6 @@
 {
   "name": "@steedos-ui/react-webapp",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "private": true,
   "dependencies": {
     "@ant-design/pro-layout": "^6.16.3",
