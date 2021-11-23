@@ -23,7 +23,7 @@ import VisualizationRenderer from "../../visualizations/VisualizationRenderer";
 
 import Widget from "./Widget";
 
-function visualizationWidgetMenuOptions({ widget, canEditDashboard, onParametersEdit }) {
+function visualizationWidgetMenuOptions({ isPublic, widget, canEditDashboard, onParametersEdit }) {
   const canViewQuery = currentUser.hasPermission("view_query");
   const canEditParameters = canEditDashboard && !isEmpty(invoke(widget, "query.getParametersDefs"));
   const widgetQueryResult = widget.getQueryResult();
@@ -59,13 +59,13 @@ function visualizationWidgetMenuOptions({ widget, canEditDashboard, onParameters
         "Download as Excel File"
       )}
     </Menu.Item>,
-    (canViewQuery || canEditParameters) && <Menu.Divider key="divider" />,
-    canViewQuery && (
+    (!isPublic && (canViewQuery || canEditParameters)) && <Menu.Divider key="divider" />,
+    !isPublic && canViewQuery && (
       <Menu.Item key="view_query">
         <Link href={widget.getQuery().getUrl(true, widget.visualization.id)}>View Query</Link>
       </Menu.Item>
     ),
-    canEditParameters && (
+    !isPublic && canEditParameters && (
       <Menu.Item key="edit_parameters" onClick={onParametersEdit}>
         Edit Parameters
       </Menu.Item>
@@ -333,6 +333,7 @@ class VisualizationWidget extends React.Component {
         {...this.props}
         className="widget-visualization"
         menuOptions={visualizationWidgetMenuOptions({
+          isPublic,
           widget,
           canEditDashboard: canEdit,
           onParametersEdit: this.editParameterMappings,

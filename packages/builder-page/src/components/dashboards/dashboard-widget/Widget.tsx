@@ -9,12 +9,12 @@ import PlainButton from "../../PlainButton";
 
 import "./Widget.less";
 
-function WidgetDropdownButton({ extraOptions, showDeleteOption, onDelete }) {
+function WidgetDropdownButton({ extraOptions, showDeleteOption, onDelete, isPublic = false }) {
   const WidgetMenu = (
     <Menu data-test="WidgetDropdownButtonMenu">
       {extraOptions}
-      {showDeleteOption && extraOptions && extraOptions.length > 0 &&<Menu.Divider />}
-      {showDeleteOption && <Menu.Item onClick={onDelete}>Remove from Page</Menu.Item>}
+      {!isPublic && showDeleteOption && extraOptions && extraOptions.length > 0 && <Menu.Divider />}
+      {!isPublic && showDeleteOption && <Menu.Item onClick={onDelete}>Remove from Page</Menu.Item>}
     </Menu>
   );
 
@@ -113,13 +113,19 @@ class Widget extends React.Component {
       <div className="widget-wrapper">
         <div className={cx("tile body-container", className)} {...tileProps}>
           <div className="widget-actions">
-            {showDropdownButton && (
+            {/* {showDropdownButton && (
               <WidgetDropdownButton
                 extraOptions={menuOptions}
                 showDeleteOption={canEdit}
                 onDelete={this.deleteWidget}
               />
-            )}
+            )} */}
+            <WidgetDropdownButton
+              extraOptions={menuOptions}
+              isPublic={isPublic}
+              showDeleteOption={canEdit}
+              onDelete={this.deleteWidget}
+            />
             {canEdit && <WidgetDeleteButton onClick={this.deleteWidget} />}
           </div>
           <div className="body-row widget-header">{header}</div>
