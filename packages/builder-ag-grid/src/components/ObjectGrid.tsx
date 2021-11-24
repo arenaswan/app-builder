@@ -867,6 +867,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
 
   const processCellFromClipboard = (event)=>{
     event.value = getCellValueFromClipboard(event);
+    // 列表中复制内容粘贴在单元格时底部弹出 “取消/保存” 确认框
+    (document.getElementsByClassName(`grid-action-drawer-${name}`)[0] as any).style.display='' ;
     return event.value;
   }
 
