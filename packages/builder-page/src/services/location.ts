@@ -37,40 +37,44 @@ const location = {
   },
 
   update(newLocation: any, replace = false) {
-    // if (isObject(newLocation)) {
-    //   // remap fields and remove undefined ones
-    //   newLocation = omitBy(
-    //     {
-    //       pathname: (newLocation as any).path,
-    //       search: (newLocation as any).search,
-    //       hash: (newLocation as any).hash,
-    //     },
-    //     isUndefined
-    //   );
 
-    //   // keep existing fields (!)
-    //   newLocation = extend(
-    //     {
-    //       pathname: location.path,
-    //       search: location.search,
-    //       hash: location.hash,
-    //     },
-    //     newLocation
-    //   );
+    if(typeof (window as any).Meteor != 'undefined'){
+      return ;
+    }
 
-    //   // serialize search and keep existing search parameters (!)
-    //   if (isObject(newLocation.search)) {
-    //     newLocation.search = omitBy(extend({}, location.search, newLocation.search), isNil);
-    //     newLocation.search = mapValues(newLocation.search, value => (value === true ? null : value));
-    //     newLocation.search = qs.stringify(newLocation.search);
-    //   }
-    // }
-    // console.log(`history replace`, replace)
-    // if (replace) {
-    //   history.replace(newLocation);
-    // } else {
-    //   history.push(newLocation);
-    // }
+    if (isObject(newLocation)) {
+      // remap fields and remove undefined ones
+      newLocation = omitBy(
+        {
+          pathname: (newLocation as any).path,
+          search: (newLocation as any).search,
+          hash: (newLocation as any).hash,
+        },
+        isUndefined
+      );
+
+      // keep existing fields (!)
+      newLocation = extend(
+        {
+          pathname: location.path,
+          search: location.search,
+          hash: location.hash,
+        },
+        newLocation
+      );
+
+      // serialize search and keep existing search parameters (!)
+      if (isObject(newLocation.search)) {
+        newLocation.search = omitBy(extend({}, location.search, newLocation.search), isNil);
+        newLocation.search = mapValues(newLocation.search, value => (value === true ? null : value));
+        newLocation.search = qs.stringify(newLocation.search);
+      }
+    }
+    if (replace) {
+      history.replace(newLocation);
+    } else {
+      history.push(newLocation);
+    }
   },
 
   url: undefined,

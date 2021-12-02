@@ -16,14 +16,14 @@ import useDashboard from "./hooks/useDashboard";
 import '../../assets/less/global.less';
 import "./PublicDashboardPage.less";
 
-function PublicDashboard({ dashboard }) {
+function PublicDashboard({ dashboard, hiddenTitle }) {
   const { globalParameters, filters, setFilters, refreshDashboard, loadWidget, refreshWidget } = useDashboard(
     dashboard
   );
 
   return (
       <div className="container p-t-10 p-b-20">
-      <PageHeader title={dashboard.label} />
+      {!hiddenTitle && <PageHeader title={dashboard.label} />}
       {!isEmpty(globalParameters) && (
         <div className="m-b-10 p-15 bg-white tiled">
           <Parameters parameters={globalParameters} onValuesChange={refreshDashboard} />
@@ -51,11 +51,13 @@ function PublicDashboard({ dashboard }) {
 
 PublicDashboard.propTypes = {
   dashboard: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+  hiddenTitle: PropTypes.bool,
 };
 
 class PublicDashboardPage extends React.Component {
   static propTypes = {
     token: PropTypes.string.isRequired,
+    hiddenTitle: PropTypes.bool,
     onError: PropTypes.func,
   };
 
@@ -76,6 +78,7 @@ class PublicDashboardPage extends React.Component {
 
   render() {
     const { loading, dashboard } = this.state;
+    const { hiddenTitle = false } = (this.props as any)
     return (
     <div className="steedos-page">
       
@@ -85,7 +88,7 @@ class PublicDashboardPage extends React.Component {
             <BigMessage className="" icon="fa-spinner fa-2x fa-pulse" message="Loading..." />
           </div>
         ) : (
-          <PublicDashboard dashboard={dashboard} />
+          <PublicDashboard dashboard={dashboard} hiddenTitle={hiddenTitle}/>
         )}
       </div>
       </div>
