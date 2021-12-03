@@ -28,7 +28,7 @@ function useOnClickOutside(ref, isMultipleUpdatable, handler) {
         }
         const target = event.target;
         const modelDom = target.closest('.ant-modal-root');
-        if(modelDom && !modelDom.contains(ref.current) && !target.closest('.ant-btn')){
+        if(modelDom && !modelDom.contains(ref.current) && !(target.closest('.ant-modal-footer .btn-cancel') || target.closest('.ant-modal-footer .btn-ok')) ){
           return; // 表单（弹出框）：包含一个浮动的下拉框（时间框等）点击外部就退出编辑； 表单（弹出框）中 有的字段选项也是弹出框，在其字段的弹出框中点击不退出编辑。
         }
         if(target.closest('.ant-select-dropdown')){

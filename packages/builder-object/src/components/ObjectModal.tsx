@@ -220,8 +220,8 @@ export const ObjectModal = ({
   }
   const footer=[
     <Button key='create' className='float-left'>{buttonNewRecord}</Button>, 
-    <Button key="cancel" onClick={onCancel}>取消</Button>,
-    <Button key="ok" type="primary" onClick={onOk} >确认</Button>
+    <Button key="cancel" className='btn-cancel' onClick={onCancel}>取消</Button>,
+    <Button key="ok" className='btn-ok' type="primary" onClick={onOk} >确认</Button>
   ]; 
   if(showCreateButton){
     Object.assign(restModalProps, {footer})
