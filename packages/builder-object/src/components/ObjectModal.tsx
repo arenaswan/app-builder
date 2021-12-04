@@ -218,14 +218,18 @@ export const ObjectModal = ({
       modalProps?.onOk?.(e);
     }
   }
-  const footer=[
-    <Button key='create' className='float-left'>{buttonNewRecord}</Button>, 
+
+  const baseFooterButton = [
     <Button key="cancel" className='btn-cancel' onClick={onCancel}>取消</Button>,
     <Button key="ok" className='btn-ok' type="primary" onClick={onOk} >确认</Button>
-  ]; 
+  ];
+  const addFooterButton = [ <Button key='create' className='float-left'>{buttonNewRecord}</Button> ];
+  let footer=baseFooterButton;
   if(showCreateButton){
-    Object.assign(restModalProps, {footer})
+    footer = addFooterButton.concat(baseFooterButton);
   }
+  Object.assign(restModalProps, {footer})
+
   return (
     <>
       {createPortal(
