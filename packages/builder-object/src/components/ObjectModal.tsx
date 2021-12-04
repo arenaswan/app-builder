@@ -229,7 +229,7 @@ export const ObjectModal = ({
   return (
     <>
       {createPortal(
-        <div className={`object-modal ${!visible && 'hidden'}`} onClick={(e) => e.stopPropagation()}
+        <div className={`object-modal ${visible ? '' : 'hidden'}`} onClick={(e) => e.stopPropagation()}
           style={{
             position: "absolute",
             top: 0,
