@@ -775,7 +775,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     if(!editedMap[params.data._id]){
       editedMap[params.data._id] = {};
     }
-    let value:any = params.value === undefined ? '' : params.value;
+    let value:any = params.value === undefined ? null : params.value;
     editedMap[params.data._id][params.colDef.field] = value;
     // if(!params.colDef.editedMap){
     //   params.colDef.editedMap = {};
