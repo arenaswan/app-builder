@@ -23,7 +23,7 @@ function ParameterApplyButton({ paramCount, onClick }) {
           <span>
             <Button onClick={onClick}>
               {icon} 
-              应用
+              确定
               {/* Apply Changes */}
             </Button>
           </span>
