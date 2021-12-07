@@ -35,10 +35,12 @@ function visualizationWidgetMenuOptions({ isPublic, widget, canEditDashboard, on
     <Menu.Item key="download_csv" disabled={isQueryResultEmpty}>
       {!isQueryResultEmpty ? (
         <Link href={downloadLink("csv")} download={downloadName("csv")} target="_self">
-          Download as CSV File
+          导出为CSV文件
+          {/* Download as CSV File */}
         </Link>
       ) : (
-        "Download as CSV File"
+        "导出为CSV文件"
+        // "Download as CSV File"
       )}
     </Menu.Item>,
     // <Menu.Item key="download_tsv" disabled={isQueryResultEmpty}>
@@ -53,10 +55,12 @@ function visualizationWidgetMenuOptions({ isPublic, widget, canEditDashboard, on
     <Menu.Item key="download_excel" disabled={isQueryResultEmpty}>
       {!isQueryResultEmpty ? (
         <Link href={downloadLink("xlsx")} download={downloadName("xlsx")} target="_self">
-          Download as Excel File
+          导出为Excel文件
+          {/* Download as Excel File */}
         </Link>
       ) : (
-        "Download as Excel File"
+        "导出为Excel文件"
+        // "Download as Excel File"
       )}
     </Menu.Item>,
     (!isPublic && (canViewQuery || canEditParameters)) && <Menu.Divider key="divider" />,
