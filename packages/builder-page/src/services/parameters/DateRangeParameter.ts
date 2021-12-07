@@ -21,11 +21,11 @@ const untilNow = (from, now = () => moment()) => (withNow = true) => [from(), wi
 
 const DYNAMIC_DATE_RANGES = {
   today: {
-    name: "Today",
+    name: "今天",//Today
     value: () => [moment().startOf("day"), moment().endOf("day")],
   },
   yesterday: {
-    name: "Yesterday",
+    name: "昨天",//Yesterday
     value: () => [
       moment()
         .subtract(1, "day")
@@ -36,19 +36,20 @@ const DYNAMIC_DATE_RANGES = {
     ],
   },
   this_week: {
-    name: "This week",
+    name: "本周",//This week
     value: () => [moment().startOf("week"), moment().endOf("week")],
   },
   this_month: {
-    name: "This month",
+    name: "本月",//This month
     value: () => [moment().startOf("month"), moment().endOf("month")],
   },
   this_year: {
-    name: "This year",
+    name: "今年",//This year
     value: () => [moment().startOf("year"), moment().endOf("year")],
   },
   last_week: {
-    name: "Last week",
+    // name: "Last week",
+    name: "上周",
     value: () => [
       moment()
         .subtract(1, "week")
@@ -59,7 +60,8 @@ const DYNAMIC_DATE_RANGES = {
     ],
   },
   last_month: {
-    name: "Last month",
+    // name: "Last month",
+    name: "上个月",
     value: () => [
       moment()
         .subtract(1, "month")
@@ -70,7 +72,8 @@ const DYNAMIC_DATE_RANGES = {
     ],
   },
   last_year: {
-    name: "Last year",
+    // name: "Last year",
+    name: "去年",
     value: () => [
       moment()
         .subtract(1, "year")
@@ -81,19 +84,23 @@ const DYNAMIC_DATE_RANGES = {
     ],
   },
   last_hour: {
-    name: "Last hour",
+    // name: "Last hour",
+    name: "过去1小时",
     value: untilNow(() => moment().subtract(1, "hour")),
   },
   last_8_hours: {
-    name: "Last 8 hours",
+    // name: "Last 8 hours",
+    name: "过去8小时",
     value: untilNow(() => moment().subtract(8, "hour")),
   },
   last_24_hours: {
-    name: "Last 24 hours",
+    // name: "Last 24 hours",
+    name: "过去24小时",
     value: untilNow(() => moment().subtract(24, "hour")),
   },
   last_7_days: {
-    name: "Last 7 days",
+    // name: "Last 7 days",
+    name: "过去7天",
     value: untilNow(
       () =>
         moment()
@@ -103,7 +110,8 @@ const DYNAMIC_DATE_RANGES = {
     ),
   },
   last_14_days: {
-    name: "Last 14 days",
+    // name: "Last 14 days",
+    name: "过去14天",
     value: untilNow(
       () =>
         moment()
@@ -113,7 +121,8 @@ const DYNAMIC_DATE_RANGES = {
     ),
   },
   last_30_days: {
-    name: "Last 30 days",
+    // name: "Last 30 days",
+    name: "过去30天",
     value: untilNow(
       () =>
         moment()
@@ -123,7 +132,8 @@ const DYNAMIC_DATE_RANGES = {
     ),
   },
   last_60_days: {
-    name: "Last 60 days",
+    // name: "Last 60 days",
+    name: "过去60天",
     value: untilNow(
       () =>
         moment()
@@ -133,7 +143,8 @@ const DYNAMIC_DATE_RANGES = {
     ),
   },
   last_90_days: {
-    name: "Last 90 days",
+    // name: "Last 90 days",
+    name: "过去90天",
     value: untilNow(
       () =>
         moment()
@@ -143,7 +154,8 @@ const DYNAMIC_DATE_RANGES = {
     ),
   },
   last_12_months: {
-    name: "Last 12 months",
+    // name: "Last 12 months",
+    name: "过去12个月",
     value: untilNow(
       () =>
         moment()
