@@ -344,6 +344,19 @@ export default {
         return results;
       }
     },
+    task_text:{
+      label: '主题',
+      type: 'text',
+      group: 'lookup联动有reference_to、filters'
+    },
+    tasks_refto_filter:{
+      label: '相关任务',
+      type: 'lookup',
+      reference_to: 'tasks',
+      group: 'lookup联动有reference_to、filters',
+      depend_on:['task_text'],
+      filters: '{{[["name","contains",formData.task_text]]}}'
+    },
     accounts_re_big: {
       reference_to: 'contract_types',
       type: 'lookup',
