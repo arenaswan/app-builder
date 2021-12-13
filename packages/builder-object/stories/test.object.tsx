@@ -356,6 +356,7 @@ export default {
       group: 'lookup公式表达式联动（filters)',
       depend_on:['task_text'],
       filters: '{{[["name","contains",formData.task_text]]}}'
+      // filters: "{{ \"(contains(name,'\" + formData.task_text +\"'))\"}}"
     },
     task_text2:{
       label: '主题2',
