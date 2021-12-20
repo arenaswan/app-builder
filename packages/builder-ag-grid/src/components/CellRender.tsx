@@ -28,7 +28,9 @@ export const AgGridCellRenderer = (props: any) => {
 
   if(render){
     _render = (dom)=>{
-      return render(dom, data)
+      // dom 是值，不是标签元素。
+      let fieldType = fieldSchema.data_type ? fieldSchema.data_type : fieldSchema.type;
+      return render(dom, data, fieldType)
     }
   }
   // 当emptyText={false}时，boolean或toggle字段，数据库中无值，会进入valueTypes中自定义render（只读）。
