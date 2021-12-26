@@ -6,6 +6,7 @@ import { observer } from "mobx-react-lite";
 import { forEach, isArray } from 'lodash';
 import './file.less'
 import { getFileResponseErrorMessage } from '../utils/utils';
+import { API } from '@steedos-ui/builder-store';
 
 const getFileListItem = (item:any, _fileType)=>{
     return (
@@ -84,6 +85,10 @@ export const FileField = observer((props: any) => {
         )
     }else{
         const proProps = Object.assign({}, props, {name:"file"});
+        const onRemove = (file) => {
+            const id = file.response?._id;
+            API.deleteRecord('cfs_files_filerecord', id)
+        };
         const propsOther = {
             action: Settings.rootUrl + '/s3/'+fileType,
             multiple,
@@ -125,7 +130,8 @@ export const FileField = observer((props: any) => {
                     }
                     onChange(fileIds)
                 }
-            }
+            },
+            onRemove
         }
         const uploadDom = <Button icon={<UploadOutlined />}>上传</Button>
         return (
