@@ -90,6 +90,12 @@ export const ImageField = observer((props: any) => {
             const imgWindow = window.open(src);
             imgWindow.document.write(image.outerHTML);
         };
+        /* // TODO: 获取不了图片对象
+        const onRemove = (file) => {
+            const id = file.response?._id;
+            console.log('onRemove==>',file, id)
+            API.deleteRecord('cfs_images_filerecord', id)
+        }; */
         const propsOther = {
             // http://127.0.0.1:5080/s3/images
             action: Settings.rootUrl + '/s3/'+fileType,
@@ -134,7 +140,8 @@ export const ImageField = observer((props: any) => {
                     }
                     onChange(fileIds)
                 }
-            }
+            },
+            // onRemove,
         }
         return (
             <Upload {...proProps} {...propsOther}>
