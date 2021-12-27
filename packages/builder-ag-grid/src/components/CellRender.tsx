@@ -29,7 +29,10 @@ export const AgGridCellRenderer = (props: any) => {
   if(render){
     _render = (dom)=>{
       // dom 是值，不是标签元素。
-      let fieldType = fieldSchema.data_type ? fieldSchema.data_type : fieldSchema.type;
+      let fieldType ;
+      if(fieldSchema){
+        fieldType = fieldSchema.data_type ? fieldSchema.data_type : fieldSchema.type;
+      }
       return render(dom, data, fieldType)
     }
   }
