@@ -1,175 +1,61 @@
 <p align="center">
-  <a href="https://www.steedos.org">
+  <a href="https://www.steedos.cn">
     <img alt="Steedos" src="https://steedos.github.io/assets/logo.png" width="80" />
   </a>
 </p>
 <h1 align="center">
-  Steedos App Builder 
+  华炎魔方前端控件
 </h1>
 
 <p align="center">
-<a href="https://github.com/steedos/steedos-platform/">Steedos Platform</a>
-<a href="http://www.steedos.org/docs/overview"> · Docs</a>
-<a href="https://github.com/steedos/steedos-platform/issues/"> · Report a bug</a>
-<a href="https://github.com/steedos/steedos-platform/discussions"> · Discussions</a>
+<a href="https://github.com/steedos/steedos-platform/">华炎魔方</a>
+<a href="https://www.steedos.cn/"> · 文档</a>
+<a href="https://github.com/steedos/app-builder/issues"> · 报告错误</a>
+<a href="https://community.steedos.cn/"> · 社区</a>
 </p>
 
 <p align="center">
 
-Steedos Low-Code App Builder, an alternative to Salesforce App Builder. use metadata to define apps, including components, forms, tables, pages, layout and routes. 
-
-You can use [Builder.IO Fiddle](https://builder.io/fiddle) for visual page design.
+华炎魔方是Salesforce低代码平台的开源替代方案，华炎魔方将低代码技术与企业业务场景结合，助力企业在最短时间内开发数字化解决方案，包括数据建模、权限控制、流程审批、统计分析、应用集成，并可以编写“高代码”实现高级业务逻辑。
 
 <h3 align="center">
  🤖 🎨 🚀
 </h3>
 
+## 源码目录索引
 
-## Build In Components
+[Storybook](.storybook)：实现展示 [Storybook](https://storybook.js.org/) 示例。
+[Github/Workflows](apps/charts-design)：基于 [redash](https://github.com/getredash/redash) 的部分源码，实现了华炎魔方 [仪表盘](https://steedos.cn/docs/developer/dashboard) 的设计器。
+[NPM Packages](packages)： 华炎魔方各种React组件包源码，其内每个子文件夹都是一个标准的NPM包。
 
-### Standard Components
+## 运行
 
-Provide standard components to working on all projects, based on [Ant Design ProComponents](https://procomponents.ant.design/en-US) .
+### 配置华炎魔方服务地址
 
-- [Form](https://procomponents.ant.design/en-US/components/form) 
-- [FormField](https://procomponents.ant.design/en-US/components/field-set)
-- [Layout](https://procomponents.ant.design/en-US/components/layout)
-- [Editable DataTable](https://procomponents.ant.design/en-US/components/editable-table)
+假设我们需要连接到的华炎魔方服务地址为`http://localhost:5000`。
 
-### Steedos Business Object Components
+请在根目录创建一个`.env.local`文件，输入以下内容把华炎魔方服务地址配置为环境变量。
 
-Provide components to query [Steedos Objects](https://github.com/steedos/steedos-platform)
-
-- Object Form
-- Object DataTable
-
-## Design App with Builder.IO
-
-You can use [Builder.IO Fiddle](https://builder.io/fiddle) as an no-code editor to design you app.
-
-### Standard Components For Design
-
-#### Form
-
-name: Steedos:Form
-props:
-
-- layout, horizontal | vertical | inline, defaultValue: horizontal
-- columns, number, defaultValue: 2
-- mode, read | edit | update, defaultValue: read
-- initialValues, object, a json
-- onValuesChange, text, a function string
-- onSubmit, text, a function string
-
-childrens: FormField
-
-#### FormField
-
-name: Steedos:FormField
-
-props:
-
-- name, the field name
-- label, the field label
-- valueType, the field value type, [ProFieldValueType](https://github.com/ant-design/pro-components/blob/2a99e27ea8f5d9d24b646f96ccd11967c059159e/packages/utils/src/typing.ts#L17) | [ProFieldValueObjectType](https://github.com/ant-design/pro-components/blob/2a99e27ea8f5d9d24b646f96ccd11967c059159e/packages/utils/src/typing.ts#L65), defaultValue: text
-- mode, read | edit | update, defaultValue: read
-- required, boolean, defaultValue: false
-- colSpan, number, defaultValue: 1
-- help, ReactNode
-- tooltip, ReactNode | [TooltipProps & { icon: ReactNode }](https://ant.design/components/tooltip-cn/#API)
-- valueEnum, {[key:string|number]:any}, only valid for the `select` valueType, see [ProFormSelect](https://procomponents.ant.design/components/field-set#proformselect) for detail.
-
-### Steedos Business Object Components For Design
-
-#### Object Form
-
-name: Steedos:ObjectForm
-
-#### Object DataTable
-
-name: Steedos:ObjectDataTable
-
-
-## Design App with json
-
-You can write json file to design your app.
-
-### Page Section
-
-```json
-{
-  "@type": "@steedos-ui/builder-sdk:Section",
-  "blocks":[
-    {
-      "@type":"@builder.io/sdk:Element",
-      "component":{
-        "name":"Text",
-        "options":{"text":"Hello Steedos ..."}
-      },
-      "responsiveStyles":{
-        "large":{
-          "position":"relative"
-        }
-      }
-    }
-  ]
-}
+```shell
+REACT_APP_API_URL=http://localhost:5000
 ```
 
+### 安装依赖包
 
-### Page
+请打开命令行窗口并在根目录执行以下命令来安装项目依赖包。
 
-```json
-{
-  "@type": "@steedos-ui/builder-sdk:Page",
-  "title": "Hello Steedos",
-  "description": "This page is generated by Steedos App Builder.",
-  "blocks":[
-    {
-      "@type":"@builder.io/sdk:Element",
-      "component":{
-        "name":"Text",
-        "options":{"text":"Hello Steedos ..."}
-      },
-      "responsiveStyles":{
-        "large":{
-          "position":"relative"
-        }
-      }
-    }
-  ]
-}
+```shell
+yarn
 ```
 
-### Layout
+### 运行项目
 
-```json
-{
-  "@type": "@steedos-ui/builder-sdk:Layout",
-  "title": "Hello Steedos",
-  "logo": "https://www.steedos.com/img/logo_platform.png",
-  "description": "This page is generated by Steedos App Builder.",
-  "menuPosition": "top",
-  "menus":[{
-    "title": "Home",
-    "route": "/"
-  }]
-}
+请在根目录执行以下命令来运行项目。
+
+```shell
+yarn start
 ```
 
-### App
+等待几分钟，当服务成功跑起来后会自动打开浏览器访问服务地址： <http://localhost:6006/>。
 
-```json
-{
-  "@type": "@steedos-ui/builder-sdk:App",
-  "title": "Hello Steedos",
-  "description": "This app is generated by Steedos App Builder.",
-  "routes": [
-  ],
-  "layouts": [
-  ],
-  "pages": [
-  ]
-}
-```
-just for test...
+我们可以在浏览器中看到跑起来的是一个 [Storybook](https://storybook.js.org/) 服务。
