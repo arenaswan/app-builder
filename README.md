@@ -22,6 +22,17 @@
  🤖 🎨 🚀
 </h3>
 
+## 技术框架
+
+华炎魔方前端使用 React 开发表单、列表视图控件，并基于 [Meteor](https://www.meteor.com/) 实现完整界面。
+
+- [Ant Design ProForm](https://procomponents.ant.design/components/form): 基于 ProForm 开发表单控件，根据自定义对象动态创建表单、操作业务数据。
+- [Salesforce Lightning Design System](https://www.lightningdesignsystem.com/): Salesforce 开源的企业软件设计标准和样式库。[React 控件库](https://react.lightningdesignsystem.com/)
+- [Tailwind CSS](https://tailwindcss.com/): 直接用class表述样式，而无需编写和维护css文件。
+- [AG Grid](https://www.ag-grid.com/): 因为ProTable功能太弱，我们选择 AG Grid 构建列表视图控件。
+- [Redash](https://github.com/getredash/redash): 引入Redash部分前端源码，开发查询设计器、图表设计器、仪表盘设计器。
+- [Mobx React Lite](https://github.com/mobxjs/mobx-react-lite)：基于Mobx React Lite实现华炎魔方的React Store。
+
 ## 源码目录索引
 
 - [Storybook](.storybook)：实现展示 [Storybook](https://storybook.js.org/) 示例。
