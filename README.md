@@ -28,7 +28,11 @@
 [Github/Workflows](apps/charts-design)：基于 [redash](https://github.com/getredash/redash) 的部分源码，实现了华炎魔方 [仪表盘](https://steedos.cn/docs/developer/dashboard) 的设计器。
 [NPM Packages](packages)： 华炎魔方各种React组件包源码，其内每个子文件夹都是一个标准的NPM包。
 
-## 运行
+组件源码在 [NPM Packages](packages) 文件夹内的各个NPM包中，要修改源码调式可以参考以下教程 [运行Storybook](#运行Storybook) 或 [运行WebApp]((#运行WebApp)) 来调式源码。
+
+## 运行Storybook
+
+在项目根目录按以下步骤指示可以运行一个 [Storybook](https://storybook.js.org/) 服务。
 
 ### 配置华炎魔方服务地址
 
@@ -50,7 +54,7 @@ yarn
 
 ### 运行项目
 
-请在根目录执行以下命令来运行项目。
+接下来执行以下命令来运行项目。
 
 ```shell
 yarn start
@@ -58,4 +62,36 @@ yarn start
 
 等待几分钟，当服务成功跑起来后会自动打开浏览器访问服务地址： <http://localhost:6006/>。
 
-我们可以在浏览器中看到跑起来的是一个 [Storybook](https://storybook.js.org/) 服务。
+## 运行WebApp
+
+按以下步骤指示可以运行源码在`packages/react-webapp`目录中的React Web APP，这是一个包括登录界面在内的可独立运行的连接华炎魔方平台的React应用。
+
+### 配置WebApp连接的服务地址
+
+假设我们需要连接到的华炎魔方服务地址为`http://localhost:5000`。
+
+请在`packages/react-webapp`中创建一个`.env.local`文件，输入以下内容把华炎魔方服务地址配置为环境变量。
+
+```shell
+REACT_APP_API_URL=http://localhost:5000
+```
+
+### 安装相关依赖包
+
+请打开命令行窗口并在根目录分别执行以下命令来安装项目依赖包。
+
+```shell
+yarn
+cd packages/react-webapp
+yarn
+```
+
+### 运行React WebApp
+
+接下来执行以下命令来运行React WebApp。
+
+```shell
+yarn start
+```
+
+等待几分钟，当服务成功跑起来后会自动打开浏览器访问服务地址： <http://localhost:3000/>。
