@@ -24,9 +24,9 @@
 
 ## 源码目录索引
 
-[Storybook](.storybook)：实现展示 [Storybook](https://storybook.js.org/) 示例。
-[Github/Workflows](apps/charts-design)：基于 [redash](https://github.com/getredash/redash) 的部分源码，实现了华炎魔方 [仪表盘](https://steedos.cn/docs/developer/dashboard) 的设计器。
-[NPM Packages](packages)： 华炎魔方各种React组件包源码，其内每个子文件夹都是一个标准的NPM包。
+- [Storybook](.storybook)：实现展示 [Storybook](https://storybook.js.org/) 示例。
+- [Github/Workflows](apps/charts-design)：基于 [redash](https://github.com/getredash/redash) 的部分源码，实现了华炎魔方 [仪表盘](https://steedos.cn/docs/developer/dashboard) 的设计器。
+- [NPM Packages](packages)： 华炎魔方各种React组件包源码，其内每个子文件夹都是一个标准的NPM包。
 
 组件源码在 [NPM Packages](packages) 文件夹内的各个NPM包中，要修改源码调式可以参考以下教程 [运行Storybook](#运行Storybook) 或 [运行WebApp]((#运行WebApp)) 来调式源码。
 
