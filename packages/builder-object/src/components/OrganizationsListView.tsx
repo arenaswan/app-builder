@@ -13,13 +13,12 @@ export const OrganizationsListView = observer(({
   filters: defaultFilters,
   ...rest
 }: OrganizationsListViewProps) => {
-  console.log("=organizations=222=");
 
   const userSession = User.getSession();
   let filters: any = ["hidden", "!=", true];
   let errorMessage:any;
   if (User.isLoading){
-    console.log("Loading session...")
+    // console.log("Loading session...")
     return (<div><Spin/></div>);
   }
   else{
@@ -49,7 +48,6 @@ export const OrganizationsListView = observer(({
     parentField: "parent",
     filters
   };
-  console.log("=organizations==");
   return (
     ( 
       errorMessage ? errorMessage :
