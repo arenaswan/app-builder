@@ -123,7 +123,7 @@ export const User = types.model({
             Settings.setAuthToken(data.token)
           }
           const me = yield User.loadMe();
-          console.log("==API.client.getSpaceId==1=", API.client.getSpaceId());
+          // console.log("==API.client.getSpaceId==1=", API.client.getSpaceId());
           yield User.loadSession();
           self.isLoading = false;
           self.isLoginFailed = false
