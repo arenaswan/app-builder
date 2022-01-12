@@ -106,3 +106,15 @@ yarn start
 ```
 
 等待几分钟，当服务成功跑起来后会自动打开浏览器访问服务地址： <http://localhost:3000/>。
+
+
+### 打包测试
+在根目录执行 `yarn build` 命令，复制packages/builder-community路径下的dist文件夹替换steedos-platform项目中creator/node_modules/@steedos-ui/builder-community路径下的dist文件夹，运行steedos-platform项目进行测试。
+
+### 发布新版本
+
+请将当前开发（目前是2.1）分支代码合并到 `publish-latest` 分支，合并代码后 [Git Actions](https://github.com/steedos/app-builder/actions) 会自动开始打包并发布。
+
+待 [Git Actions](https://github.com/steedos/app-builder/actions) 执行成功后把`publish-latest` 分支代码合并到当前开发分支。
+
+在 [steedos-platform](https://github.com/steedos/steedos-platform) 项目的 `creator/package.json` 文件中找到 ` @steedos-ui/builder-community ` 属性，修改为最新版本值，提交代码。
