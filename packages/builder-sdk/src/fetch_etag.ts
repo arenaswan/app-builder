@@ -5,6 +5,9 @@ const etags = {};
 export default (url:any = null, options:any = {headers: {}}) => {
     url = url || options.url; // eslint-disable-line no-param-reassign
 
+    if(options.method){
+        options.method = options.method.toUpperCase();
+    }
     if (options.method === 'GET' || !options.method) {
         const etag = etags[url];
         const cachedResponse = data[`${url}${etag}`]; // ensure etag is for url

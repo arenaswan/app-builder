@@ -1,7 +1,7 @@
 import React from "react"
 import { observer } from "mobx-react-lite"
 import { omit, isArray } from "lodash"
-import { User } from '@steedos/builder-store';
+import { User } from '@steedos-ui/builder-store';
 import { formatFiltersToODataQuery } from '@steedos/filters';
 import { Alert, Spin } from 'antd';
 import { ObjectTree, ObjectTreeProps } from ".."

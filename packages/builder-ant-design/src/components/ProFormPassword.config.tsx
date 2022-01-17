@@ -1,5 +1,5 @@
 export const configProFormPassword = {
-  name: '@steedos/builder-form:Password',
+  name: '@steedos-ui/builder-form:Password',
   inputs: [
     { name: 'name', type: 'text', defaultValue: 'password', required: true},
     { name: 'label', type: 'text', defaultValue: 'Password', required: true},
@@ -25,7 +25,7 @@ export const configProFormPassword = {
   requiresParent: {
     message: 'This block must be inside a "Form" or "FormSection" or "FormList" or "Table" block',
     query: {
-      'component.name': { $in: ['@steedos/builder-form:Form', '@steedos/builder-form:FormSection', '@steedos/builder-form:FormList', '@steedos/builder-form:Table'] }
+      'component.name': { $in: ['@steedos-ui/builder-form:Form', '@steedos-ui/builder-form:FormSection', '@steedos-ui/builder-form:FormList', '@steedos-ui/builder-form:Table'] }
     }
   }
 };

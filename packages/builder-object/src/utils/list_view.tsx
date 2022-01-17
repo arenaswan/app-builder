@@ -1,5 +1,5 @@
 import { find, intersection, union, each, isObject, compact, keys} from 'lodash';
-import { API } from "@steedos/builder-store"
+import { API } from "@steedos-ui/builder-store"
 export function isRecentListView(listViewName: string) {
   return listViewName === "recent"
 }

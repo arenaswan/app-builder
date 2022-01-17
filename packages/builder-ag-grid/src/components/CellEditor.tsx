@@ -1,6 +1,8 @@
-import React, { useContext, useRef, useEffect, useState, useImperativeHandle, forwardRef } from "react"
-import _ from "lodash"
+import React, { useContext, useRef, useEffect, useState, useImperativeHandle, forwardRef, useCallback, useMemo } from "react"
 import ProField from "@ant-design/pro-field";
+import { Checkbox, Button, Space } from 'antd';
+import { CellMultipleUpdatePanel, getIsMultipleUpdatable } from './CellMultipleUpdatePanel';
+import { forEach } from "lodash"
 
 function getParentsClassName(element, classNames=[]){
   if(element){
@@ -12,7 +14,7 @@ function getParentsClassName(element, classNames=[]){
   return classNames
 }
 
-function useOnClickOutside(ref, handler) {
+function useOnClickOutside(ref, isMultipleUpdatable, handler) {
   useEffect(
     () => {
       const listener = (event) => {
@@ -20,10 +22,27 @@ function useOnClickOutside(ref, handler) {
         if (!ref.current || ref.current.contains(event.target)) {
           return;
         }
-        const parentsClassName = getParentsClassName(event.target) 
-        if((parentsClassName.toString().indexOf('ant-modal-root') > -1 && parentsClassName.toString().indexOf('ant-btn') < 0) || parentsClassName.toString().indexOf('ant-select-dropdown') > -1 || (parentsClassName.toString().indexOf('ant-picker-dropdown') > -1 && (parentsClassName.toString().indexOf('ant-btn') < 0 && parentsClassName.toString().indexOf('ant-picker-now-btn') < 0))){
+        if(isMultipleUpdatable){
+          // 表格单元格批量编辑时，所有字段操作都不自动退出编辑，统一由字段底下的应用操作
           return;
         }
+        const target = event.target;
+        const modelDom = target.closest('.ant-modal-root');
+        const modalNum = document.getElementsByClassName('object-modal').length;
+        const noExitEditOfModal = modelDom && !modelDom.contains(ref.current) && !((target.closest('.ant-modal-footer .btn-cancel') || target.closest('.ant-modal-footer .btn-ok') || target.closest('.ant-modal-close')) && modalNum == 1);
+        if (noExitEditOfModal) {
+          return; // 表单（弹出框）：包含一个浮动的下拉框（时间框等）点击外部就退出编辑； 表单（弹出框）中 有的字段选项也是弹出框，在其字段的弹出框中点击不退出编辑。
+        }
+        if(target.closest('.ant-select-dropdown')){
+          return; // 下拉框
+        }
+        if(target.closest('.ant-picker-dropdown') && !target.closest('.ant-btn') && !target.closest('.ant-picker-now-btn') && !target.closest('.ant-picker-today-btn') ){
+          return; // 日期时间字段、 日期字段： 点击 此刻/今天 后退出编辑
+        }
+        // if(target.closest('.ag-grid-multiple-update-footer')){
+        //   return; 
+        // }
+        // console.log("=====handler====");
         handler(event);
       };
       document.addEventListener("mousedown", listener);
@@ -47,6 +66,7 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
   const { 
     valueType = 'text',
     fieldSchema,
+    objectApiName,
     form,
     context
   } = props;
@@ -66,7 +86,9 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
     }; 
   });
 
-  useOnClickOutside(refEditor, (e) => {
+  const isMultipleUpdatable = getIsMultipleUpdatable(props.api.getSelectedNodes(), props.data._id);
+
+  useOnClickOutside(refEditor, isMultipleUpdatable, (e) => {
     setTimeout(() => props.api.stopEditing(false), 300);
   });
 
@@ -76,7 +98,20 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
   //     props.api.stopEditing(false);
   //     clearInterval(IntervalID);
   //   }
-  // }, 300)
+  // }, 300)  let depend_field_values = {};
+  let depend_field_values = {};
+  let allValues = {};
+  if(!form){
+    // ObjectGrid的form为undefined, 依赖了depend_field_values；   aggrid的form有表单值，且此时传入的值可能会覆盖外面同名的字段值，所以目前不需要depend_field_values；
+    if(fieldSchema && fieldSchema.depend_on && fieldSchema.depend_on.length){
+      forEach(fieldSchema.depend_on,(val)=>{
+        if(props.data[val] !== undefined){
+          depend_field_values[val] = props.data[val];
+          allValues = props.data;
+        }
+      })
+    }
+  }
   return (
     <section className="slds-popover slds-popover slds-popover_edit" role="dialog" ref={refEditor}>
       <div className="slds-popover__body">
@@ -85,6 +120,7 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
           valueType={valueType} 
           value={value}
           onChange={(element, value)=>{
+            // console.log("===ProField=onChange==");
             const newValue = (element?.currentTarget)? element.currentTarget.value: element
             if (newValue === props.value)
               return;
@@ -96,15 +132,35 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
               }
               editedMap[props.data._id][props.colDef.field] = newValue;
             }
+            
+            if(isMultipleUpdatable){
+              // 表格单元格批量编辑时，所有字段操作都不自动退出编辑，统一由字段底下的应用操作
+              return;
+            }
+            
             if (['lookup','select','master_detail'].indexOf(valueType)>=0 && fieldSchema.multiple != true){
               return setTimeout(() => props.api.stopEditing(false), 100);
             }
 
             if(fieldSchema.multiple != true){
               if(element?.target && document.activeElement === element.target){
-                
+              // if(element?.target && document.activeElement.closest('.ag-popup-editor.ag-popup-child')){
+                // console.log("==document.activeElement,element.target===1===", document.activeElement,element.target);
                 const IntervalID = setInterval(()=>{
                   if(document.activeElement != element.target){
+                  // if(!document.activeElement.closest('.ag-popup-editor.ag-popup-child')){
+                    // console.log("==document.activeElement,element.target====2===", document.activeElement,element.target);
+                    // if(document.activeElement.closest('.ag-grid-multiple-update-chckbox')){
+                    //   return;
+                    // }
+                    // if(document.activeElement.closest('.ag-grid-multiple-update-footer')){
+                    //   return;
+                    // }
+                    // if(document.activeElement.closest('.ag-popup-editor.ag-popup-child')){
+                    //   return;
+                    // }
+                    // console.log("==document.activeElement,element.target====3===", document.activeElement,element.target);
+                    // console.log("==clearInterval===");
                     props.api.stopEditing(false);
                     clearInterval(IntervalID);
                   }
@@ -114,11 +170,15 @@ export const AgGridCellEditor = forwardRef((props: any, ref) => {
           }}
           fieldProps={{
             _grid_row_id: props.data._id,
-            field_schema: fieldSchema
+            allValues,
+            depend_field_values,
+            field_schema: fieldSchema,
           }}
           form={form}
           allowClear={false}
-          />
+          object_api_name={objectApiName}
+        />
+        <CellMultipleUpdatePanel cellProps={props} value={value} setValue={setValue} context={context} />
       </div>
     </section>
   ) 

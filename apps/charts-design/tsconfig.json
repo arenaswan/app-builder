@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "sourceMap": false,
+  "compilerOptions": {
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "isolatedModules": true,
+    "noEmit": false,
+    "jsx": "react-jsx",
+    "declarationDir": "dist/types",
+    "outDir": "dist/cjs"
+  },
+  "include": [
+    "src"
+  ]
+}

@@ -1,4 +1,5 @@
 import { get, set, cloneDeep } from 'lodash';
+import { translate } from '@steedos-ui/builder-sdk';
 
 // 后面三个参数都是内部递归使用的，将schema的树形结构扁平化成一层, 每个item的结构
 // {
@@ -230,7 +231,7 @@ export function isDeepEqual(param1, param2) {
   if (param1.constructor === Array) {
     if (param1.length !== param2.length) return false;
     for (let i = 0; i < param1.length; i++) {
-      if (param1[i].constructor === Array || param1[i].constructor === Object) {
+      if (param1[i]?.constructor === Array || param1[i]?.constructor === Object) {
         if (!isDeepEqual(param1[i], param2[i])) return false;
       } else if (param1[i] !== param2[i]) return false;
     }
@@ -241,8 +242,8 @@ export function isDeepEqual(param1, param2) {
       if (
         param1[key] &&
         typeof param1[key] !== 'number' &&
-        (param1[key].constructor === Array ||
-          param1[key].constructor === Object)
+        (param1[key]?.constructor === Array ||
+          param1[key]?.constructor === Object)
       ) {
         if (!isDeepEqual(param1[key], param2[key])) return false;
       } else if (param1[key] !== param2[key]) return false;
@@ -392,6 +393,7 @@ export function isExpression(func) {
   // }
   // 不再允许函数式的表达式了！
   if (typeof func !== 'string') return false;
+  func = func.replace(/\r|\n/g, " ")
   // 这样的pattern {{.....}}
   const pattern = /^{{(.+)}}$/;
   const reg1 = /^{{(function.+)}}$/;
@@ -411,11 +413,15 @@ export function parseSingleExpression(func, formData = {}, dataPath, global?) {
   const parentPath = getParentPath(dataPath);
   const parent = getValueByPath(formData, parentPath) || {};
   if (typeof func === 'string') {
-    const funcBody = func.substring(2, func.length - 2);
+    const funcBody = func.substring(2, func.length - 2).replace(/\r|\n/g, " ");
+    // 以下增加globalTag逻辑是因为formData的字段值中可能会正好有global字眼，
+    // 这会造成把formData中的global字符替换成global变量值了，这样的话，会造成所有字段上的公式表达式都失效
+    const globalTag = "__G_L_O_B_A_L__";
     const str = `
     return ${funcBody
-      .replace(/formData/g, JSON.stringify(formData))
-      .replace(/global/g, JSON.stringify(global))
+      .replace(/\bformData\b/g, JSON.stringify(formData).replace(/\bglobal\b/g, globalTag))
+      .replace(/\bglobal\b/g, JSON.stringify(global))
+      .replace(new RegExp(`\\b${globalTag}\\b`,"g"), "global")
       .replace(/rootValue/g, JSON.stringify(parent))}`;
 
     try {
@@ -1137,3 +1143,22 @@ export const removeHiddenFromResult = (data, flatten) => {
   });
   return data;
 };
+
+export const getFileResponseErrorMessage = (file: any) => {
+  let result = "";
+  let errorCode = file.error?.status;
+  let errorMsg = file.error?.reason || file.error?.message || "";
+  if(errorMsg){
+      errorMsg = translate(errorMsg);
+  }
+  let matchedResponseTitles = (file.response?.match("\<title\>\(.+)<\/title\>") || []);
+  let responseTitle = matchedResponseTitles[1];
+  if(responseTitle){
+      // 如果是nginx报错，比如文件太大，会返回html，取出其title显示。
+      result = errorMsg ? `${errorMsg} \r\n ${responseTitle}` : responseTitle;
+  }
+  if(errorCode === 413){
+      result = translate("creator_request_oversized");
+  }
+  return result;
+}

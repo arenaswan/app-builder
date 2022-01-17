@@ -212,7 +212,11 @@ export default class SteedosClient {
         if (newOptions.headers) {
             Object.assign(headers, newOptions.headers);
         }
-
+        
+        if(!headers["Content-Type"]){
+            // markdown上传图片不允许有 默认值Content-Type， 当没有时浏览器会添加其及其正确的值boundary。
+            delete headers["Content-Type"];
+        }
         return {
             ...newOptions,
             headers,
@@ -326,6 +330,31 @@ export default class SteedosClient {
         );
     };
 
+    postS3File = async (file: any) => {
+        const formData = new FormData();
+        if (file.blob) {
+            // 突然不支持第三个参数，暂时注释掉， 不影响功能。官网介绍：https://developer.mozilla.org/zh-CN/docs/Web/API/FormData/append
+            // formData.append("file", file, file.name);
+            formData.append("file", file);
+        } else {
+            // 目前走的这块代码
+            formData.append("file", file);
+        }
+        formData.append('space', this.getSpaceId());
+        formData.append('owner', this.getUserId());
+
+        return this.doFetch<UserProfile>(
+            `${this.getBaseRoute()}/s3/images`,
+            {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': undefined
+                },
+            }
+        );
+    };
+
     getSettings = () => {
         return this.doFetch<UserProfile>(
             `${this.getAccountsRoute()}/settings`,
@@ -373,11 +402,12 @@ export default class SteedosClient {
     };
 
     doFetchWithResponse = async <T>(url: string, options: Options): Promise<ClientResponse<T>> => {
-        const response = await fetch(url, this.getOptions(options));
-        const headers = parseAndMergeNestedHeaders(response.headers);
+        let response:any, headers:any;
 
         let data;
         try {
+            response = await fetch(url, this.getOptions(options));
+            headers = parseAndMergeNestedHeaders(response.headers);
             data = await response.json();
         } catch (err) {
             throw new ClientError(this.getUrl(), {

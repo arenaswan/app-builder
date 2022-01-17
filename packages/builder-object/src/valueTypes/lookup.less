@@ -1,5 +1,7 @@
 // 选中的选项附带的icon样式
-.type-lookup{
+.lookup-field-container{
+    display: flex;
+    width: 100%;
     .ant-select {
         .ant-select-selection-item{
             display: flex;
@@ -54,9 +56,6 @@
 .type-lookup{
     .ant-form-item-control-input{
         .ant-select-selector{
-            .anticon-smile{
-                margin-top:2px;
-            }
             .left_label{
                 display: none;
             }
@@ -69,14 +68,14 @@
         .ant-form-item-control{
             .ant-form-item-control-input-content{
                 display:flex;
-                .left_label_menu{
+                .lookup-field-left-select{
                     width:55px;
                     margin-right: -1px;
                     .ant-select-selector{
                         border-radius: 2px 0 0 2px;
                     }
                 }
-                .left_label_menu:hover,.left_label_menu:active,.left_label_menu.ant-select-focused{
+                .lookup-field-left-select:hover,.lookup-field-left-select:active,.lookup-field-left-select.ant-select-focused{
                     .ant-select-selector{
                         z-index: 1;
                     }
@@ -84,7 +83,7 @@
                         z-index: 2;
                     }
                 }
-                .left_label_menu + .ant-pro-filed-search-select{
+                .lookup-field-left-select + .ant-pro-filed-search-select{
                     flex:auto;
                     .ant-select-selector{
                         border-radius: 0 2px 2px 0;
@@ -113,5 +112,18 @@
         display: flex;
         align-items: center;
         padding: 0px 7px 0px 2px;
+    }
+}
+
+// 2.0 样式调整：object类型下 lookup字段样式调整。
+.type-object.mode-edit{
+    .type-lookup{
+        .ant-col-6.ant-form-item-label-left{
+            flex: auto;
+        }
+        .ant-col-18.ant-form-item-control{
+            flex: auto;
+            max-width: 100%;
+        }
     }
 }

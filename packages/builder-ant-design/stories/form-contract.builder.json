@@ -6,7 +6,7 @@
         "@version": 2,
         "id": "builder-78d2bb14cbe2410aaff34caf74d63852",
         "component": {
-          "name": "@steedos/builder-form:Form",
+          "name": "@steedos-ui/builder-form:Form",
           "options": {
             "layout": "vertical",
             "initialValues": "({})",
@@ -23,7 +23,7 @@
             "@version": 2,
             "id": "builder-68c6102c7700470c9ced06b266d5052a",
             "component": {
-              "name": "@steedos/builder-form:FormSection",
+              "name": "@steedos-ui/builder-form:FormSection",
               "options": {
                 "title": ""
               }
@@ -34,7 +34,7 @@
                 "@version": 2,
                 "id": "builder-ce4bc102e67e4dd7998803d743183cb7",
                 "component": {
-                  "name": "@steedos/builder-form:Text",
+                  "name": "@steedos-ui/builder-form:Text",
                   "options": {
                     "name": "name",
                     "label": "签约客户名称",
@@ -66,7 +66,7 @@
                 "@version": 2,
                 "id": "builder-a0a05df1d1af4555bbbd8e1ebdbf5925",
                 "component": {
-                  "name": "@steedos/builder-form:Text",
+                  "name": "@steedos-ui/builder-form:Text",
                   "options": {
                     "name": "company",
                     "label": "我方公司名称",
@@ -100,7 +100,7 @@
             "@version": 2,
             "id": "builder-d08d2211daf44defb9fc4196a0deef42",
             "component": {
-              "name": "@steedos/builder-form:FormSection",
+              "name": "@steedos-ui/builder-form:FormSection",
               "options": {
                 "title": ""
               }
@@ -111,7 +111,7 @@
                 "@version": 2,
                 "id": "builder-346050115b194597abceb985aab46015",
                 "component": {
-                  "name": "@steedos/builder-form:Text",
+                  "name": "@steedos-ui/builder-form:Text",
                   "options": {
                     "name": "contract",
                     "label": "合同名称",
@@ -134,7 +134,7 @@
                 "@version": 2,
                 "id": "builder-7d891a2dcfa749d995498fd193643b59",
                 "component": {
-                  "name": "@steedos/builder-form:Password",
+                  "name": "@steedos-ui/builder-form:Password",
                   "options": {
                     "name": "password",
                     "label": "密码",
@@ -175,7 +175,7 @@
             "@version": 2,
             "id": "builder-84cc0979ed7647338a1ccb1d117da2f6",
             "component": {
-              "name": "@steedos/builder-form:FormSection",
+              "name": "@steedos-ui/builder-form:FormSection",
               "options": {
                 "title": ""
               }
@@ -186,7 +186,7 @@
                 "@version": 2,
                 "id": "builder-205dd504f64d451aae91daee339549e5",
                 "component": {
-                  "name": "@steedos/builder-form:Select",
+                  "name": "@steedos-ui/builder-form:Select",
                   "options": {
                     "name": "useMode",
                     "label": "合同约定生效方式",
@@ -225,7 +225,7 @@
                 "@version": 2,
                 "id": "builder-882a6205f06b42d391df7107d6b36cff",
                 "component": {
-                  "name": "@steedos/builder-form:Select",
+                  "name": "@steedos-ui/builder-form:Select",
                   "options": {
                     "name": "unusedMode",
                     "label": "合同约定失效效方式",
@@ -264,7 +264,7 @@
             "@version": 2,
             "id": "builder-04367bd0b727467d84619d7b3b7d4667",
             "component": {
-              "name": "@steedos/builder-form:FormSection",
+              "name": "@steedos-ui/builder-form:FormSection",
               "options": {
                 "title": ""
               }
@@ -286,7 +286,7 @@
                             "@version": 2,
                             "id": "builder-46ebecc52daf409fa87c004791d833d1",
                             "component": {
-                              "name": "@steedos/builder-form:DatetimePicker",
+                              "name": "@steedos-ui/builder-form:DatetimePicker",
                               "options": {
                                 "name": "startDatetime",
                                 "label": "开始日期",
@@ -319,7 +319,7 @@
                             "@version": 2,
                             "id": "builder-c6c26112a6ce4e32b0752013d467d6e6",
                             "component": {
-                              "name": "@steedos/builder-form:DatetimePicker",
+                              "name": "@steedos-ui/builder-form:DatetimePicker",
                               "options": {
                                 "name": "endDateTime",
                                 "label": "结束日期",
@@ -359,7 +359,7 @@
             "@version": 2,
             "id": "builder-11a8860f938e470b8f650ab04f6fbb8c",
             "component": {
-              "name": "@steedos/builder-form:FormSection",
+              "name": "@steedos-ui/builder-form:FormSection",
               "options": {
                 "title": ""
               }
@@ -370,7 +370,7 @@
                 "@version": 2,
                 "id": "builder-e133398469cc44799e09d95281b12923",
                 "component": {
-                  "name": "@steedos/builder-form:Text",
+                  "name": "@steedos-ui/builder-form:Text",
                   "options": {
                     "name": "id",
                     "label": "主合同编号",
@@ -392,7 +392,7 @@
                 "@version": 2,
                 "id": "builder-47ffd194988841eb9f85dae22ee6557a",
                 "component": {
-                  "name": "@steedos/builder-form:DateRangePicker",
+                  "name": "@steedos-ui/builder-form:DateRangePicker",
                   "options": {
                     "name": "createTime",
                     "label": "合同生效时间",
@@ -431,7 +431,7 @@
             "@version": 2,
             "id": "builder-7d999e8d22fe400c8b8b6df1a51f36bc",
             "component": {
-              "name": "@steedos/builder-form:FormSection",
+              "name": "@steedos-ui/builder-form:FormSection",
               "options": {
                 "title": ""
               }
@@ -442,7 +442,7 @@
                 "@version": 2,
                 "id": "builder-05d6c8ff6d8044b6b439e46f82e97dd9",
                 "component": {
-                  "name": "@steedos/builder-form:Select",
+                  "name": "@steedos-ui/builder-form:Select",
                   "options": {
                     "name": "useMode",
                     "label": "金额类型",
@@ -470,7 +470,7 @@
                 "@version": 2,
                 "id": "builder-ad700c9259f54be091a7e6e33f024b35",
                 "component": {
-                  "name": "@steedos/builder-form:Select",
+                  "name": "@steedos-ui/builder-form:Select",
                   "options": {
                     "name": "taxRate",
                     "label": "税率",
@@ -503,7 +503,7 @@
                 "@version": 2,
                 "id": "builder-d5123532068d4a53ba344937b99e9ce5",
                 "component": {
-                  "name": "@steedos/builder-form:Digit",
+                  "name": "@steedos-ui/builder-form:Digit",
                   "options": {
                     "name": "num",
                     "label": "合同份数",
@@ -545,7 +545,7 @@
             "@version": 2,
             "id": "builder-7cab3eefc0984dcb845721fa812c44a0",
             "component": {
-              "name": "@steedos/builder-form:Radio",
+              "name": "@steedos-ui/builder-form:Radio",
               "options": {
                 "name": "invoiceType",
                 "label": "发票类型",
@@ -590,7 +590,7 @@
             "@version": 2,
             "id": "builder-9ed36a78efc74593bf802f123e283340",
             "component": {
-              "name": "@steedos/builder-form:FormSection",
+              "name": "@steedos-ui/builder-form:FormSection",
               "options": {
                 "title": ""
               }
@@ -601,7 +601,7 @@
                 "@version": 2,
                 "id": "builder-28442c67e36d4b6f940db89b3eabe6e2",
                 "component": {
-                  "name": "@steedos/builder-form:UploadButton",
+                  "name": "@steedos-ui/builder-form:UploadButton",
                   "options": {
                     "name": "file",
                     "label": "倒签报备附件",
@@ -643,7 +643,7 @@
             "@version": 2,
             "id": "builder-7deb1a4062bd4807bd33472987d2f6b0",
             "component": {
-              "name": "@steedos/builder-form:Text",
+              "name": "@steedos-ui/builder-form:Text",
               "options": {
                 "name": "project",
                 "label": "项目名称",
@@ -668,7 +668,7 @@
             "@version": 2,
             "id": "builder-08317da88cc045d1bf63af4704b5056c",
             "component": {
-              "name": "@steedos/builder-form:Textarea",
+              "name": "@steedos-ui/builder-form:Textarea",
               "options": {
                 "name": "remark",
                 "label": "合同备注说明",
@@ -698,7 +698,7 @@
             "@version": 2,
             "id": "builder-97bc1e02128f4733beefd33ce6efe359",
             "component": {
-              "name": "@steedos/builder-form:Checkbox",
+              "name": "@steedos-ui/builder-form:Checkbox",
               "options": {
                 "name": "checkbox",
                 "label": "多选框",
@@ -746,7 +746,7 @@
             "@version": 2,
             "id": "builder-aa603039595148edb88f2118373082cc",
             "component": {
-              "name": "@steedos/builder-form:DatePicker",
+              "name": "@steedos-ui/builder-form:DatePicker",
               "options": {
                 "name": "date",
                 "label": "Date Picker",

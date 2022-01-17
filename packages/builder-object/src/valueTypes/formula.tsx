@@ -17,7 +17,9 @@ export const FieldFormula = (props:any) => {
   else{
     return (
       <React.Fragment>
-        <ProField {...props} mode='read' valueType={valueType} />
+        <div style={{visibility: "hidden"}}>
+          <ProField  {...props} mode='read' valueType={valueType} />
+        </div>
         <div className="ant-form-item-explain">
           <div role="alert"><i>在保存时，计算此字段</i></div>
         </div>

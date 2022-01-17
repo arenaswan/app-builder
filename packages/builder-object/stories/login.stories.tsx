@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import * as _ from 'lodash';
 import { observer } from "mobx-react-lite";
 import { useHistory } from "react-router-dom";
-import { API, Settings, User } from '@steedos/builder-store';
+import { API, Settings, User } from '@steedos-ui/builder-store';
 import { Alert, message, Button, Space } from 'antd';
 
 

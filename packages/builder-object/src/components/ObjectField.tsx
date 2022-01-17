@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 
-import { Field } from '@steedos/builder-form'
+import { Field } from '@steedos-ui/builder-form'
 import _ from 'lodash';
 import { useQuery } from "react-query";
 import { observer } from "mobx-react-lite"
 import { FormContext } from "antd/es/form/context";
 import { ProFormDependency } from '@ant-design/pro-form';
 import useAntdMediaQuery from 'use-media-antd-query';
-import { Forms } from '@steedos/builder-store';
+import { Forms } from '@steedos-ui/builder-store';
 
 export type ObjectFieldProps = {
   objectApiName?: string,
@@ -61,9 +61,21 @@ export const ObjectField = observer((props: any) => {
     formFieldProps.rules = [
       {
         required: true,
-        message: `请输入${formFieldProps.label}...`,
+        message: `请输入${formFieldProps.label}`,
       },
     ]
+  }
+  if (formFieldProps.valueType === "email") {
+    const emailRule = {
+      type: 'email',
+      message: `${formFieldProps.label}必须是合法的电邮地址`,
+    };
+    if(formFieldProps.rules){
+      formFieldProps.rules.push(emailRule)
+    }
+    else{
+      formFieldProps.rules = [emailRule]
+    }
   }
 
   const formItemProps:any = {

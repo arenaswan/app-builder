@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import ProLayout, { PageContainer } from '@ant-design/pro-layout';
-import { API } from '@steedos/builder-store';
+import { API } from '@steedos-ui/builder-store';
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,18 +8,18 @@ import {
   Link,
   useParams
 } from "react-router-dom";
-// import { ObjectListView } from '@steedos/builder-object';
-import { SteedosAppLauncher } from "@steedos/builder-lightning";
+// import { ObjectListView } from '@steedos-ui/builder-object';
+import { SteedosAppLauncher } from "@steedos-ui/builder-lightning";
 import { observer } from "mobx-react-lite";
-import { Apps } from '@steedos/builder-store';
+import { Apps } from '@steedos-ui/builder-store';
 import _ from 'lodash';
 import { useHistory } from "react-router-dom";
 import ProSkeleton from '@ant-design/pro-skeleton';
 import { RightContent } from '../components/GlobalHeader/RightContent';
-import { SteedosIcon } from '@steedos/builder-lightning';
+import { SteedosIcon } from '@steedos-ui/builder-lightning';
 import { Image, Spin } from 'antd';
-import { Objects} from '@steedos/builder-store';
-import { Settings, User } from '@steedos/builder-store';
+import { Objects} from '@steedos-ui/builder-store';
+import { Settings, User } from '@steedos-ui/builder-store';
 
 export const Layout = observer((props: any) => {
   let history = useHistory();

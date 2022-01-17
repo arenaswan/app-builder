@@ -1,6 +1,6 @@
 {
-  "name": "@steedos/builder-community",
-  "version": "1.0.0",
+  "name": "@steedos-ui/builder-community",
+  "version": "1.0.20",
   "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "prebuild": "rimraf dist",
-    "build:rollup": "export NODE_OPTIONS=--max_old_space_size=4096 && rollup -c rollup.config.ts",
+    "build:rollup": "cross-env NODE_OPTIONS=--max_old_space_size=4096 rollup -c rollup.config.ts",
     "build": "concurrently yarn:build:*",
     "start": "nodemon --watch src --exec yarn build -e ts,tsx,less",
     "test": "jest --env=jsdom --passWithNoTests",
@@ -27,25 +27,15 @@
     "lint:src": "eslint src --ext .ts,.tsx --config ../../.eslintrc",
     "lint:types": "tsc --noEmit"
   },
-  "dependencies": {
-    "@rollup/plugin-alias": "^3.1.2",
-    "@steedos/builder-form": "1.0.0",
-    "@steedos/builder-locale": "1.0.0",
-    "@steedos/builder-store": "1.0.0",
-    "@steedos/filters": "^2.0.46",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-loadable": "^5.5.0",
-    "react-query": "^3.13.3",
-    "react-resizable": "^1.11.1",
-    "react-slick": "^0.23.2",
-    "react-sortable-hoc": "^2.0.0",
-    "react-to-webcomponent": "^1.5.1",
-    "react-use": "^17.2.4",
-    "tslib": "^2.1.0"
-  },
   "devDependencies": {
     "@builder.io/block-publish": "^1.1.2",
+    "@rollup/plugin-alias": "^3.1.2",
+    "@rollup/plugin-image": "2.1.0",
+    "@steedos-ui/builder-form": "1.0.20",
+    "@steedos-ui/builder-locale": "1.0.20",
+    "@steedos-ui/builder-page": "1.0.20",
+    "@steedos-ui/builder-store": "1.0.20",
+    "@steedos/filters": "^2.0.46",
     "@types/jest": "^26.0.19",
     "@types/lodash-es": "^4.17.1",
     "@types/node": "^14.14.19",
@@ -65,6 +55,15 @@
     "npm-install-peers": "^1.2.1",
     "prettier": "^2.2.1",
     "prompt": "^1.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-loadable": "^5.5.0",
+    "react-query": "^3.13.3",
+    "react-resizable": "^1.11.1",
+    "react-slick": "^0.23.2",
+    "react-sortable-hoc": "^2.0.0",
+    "react-to-webcomponent": "^1.5.1",
+    "react-use": "^17.2.4",
     "replace-in-file": "^6.2.0",
     "rimraf": "3.0.2",
     "rollup": "^2.42.4",
@@ -83,11 +82,16 @@
     "semantic-release": "^17.2.3",
     "ts-jest": "26.4.4",
     "ts-node": "^9.1.1",
+    "tslib": "^2.1.0",
     "tslint": "^5.8.0",
     "tslint-config-prettier": "^1.1.0",
     "tslint-config-standard": "^7.0.0",
     "typedoc": "^0.11.0",
     "validate-commit-msg": "^2.12.2"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
   },
   "repository": "https://github.com/steedos/app-builder/tree/master/packages/builder-community"
 }

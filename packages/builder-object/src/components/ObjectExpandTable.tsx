@@ -16,8 +16,8 @@ import { ActionType } from "react-table"
 import { formatFiltersToODataQuery } from '@steedos/filters';
 import "./ObjectExpandTable.less"
 import useAntdMediaQuery from 'use-media-antd-query';
-import { ObjectGrid } from '@steedos/builder-ag-grid';
-import { Objects } from '@steedos/builder-store';
+import { ObjectGrid } from '@steedos-ui/builder-ag-grid';
+import { Objects } from '@steedos-ui/builder-store';
 import { Spin } from 'antd';
 
 import {
@@ -181,13 +181,13 @@ export const ObjectExpandTable = observer((props: ObjectExpandTableProps) => {
   let defaultExpandReference, defaultExpandNameField, defaultExpandParentField;
   const objectSchema = rest.objectSchema || object?.schema;
   const objectSchemaFields = objectSchema.fields;
-  const currentFields = expandDefine && objectSchemaFields[expandDefine.fieldName]
-  defaultExpandReference = currentFields && currentFields.reference_to;
+  const currentField = expandDefine && objectSchemaFields[expandDefine.fieldName]
+  defaultExpandReference = currentField && currentField.reference_to;
   const referenceObject = Objects.getObject(defaultExpandReference);
 
   if(ExpandComponent){
-    if(currentFields.type === 'lookup' ){
-      defaultExpandReference = currentFields.reference_to;
+    if(currentField && currentField.type === 'lookup' ){
+      defaultExpandReference = currentField.reference_to;
       defaultExpandNameField = 'name';
       defaultExpandParentField = 'parent';
       if(referenceObject && referenceObject.schema){

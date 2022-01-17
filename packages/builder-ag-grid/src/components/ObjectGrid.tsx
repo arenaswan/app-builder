@@ -1,14 +1,14 @@
-import React, { useState } from "react"
-import { forEach, compact, filter, includes, keys, map, isEmpty, isFunction, isObject, uniq, find, sortBy, reverse, clone, isArray, isString } from 'lodash';
+import React, { useState, useEffect } from "react"
+import { forEach, compact, filter, includes, keys, map, isEmpty, isFunction, isObject, uniq, find, sortBy, reverse, clone, isArray, isString, isBoolean } from 'lodash';
 import useAntdMediaQuery from 'use-media-antd-query';
 import { observer } from "mobx-react-lite"
-import { Objects, API } from "@steedos/builder-store"
-import { Spin } from 'antd';
-import { concatFilters } from '@steedos/builder-sdk';
+import { Objects, API } from "@steedos-ui/builder-store"
+import { Spin, Alert } from 'antd';
+import { concatFilters } from '@steedos-ui/builder-sdk';
 import {AgGridColumn, AgGridReact} from '@ag-grid-community/react';
 import { AllModules } from '@ag-grid-enterprise/all-modules';
 import { ServerSideStoreType } from '@ag-grid-enterprise/all-modules';
-import { getNameFieldColumnRender } from "@steedos/builder-form"
+import { getNameFieldColumnRender } from "@steedos-ui/builder-form"
 import { AgGridCellEditor } from "./CellEditor";
 import { AgGridCellRenderer } from "./CellRender";
 import { AgGridCellFilter } from "./CellFilter";
@@ -19,9 +19,11 @@ import { AgGridCellBooleanFilter } from './CellBooleanFilter';
 import { AgGridRowActions } from './RowActions';
 import { Modal, Drawer, Button, Space } from 'antd';
 import { AG_GRID_LOCALE_ZH_CN } from '../locales/locale.zh-CN'
-import { Tables } from '@steedos/builder-store';
+import { Tables } from '@steedos-ui/builder-store';
 import { message } from 'antd';
-import { translate } from '@steedos/builder-sdk';
+import { translate } from '@steedos-ui/builder-sdk';
+import { getObjectNameFieldKey } from '@steedos-ui/builder-sdk';
+import { getObjectBaseFieldNames } from '@steedos-ui/builder-sdk';
 
 import './ObjectGrid.less'
 
@@ -41,6 +43,16 @@ export type ObjectGridProps<T extends ObjectGridColumnProps> =
       onChange?: ([any]) => void
       linkTarget?: string //单元格如果是链接，配置其链接的target属性值
       autoClearSelectedRows?: boolean//当请求列表数据时自动清除选中项
+      rows?: any[]//静态数据配合objectSchema使用
+      objectSchema?: any//不传入objectApiName时，使用静态objectSchema
+      rowKey?: string//选中项的key，即字段名
+      selectedRowKeys?: [string]//选中项值集合
+      isInfinite?: boolean//是否使用滚动翻页模式，即rowModelType是否为infinite
+      autoFixHeight?: boolean//当isInfinite且记录总数量大于pageSize时，自动把Grid高度设置为pageSize行的总高度，即rowHeight*pageSize
+      autoHideForEmptyData: boolean//当数据为空时自动隐藏整个Grid记录详细界面子表需要该属性
+      filtersTransform: Function//DataSource的getRows最终过滤条件转换器
+      dataValueTransform: Function//DataSource的getRows最终返回数据转换器，可以变更记录字段值或过滤掉部分记录
+      showSortNumber: boolean//显示第一列勾选框中的序号数值
       // filterableFields?: [string]
     } & {
       defaultClassName?: string
@@ -60,6 +72,10 @@ const FilterTypesMap = {
   'greaterThanOrEqual': '>=',
   'empty': 'empty' //TODO 不支持
 }
+
+const DEFAULT_ROW_HEIGHT = 28;
+const DEFAULT_HEADER_HEIGHT = 33;
+const DEFAULT_GRID_HEIGHT = "100%";
 
 /**
  * 
@@ -120,6 +136,101 @@ const getField = (objectSchema, fieldName: any)=>{
   }, objectSchema.fields)
 }
 
+const getFieldMinWidth = (field: any)=>{
+  const fieldType = field.type;
+  let result = 80;
+  if(["text", "textarea", "select", "lookup", "master_detail", "autonumber", "url", "email", "image", "file"].indexOf(fieldType) > -1){
+    result = 110
+  }
+  else if(["date"].indexOf(fieldType) > -1){
+    result = 110
+  }
+  else if(["datetime"].indexOf(fieldType) > -1){
+    result = 150
+  }
+  else if(["html"].indexOf(fieldType) > -1){
+    result = 220
+  }
+  else if(["formula", "summary", "number", "percent"].indexOf(fieldType) > -1){
+    result = 80
+  }
+  if(field.is_wide){
+    result = 220;
+  }
+  return result;
+}
+
+const getCellValueForClipboard = (event: any)=>{
+  let value = event.value;
+  if(isArray(value)){
+    const fieldSchema = event.column?.colDef?.cellEditorParams?.fieldSchema
+    console.log(`fieldSchema`, fieldSchema)
+    if(fieldSchema && fieldSchema.multiple){
+      value = value.join(',');
+    }
+  }
+  return value;
+}
+
+const getCellValueFromClipboard = (event: any, forceFieldType?: string)=>{
+  let value = event.value;
+  if(isString(value) && value){
+    const fieldSchema = event.column?.colDef?.cellEditorParams?.fieldSchema;
+    const fileType = forceFieldType || fieldSchema.type;
+    if(fieldSchema && fieldSchema.multiple){
+      value = value.split(',');
+    }
+    if(["number", "currency", "percent"].indexOf(fileType) > -1){
+      if(fieldSchema && fieldSchema.multiple){
+        if(value instanceof Array && value.length){
+          value = value.map((item)=>{
+            return Number(item)
+          });
+        }
+      }
+      else{
+        value = Number(value);
+      }
+    }
+    else if(["boolean", "toggle"].indexOf(fileType) > -1){
+      value = value === "true";
+    }
+    else if(["select"].indexOf(fileType) > -1){
+      // select字段类型可能配置了data_type，如果配置了则以其配置的为准
+      value = getCellValueFromClipboard(event, fieldSchema.data_type || "text");
+    }
+    else if(["formula", "summary"].indexOf(fileType) > -1){
+      // 公式和汇总字段是只读的，不需要处理
+      // value = getCellValueFromClipboard(event, fieldSchema.data_type);
+    }
+  }
+  return value;
+}
+
+const getSortModel = (objectSchema: any, sortModel: any)=>{
+  return sortModel.map((model: any)=>{
+    if(model.colId === "ag-Grid-AutoColumn"){
+      // tree模式下无法把group的field名称识别为colId，需要转换下
+      return Object.assign({}, model, {
+        colId: getObjectNameFieldKey(objectSchema)
+      });
+    }
+    else{
+      return model;
+    }
+  });
+}
+
+const getGridColumnFieldType = (fieldSchema: any)=>{
+  if(["formula", "summary"].indexOf(fieldSchema.type) > -1){
+    // 只有公式和汇总字段类型需要按data_type显示，其他比如select中的data_type只是保存数据类型，显示控制类型不需要换
+    return fieldSchema.data_type ? fieldSchema.data_type : fieldSchema.type
+  }
+  else{
+    return fieldSchema.type;
+  }
+}
+
 export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
 
   const {
@@ -141,17 +252,64 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     onModelUpdated,
     onUpdated,
     checkboxSelection = true,
-    pagination = true,
+    pagination: defaultPagination = true,
+    isInfinite: defaultIsInfinite = true,
+    rowHeight,
+    headerHeight,
     selectedRowKeys,
     rowKey = '_id',
     objectSchema: defaultObjectSchema,
     rows,
     linkTarget,
     autoClearSelectedRows = true,
+    autoFixHeight = false,
+    autoHideForEmptyData = false,
+    filtersTransform, 
+    dataValueTransform,
+    showSortNumber: defaultShowSortNumber,
     ...rest
   } = props;
-  const table = Tables.loadById(name, objectApiName,rowKey);
+  const [objectGridApi, setObjectGridApi] = useState({} as any);
+  const [isGridReady, setIsGridReady] = useState(false);
+  const [gridHeight, setGridHeight] = useState(DEFAULT_GRID_HEIGHT as string | number);
+  const [isDataEmpty, setIsDataEmpty] = useState(false);
+  let widthOfAllColumnsForFitSize = 0;
+  let pagination = defaultPagination;
+  let isInfinite = defaultIsInfinite;
+  // const isInfinite = rowModelType === "infinite";
+  let rowModelType = "serverSide"; //serverSide、infinite
+  if(rows){
+    // 传入rows静态数据时不支持翻页，以后有需求再说
+    pagination = false;
+    isInfinite = false;
+  }
+  if(pagination === false){
+    // 传入defaultIsInfinite为false表示一次性加载所有数据，不需要按isInfinite来滚动翻页请求数据
+    isInfinite = false;
+  }
+  if(isInfinite){
+    rowModelType = "infinite";
+    pagination = false;
+  }
+
   const [editedMap, setEditedMap] = useState({});
+
+  let getDataSource: Function;
+  useEffect(() => {
+    if(isGridReady && isInfinite){
+      objectGridApi.setDatasource(getDataSource(objectGridApi));
+    }
+  }, [defaultFilters, isGridReady, editedMap]);
+  const table = Tables.loadById(name, objectApiName,rowKey);
+  // 将初始值存放到 store 中。
+  useEffect(() => {
+    // 只需要触发一次selectedRowKeys即可
+    // 用!isGridReady判断可以避免每次过滤条件变更后重新触发addSelectedRowsByKeys，进而带来多余的network请求
+    if(!isGridReady && selectedRowKeys && selectedRowKeys.length){
+      table.addSelectedRowsByKeys(selectedRowKeys, columnFields, rows, defaultFilters);
+    }
+  }, [selectedRowKeys, defaultFilters, isGridReady]);
+
   let sort = defaultSort;
   if(sort && sort.length){
     if(isArray(sort[0])){
@@ -160,17 +318,13 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
       });
     }
   }
-  // 将初始值存放到 stroe 中。
-  if(selectedRowKeys && selectedRowKeys.length){
-    table.addSelectedRowsByKeys(selectedRowKeys, columnFields, rows, defaultFilters)
-  }
   // const [drawerVisible, setDrawerVisible] = useState(false);
   // const [modal] = Modal.useModal();
-  // const colSize = useAntdMediaQuery();
-  // const isMobile = (colSize === 'sm' || colSize === 'xs') && !props.disableMobile;
+  const colSize = useAntdMediaQuery();
+  const isMobile = (colSize === 'sm' || colSize === 'xs') && !props.disableMobile;
   let sideBar = defaultSideBar;
   let _pageSize = pageSize;
-  if(!pagination){
+  if(!pagination && !isInfinite){
     _pageSize = 0;
   }
   if(isEmpty(sideBar) && sideBar !== false ){
@@ -193,13 +347,16 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   if (object && object.isLoading) return (<div><Spin/></div>)
 
   const objectSchema = defaultObjectSchema ? defaultObjectSchema : object.schema;
-
-  const setSelectedRows = (params)=>{
+  if(isEmpty(objectSchema) || (objectSchema.permissions && objectSchema.permissions.allowRead !== true) ){
+    const errorWarning = isEmpty(objectSchema) ? translate('creator_odata_collection_query_fail') : translate('creator_odata_user_access_fail');
+    return (<Alert message={errorWarning} type="warning" showIcon style={{padding: '4px 15px'}}/>)
+  }
+  const setSelectedRows = (params, gridApi?)=>{
       // 当前显示页中store中的初始值自动勾选。
       const selectedRowKeys = table.getSelectedRowKeys();
-      const gridApi = params.api;
+      const currentGridApi = params.api || gridApi;
       if(selectedRowKeys && selectedRowKeys.length){
-        gridApi.forEachNode(node => {
+        currentGridApi.forEachNode(node => {
           if(node.data && node.data[rowKey]){
             if (selectedRowKeys.indexOf(node.data[rowKey])>-1) {
               node.setSelected(true);
@@ -210,16 +367,23 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         });
       }
       else{
-        gridApi.deselectAll();
+        currentGridApi.deselectAll();
       }
   }
 
-  const getDataSource = () => {
+  getDataSource = (gridApi?: any) => {
     return {
         getRows: params => {
+          // console.log("===getRows=params==", params);
+          // console.log("===getRows=isInfinite==", isInfinite);
+          const currentGridApi = isInfinite ? gridApi : params.api;
+          let sortModel = isInfinite ? params.sortModel : params.request.sortModel;
+          sortModel = getSortModel(objectSchema, sortModel);
+          const filterModel = isInfinite ? params.filterModel : params.request.filterModel;
+          const startRow = isInfinite ? params.startRow : params.request.startRow;
           if(rows){
             const sort = []
-            forEach(params.request.sortModel, (sortField)=>{
+            forEach(sortModel, (sortField)=>{
               sort.push([sortField.colId, sortField.sort])
             })
             let sortedRows = clone(rows);
@@ -229,38 +393,65 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
                 sortedRows = reverse(sortedRows)
               }
             }
-            params.success({
-              rowData: sortedRows,
-              rowCount: rows.length
-            });
-            setSelectedRows(params);
+            if(isInfinite){
+              let lastRow = sortedRows.length;
+              params.successCallback(sortedRows, lastRow);
+            }
+            else{
+              params.success({
+                rowData: sortedRows,
+                rowCount: rows.length
+              });
+            }
+            setSelectedRows(params, currentGridApi);
           }
           else{
-            let fields = ['name'];
+            let nameFieldKey = objectSchema.NAME_FIELD_KEY;
+            let fields = [nameFieldKey];
             forEach(columnFields, ({ fieldName, ...columnItem }: ObjectGridColumnProps) => {
               fields.push(fieldName)
             });
-            fields = uniq(compact(fields.concat(extraColumnFields).concat(["owner", "company_id", "company_ids", "locked"])));
+            if(objectApiName === "cms_files"){
+              // 附件列表需要这个字段判断权限
+              extraColumnFields.push("parent")
+            }
+            const baseExtraFields = getObjectBaseFieldNames(objectSchema);
+            fields = uniq(compact(fields.concat(extraColumnFields).concat(baseExtraFields)));
+            // 当查询的某个字段有depend_on属性时，接口返回的数据字段要包含depend_on的值。 
+            let dependOnFields = [];
+            forEach(fields,(val)=>{
+              const dependOnValues = objectSchema && objectSchema.fields && objectSchema.fields[val] && objectSchema.fields[val].depend_on;
+              if(dependOnValues && dependOnValues.length){
+                dependOnFields = dependOnFields.concat(dependOnValues)
+              }
+            })
+            if(dependOnFields.length){
+              fields = uniq(compact(fields.concat(dependOnFields)));
+            }
             const sort = []
-            forEach(params.request.sortModel, (sortField)=>{
+            forEach(sortModel, (sortField)=>{
               sort.push([sortField.colId, sortField.sort])
             })
-            // const filters = compact([].concat([defaultFilters]).concat(filterModelToOdataFilters(params.request.filterModel)));
-            const modelFilters:any = filterModelToOdataFilters(params.request.filterModel);
-            const filters = concatFilters(defaultFilters, modelFilters)
+            // const filters = compact([].concat([defaultFilters]).concat(filterModelToOdataFilters(filterModel)));
+            const modelFilters:any = filterModelToOdataFilters(filterModel);
+            let filters = concatFilters(defaultFilters, modelFilters)
             // TODO 此处需要叠加处理 params.request.fieldModel
             // console.log("===params.request.startRow===", params.request.startRow);
+            if(isFunction(filtersTransform)){
+              filters = filtersTransform(params, filters);
+            }
             let options: any = {
               sort,
               $top: pageSize,
-              $skip: params.request.startRow
+              $skip: startRow
             };
-            if(!pagination){
+            if(!pagination && !isInfinite){
               options = {
                 sort
               };
             }
-            if(autoClearSelectedRows && params.api.paginationGetCurrentPage() === 0){
+            let isFirstPage = isInfinite ? startRow === 0 : params.api.paginationGetCurrentPage() === 0
+            if(autoClearSelectedRows && isFirstPage){
               // 只有在第一页才自动清除选中项，这样翻页时就可以保持之前选中项不被清除
               table.clearSelectedRows();
             }
@@ -268,16 +459,40 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
               objectApiName,
               filters,
               fields,options).then((data)=>{
-                params.success({
-                  rowData: data.value,
-                  rowCount: data['@odata.count']
-                });
-                if(!modelFilters.length && !data['@odata.count']){
-                  params.api.setSideBarVisible(false)
-                }else if(sideBar !== false){
-                  params.api.setSideBarVisible(true)
+                let dataLength = data["@odata.count"];
+                let dataValue = data.value;
+                if(isFunction(dataValueTransform)){
+                  dataValue = dataValueTransform(params, dataValue);
+                  dataLength -= data.value.length - dataValue.length;
                 }
-                setSelectedRows(params);
+                if(isInfinite){
+                  if(autoFixHeight && pageSize && pageSize < dataLength){
+                    // const rowItemHeight = currentGridApi.getRowNode().rowHeight;
+                    setGridHeight(pageSize * (rowHeight || DEFAULT_ROW_HEIGHT) + (headerHeight || DEFAULT_HEADER_HEIGHT));
+                  }
+                  else{
+                    // 这里故意不再重置为DEFAULT_GRID_HEIGHT，因为会重新渲染整个grid，比如正在过滤数据，会把打开的右侧过滤器自动隐藏了体验不好
+                    // setGridHeight(DEFAULT_GRID_HEIGHT);
+                  }
+                  params.successCallback(dataValue, dataLength);
+                }
+                else{
+                  params.success({
+                    rowData: dataValue,
+                    rowCount: dataLength
+                  });
+                }
+
+                if(!modelFilters.length && !dataLength){
+                  currentGridApi.setSideBarVisible(false)
+                  setIsDataEmpty(true);
+                }else {
+                  if(sideBar !== false){
+                    currentGridApi.setSideBarVisible(true)
+                  }
+                  setIsDataEmpty(false);
+                }
+                setSelectedRows(params, currentGridApi);
             })
           }
         }
@@ -309,14 +524,53 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     return filter;
   }
 
+  const onGridReady = (params) => {
+    if(isInfinite){
+      // 如果在非isInfinite模式下执行下面两个state变更，会造成多次执行serverSideDatasource语句进而产生多余的network请求
+      setObjectGridApi(params.api);
+      setIsGridReady(true);
+    }
+  };
+
+  const onGridSizeChanged = (params)=>{
+    // console.log("===onGridSizeChanged=1==", params.api.getHorizontalPixelRange());
+    // console.log("===onGridSizeChanged=2==", document.getElementsByClassName("ag-theme-balham")[0].clientWidth);
+    // 自动调整各个列宽使其满屏显示，当出现水平滚动条即widthOfAllColumnsForFitSize < gridWidth时，不执行sizeColumnsToFit自动调整宽度
+    const {left: scrollLeft, right: scrollRight} = params.api.getHorizontalPixelRange();
+    const gridWidth = scrollRight - scrollLeft;
+    // console.log("===onGridSizeChanged=3==", widthOfAllColumnsForFitSize, gridWidth, widthOfAllColumnsForFitSize < gridWidth);
+    if(widthOfAllColumnsForFitSize > 0  && widthOfAllColumnsForFitSize < gridWidth){
+      params.api.sizeColumnsToFit();
+    }
+  }
+
   const getColumns = (rowButtons)=>{
-    const width = checkboxSelection ? 80 : 50;
+    let showSortNumber = defaultShowSortNumber;
+    if(!isBoolean(showSortNumber)){
+      showSortNumber = !isMobile;
+    }
+    let width = checkboxSelection ? 80 : 50;
+    if(!showSortNumber){
+      width -= 38;
+    }
+    let showSortColumnAsLink = false;
+    if(showSortNumber){
+      if(rows){
+        showSortColumnAsLink = false;
+      }
+      else if(!objectSchema?.NAME_FIELD_KEY){
+        showSortColumnAsLink = true;
+      }
+      else if(!find(columnFields,['fieldName',objectSchema.NAME_FIELD_KEY])){
+        showSortColumnAsLink = true;
+      }
+    }
     const columns:any[] = [
       {
         resizable: false,
         pinned: "left",
         valueGetter: params => {
-          return parseInt(params.node.id) + 1
+          return showSortNumber ? parseInt(params.node.id) + 1 : null;
         },
         width: width,
         maxWidth: width,
@@ -328,7 +582,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         // 对象name_field字段为不存在时，列表视图上应该显示序号为name链接
         cellRenderer: 'AgGridCellRenderer',
         cellRendererParams: {
-          render: !objectSchema?.NAME_FIELD_KEY && getNameFieldColumnRender(objectApiName)
+          // rows静态数据传入不应该显示为链接
+          render: showSortColumnAsLink && getNameFieldColumnRender(objectApiName, props.linkTarget)
         },
       },
       // {
@@ -365,7 +620,7 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         else{
           filterParams = {
             fieldSchema: field,
-            valueType: field.data_type ? field.data_type : field.type,
+            valueType: getGridColumnFieldType(field),
             objectApiName: objectApiName
           }
         }
@@ -378,22 +633,49 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         // 允许不配置order，不配置就按升序排序。
         fieldSort.order = "asc";
       }
+      let columnWidth = (columnItem as any).width;
+      if(!columnWidth && field.is_wide){
+        columnWidth = 220;
+      }
+      let columnFlex:any;
+      if(!columnWidth){
+        columnFlex = 1;
+        if(field.is_wide){
+          columnFlex = 2;
+        }
+      }
+      // console.log("===field.is_wide===", field.is_wide, fieldName);
+      // console.log("===fieldWidth===", columnWidth, fieldName);
+      // console.log("===columnFlex===", columnFlex, fieldName);
 
-      let fieldWidth = (columnItem as any).width ? (columnItem as any).width : (field.is_wide ? 300 : 150);
+      let columnWrap = (columnItem as any).wrap;
+      let wrapText = false;
+      let autoHeight = false;
+      // isInfinite为true时wrap功能有bug，见：https://github.com/ag-grid/ag-grid/issues/3909，暂时只支持isInfinite为false情况
+      if(columnWrap && !isInfinite){
+        wrapText = true;
+        autoHeight = true;
+      }
+
+      const minWidth = getFieldMinWidth(field);
 
       columns.push({
         field: fieldName,
         hide: hideInTable,
+        wrapText,
+        autoHeight,
         headerName: field.label ? field.label:fieldName,
-        width: fieldWidth,
-        minWidth: fieldWidth ? fieldWidth : 60,
+        width: columnWidth,
+        minWidth,
+        // minWidth: columnWidth ? columnWidth : 60,
         resizable: true,
         filter,
         sort: fieldSort ? fieldSort.order : undefined,
         filterParams,
-        menuTabs: ['filterMenuTab','generalMenuTab','columnsMenuTab'],
+        menuTabs: ['filterMenuTab'],
+        // menuTabs: ['filterMenuTab','generalMenuTab','columnsMenuTab'],
         rowGroup,
-        flex: 1,
+        flex: columnFlex,
         sortable: true,
         cellRenderer: 'AgGridCellRenderer',
         // cellClassRules: {
@@ -407,12 +689,14 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         cellRendererParams: {
           fieldSchema: Object.assign({}, { ...field }, { link_target: linkTarget }),
           valueType: field.type,
+          objectApiName: objectApiName,
           render: fieldRender
         },
         cellEditor: 'AgGridCellEditor',
         cellEditorParams: {
           fieldSchema: field,
           valueType: field.type,
+          objectApiName: objectApiName
         },
         // key: fieldName,
         // dataIndex: fieldName,
@@ -423,6 +707,24 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         }
       })
     });
+    
+    //处理列宽自动适应
+    widthOfAllColumnsForFitSize = 0;
+    let hasNoSetWidthColumns = false;
+    forEach(columns, (column)=>{
+      if (column.field && !column.hide) {
+        if(column.width){
+          widthOfAllColumnsForFitSize += parseInt(column.width);
+        }
+        else{
+          hasNoSetWidthColumns = true;
+        }
+      }
+    });
+    if(hasNoSetWidthColumns){
+      // 不是每个列都设置了宽度的话，就不执行自动宽度逻辑，只有每个列都设置了宽度才按近似百分比的方式显示各个列宽度
+      widthOfAllColumnsForFitSize = 0;
+    }
 
     //处理filters depend_on  
     map(columns, (column)=>{
@@ -458,16 +760,23 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
     return columns
   }
 
+  const onCellEditingStopped = (params) => {
+    // console.log("====onCellEditingStopped===params===", params, name, editedMap);
+    setTimeout(function(){
+      if(!isEmpty(editedMap) && !isEmpty(editedMap[params.data._id])){
+        (document.getElementsByClassName(`grid-action-drawer-${name}`)[0] as any).style.display=''
+      }
+    }, 300)
+  }
+
   const onCellValueChanged = (params) => {
+    // console.log("====onCellValueChanged===params===", params, name);
     // 这里赋值有延迟，转移到 CellEditor
     if(!editedMap[params.data._id]){
       editedMap[params.data._id] = {};
     }
-    editedMap[params.data._id][params.colDef.field] = params.value;
-    setTimeout(function(){
-      // setDrawerVisible(true);
-      (document.getElementsByClassName(`grid-action-drawer-${name}`)[0] as any).style.display=''
-    }, 300)
+    let value:any = params.value === undefined ? null : params.value;
+    editedMap[params.data._id][params.colDef.field] = value;
     // if(!params.colDef.editedMap){
     //   params.colDef.editedMap = {};
     // }
@@ -553,33 +862,28 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
   // }
 
   const processCellForClipboard = (event)=>{
-    if(isArray(event.value)){
-      const fieldSchema = event.column?.colDef?.cellEditorParams?.fieldSchema
-      console.log(`fieldSchema`, fieldSchema)
-      if(fieldSchema && fieldSchema.multiple){
-        event.value = event.value.join(',')
-      }
-    }
+    event.value = getCellValueForClipboard(event);
     return event.value;
   }
+
   const processCellFromClipboard = (event)=>{
-    if(isString(event.value) && event.value){
-      const fieldSchema = event.column?.colDef?.cellEditorParams?.fieldSchema
-      if(fieldSchema && fieldSchema.multiple){
-        event.value = event.value.split(',')
-      }
-    }
+    event.value = getCellValueFromClipboard(event);
+    // 列表中复制内容粘贴在单元格时底部弹出 “取消/保存” 确认框
+    (document.getElementsByClassName(`grid-action-drawer-${name}`)[0] as any).style.display='' ;
     return event.value;
   }
 
   return (
 
-    <div className="ag-theme-balham" style={{height: "100%", flex: "1 1 auto",overflow:"hidden"}}>
+    <div className={`ag-theme-balham ${autoHideForEmptyData && isDataEmpty ? 'hidden' : ''}`}  style={{height: gridHeight, flex: "1 1 auto",overflow:"hidden"}}>
       <AgGridReact
         columnDefs={getColumns(rowButtons)}
         paginationAutoPageSize={false}
         localeText={AG_GRID_LOCALE_ZH_CN}
-        rowModelType='serverSide'
+        rowModelType={rowModelType}
+        rowBuffer={0}//该参数默认值为10，ag-grid infinite-scrolling官网示例中该参数为0
+        onGridReady={onGridReady}
+        onGridSizeChanged={onGridSizeChanged}
         pagination={pagination}
         onSortChanged={onSortChanged}
         onFilterChanged={onFilterChanged}
@@ -588,6 +892,8 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         suppressExcelExport={true}
         cacheBlockSize={_pageSize}
         rowSelection={rowSelection}
+        rowHeight={rowHeight}
+        headerHeight={headerHeight}
         suppressRowClickSelection={true}
         // suppressCellSelection={true}
         // rowMultiSelectWithClick={true}
@@ -596,16 +902,18 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         modules={AllModules}
         stopEditingWhenGridLosesFocus={false}
         stopEditingWhenCellsLoseFocus={false}
-        serverSideDatasource={getDataSource()}
+        serverSideDatasource={isInfinite ? null : getDataSource()}
         onModelUpdated={onModelUpdated}
         serverSideStoreType={ServerSideStoreType.Partial}
         sideBar={sideBar}
         undoRedoCellEditing={true}
         onCellValueChanged={onCellValueChanged}
+        onCellEditingStopped={onCellEditingStopped}
         onRowValueChanged={onRowValueChanged}
         onRowSelected={onRowSelected}
         context={{editedMap: editedMap}}
         suppressClickEdit={suppressClickEdit}
+        suppressClipboardPaste={suppressClickEdit}
         processCellForClipboard={processCellForClipboard}
         processCellFromClipboard={processCellFromClipboard}
         frameworkComponents = {{
@@ -616,9 +924,11 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
           AgGridCellTextFilter: AgGridCellTextFilter,
           AgGridCellNumberFilter: AgGridCellNumberFilter,
           AgGridCellBooleanFilter: AgGridCellBooleanFilter,
+          // agGroupCellInnerRenderer: AgGridCellRenderer,
           rowActions: AgGridRowActions,
         }}
         ref={gridRef}
+        {...rest}
       />
       <Drawer
         placement={"bottom"}
@@ -626,13 +936,13 @@ export const ObjectGrid = observer((props: ObjectGridProps<any>) => {
         visible={true}
         mask={false}
         maskClosable={false}
-        style={{height: "60px", display: "none"}}
-        bodyStyle={{padding: "12px", textAlign: "center"}}
+        style={{height: "48px", display: "none"}}
+        bodyStyle={{padding: "8px", textAlign: "center", background: "rgb(243, 242, 242)"}}
         className={`grid-action-drawer-${name}`}
       >
         <Space>
           <Button onClick={cancel}>取消</Button>
-          <Button onClick={updateMany} type="primary" >确定</Button>
+          <Button onClick={updateMany} type="primary" >保存</Button>
         </Space>
       </Drawer>
     </div>

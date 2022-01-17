@@ -7,7 +7,7 @@ import { Apps } from './Apps'
 import { User } from './User'
 import { Queries } from './Queries';
 import { ComponentRegistry } from './ComponentRegistry';
-
+import { Pages } from './Pages';
 const stores = {
   Forms,
   Tables,
@@ -17,7 +17,8 @@ const stores = {
   Apps,
   User,
   Queries,
-  ComponentRegistry
+  ComponentRegistry,
+  Pages
 };
 
 // if (process.env.NODE_ENV !== 'production') {
@@ -33,7 +34,8 @@ export {
   Apps,
   User,
   Queries,
-  ComponentRegistry
+  ComponentRegistry,
+  Pages
 }
 
 export default stores;
@@ -47,6 +49,9 @@ declare global {
   }
   interface Window {
     SteedosUI: any
+  }
+  interface Window {
+    Steedos: any
   }
 }
 

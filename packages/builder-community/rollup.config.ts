@@ -8,6 +8,7 @@ import sourceMaps from 'rollup-plugin-sourcemaps';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 import svg from 'rollup-plugin-svg';
+import image from '@rollup/plugin-image';
 import { uglify } from 'rollup-plugin-uglify';
 const rollupPostcssLessLoader = require('rollup-plugin-postcss-webpack-alias-less-loader')
 import alias from '@rollup/plugin-alias';
@@ -25,6 +26,7 @@ const options = {
   },
   plugins: [,
     // Allow json resolution
+    image(),
     json(),
     nodeResolve({
       extensions: [ '.jsx', '.js', '.json', '.node' ],
@@ -35,12 +37,12 @@ const options = {
     svg(),
     // alias({
     //   entries: {
-    //     "@steedos/builder-sdk": "../../packages/builder-sdk/src/index.ts",
-    //     "@steedos/builder-store": "../../packages/builder-store/src/index.tsx",
-    //     "@steedos/builder-ant-design": "../../packages/builder-ant-design/src/index.tsx",
-    //     "@steedos/builder-form": "../../packages/builder-form/src/index.tsx",
-    //     "@steedos/builder-object": "../../packages/builder-object/src/index.tsx",
-    //     "@steedos/builder-locale": "../../packages/builder-locale/src/index.tsx",
+    //     "@steedos-ui/builder-sdk": "../../packages/builder-sdk/src/index.ts",
+    //     "@steedos-ui/builder-store": "../../packages/builder-store/src/index.tsx",
+    //     "@steedos-ui/builder-ant-design": "../../packages/builder-ant-design/src/index.tsx",
+    //     "@steedos-ui/builder-form": "../../packages/builder-form/src/index.tsx",
+    //     "@steedos-ui/builder-object": "../../packages/builder-object/src/index.tsx",
+    //     "@steedos-ui/builder-locale": "../../packages/builder-locale/src/index.tsx",
     //     "@emotion/core": "../../node_modules/@emotion/react",
     //     "emotion-theming": "../../node_modules/@emotion/react",
     //   }
@@ -65,6 +67,7 @@ const options = {
         '../../node_modules/@ant-design/**'
       ],
       // exclude: 'node_modules/',
+      // exclude: ["../../node_modules/d3/**", "../../node_modules/d3-*/**"],
       presets: ["@babel/preset-react", "@babel/preset-env"],
       plugins: [
         ['import', { libraryName: 'antd', style: true, "libraryDirectory": "es" }, 'antd'],
@@ -94,6 +97,7 @@ const options = {
       // transformMixedEsModules: true,
       // exclude: ["../../node_modules/antd/**", "../../node_modules/@ant-design/**"],
       // include: /\**node_modules\**/,
+      // exclude: ["../../node_modules/d3/**", "../../node_modules/d3-*/**"],
     }),
     // css({ output: 'builder-object.css' }),
   ],
@@ -110,6 +114,7 @@ export default [
         file: 'dist/builder-community.react.js', 
         format: 'cjs', 
         sourcemap: true,
+        strict: false,
         globals: { react: 'React' }
       }
     ],
@@ -148,7 +153,7 @@ export default [
   //       format: 'umd',
   //       sourcemap: false,
   //       amd: {
-  //         id: '@steedos/builder-community',
+  //         id: '@steedos-ui/builder-community',
   //       },
   //       intro: 'const global = window;',
   //     },

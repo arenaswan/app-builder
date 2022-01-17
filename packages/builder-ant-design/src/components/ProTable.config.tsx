@@ -1,5 +1,5 @@
 export const configProTable = {
-  name: '@steedos/builder-form:Table',
+  name: '@steedos-ui/builder-form:Table',
   inputs: [
     {
       name: 'columns', friendlyName: "列配置", type: 'list', required: true, helperText: '表格列的配置描述', subFields: [

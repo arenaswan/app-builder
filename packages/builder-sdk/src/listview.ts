@@ -5,7 +5,7 @@ export default class ListView {
         if(listview){
             return listview;
         }else{
-            if(window.Creator){
+            if(window.Creator && window.Creator.getCollection){
                 return window.Creator.getCollection("object_listviews").findOne(key)
             }
         }

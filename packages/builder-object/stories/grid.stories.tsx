@@ -1,7 +1,7 @@
-import { ObjectProTable, ObjectTree, ObjectListView, ObjectExpandTable, ObjectTable } from "@steedos/builder-object";
-import { FieldSection } from "@steedos/builder-form";
+import { ObjectProTable, ObjectTree, ObjectListView, ObjectExpandTable, ObjectTable } from "@steedos-ui/builder-object";
+import { FieldSection } from "@steedos-ui/builder-form";
 import * as React from "react"
-import { API } from '@steedos/builder-store';
+import { API } from '@steedos-ui/builder-store';
 import { Link } from "react-router-dom";
 import { Modal, TreeSelect, Select, Input, Button } from "antd"
 import ProCard from "@ant-design/pro-card"
@@ -158,6 +158,34 @@ export const ListView = () => {
   )
 }
 
+// wrap功能暂时只支持isInfinite为false的情况
+export const ListViewWithColumnWrap = () => {
+  return (
+    <div style={{height:'500px'}}>
+      <ObjectListView objectApiName='tasks' 
+          listName="all"
+          isInfinite={false}
+          // columnFields={
+          //   [
+          //     {
+          //       fieldName: 'name',
+          //       width: '200',
+          //       wrap: true
+          //     },
+          //     {
+          //       fieldName: 'created'
+          //     },
+          //     {
+          //       fieldName: 'created_by'
+          //     },
+          //   ]
+          // }
+        >
+      </ObjectListView>
+    </div>
+  )
+}
+
 export const ListViewColumnRender= () => {
   return (
       <ObjectListView objectApiName='tasks' 
@@ -210,14 +238,13 @@ export const ListViewTree = () => {
   return (
     <div style={{height:'500px'}}>
       <ObjectListView objectApiName='organizations' 
+        // pagination={false}
         sort="created desc,name desc"
         // rowSelection="single"
-        pagination={false}
         columnFields={
           [
             {
               fieldName: 'name',
-              hideInTable: true
             },
             // {
             //   fieldName: 'parent',

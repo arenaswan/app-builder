@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, Button,  Spin} from 'antd';
+import { Upload, Button,  Spin, message} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { Settings , Objects } from '@steedos/builder-store';
+import { Settings , Objects } from '@steedos-ui/builder-store';
 import { observer } from "mobx-react-lite";
 import { forEach, isArray } from 'lodash';
 import './file.less'
+import { getFileResponseErrorMessage } from '../utils/utils';
+import { API } from '@steedos-ui/builder-store';
 
 const getFileListItem = (item:any, _fileType)=>{
     return (
@@ -83,6 +85,10 @@ export const FileField = observer((props: any) => {
         )
     }else{
         const proProps = Object.assign({}, props, {name:"file"});
+        const onRemove = (file) => {
+            const id = file.response?._id;
+            API.deleteRecord('cfs_files_filerecord', id)
+        };
         const propsOther = {
             action: Settings.rootUrl + '/s3/'+fileType,
             multiple,
@@ -101,20 +107,31 @@ export const FileField = observer((props: any) => {
             },
             onChange: (options: any) => {
                 const { file, fileList: newFileList } = options;
-                setFileList(newFileList);
+                if (file.status === "error") {
+                    message.error(getFileResponseErrorMessage(file));
+                }
                 let fileIds:any = [];
+                let isUploading = false;
                 forEach(newFileList,(item)=>{
-                    if (item.status === "done") {
+                    if(item.status === "uploading"){
+                        isUploading = true;
+                    }
+                    else if (item.status === "done") {
                         fileIds.push(item.response._id)
                     }
-                })
-                if (newFileList.length == fileIds.length) {
+                    else if (item.status === "error") {
+                        item.response = getFileResponseErrorMessage(item);
+                    }
+                });
+                setFileList(newFileList);
+                if (!isUploading) {
                     if(!multiple){
                         fileIds= fileIds.length ? fileIds[0] : '';
                     }
                     onChange(fileIds)
                 }
-            }
+            },
+            onRemove
         }
         const uploadDom = <Button icon={<UploadOutlined />}>上传</Button>
         return (

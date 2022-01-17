@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import reactToWebComponent from "./react-to-webcomponent";
 
-import { ObjectForm } from '@steedos/builder-object';
+import { ObjectForm } from '@steedos-ui/builder-object';
 
 export const WebComponents = {
   'object-form': ObjectForm,

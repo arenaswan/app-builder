@@ -1,6 +1,6 @@
 import ProField from "@ant-design/pro-field";
 import type { InputProps } from 'antd';
-import { API } from "@steedos/builder-store"
+import { API } from "@steedos-ui/builder-store"
 import { isFunction, isNil } from 'lodash';
 
 import React, { useContext, useState } from "react";
@@ -10,11 +10,11 @@ import { FormContext } from "antd/es/form/context";
 import createField from '@ant-design/pro-form/es/BaseForm/createField'
 
 import { ProFormItemProps } from "@ant-design/pro-form/es/interface";
-import { Forms } from '@steedos/builder-store';
+import { Forms } from '@steedos-ui/builder-store';
 
 import { observer } from "mobx-react-lite"
 import Button from '@salesforce/design-system-react/components/button'; 
-import { safeRunFunction } from '@steedos/builder-sdk';
+import { safeRunFunction } from '@steedos-ui/builder-sdk';
 
 import './Field.less'
 
@@ -52,6 +52,7 @@ export const Field = observer((props: any) => {
   const formItemPropsMerged = {
     ...attributes,
     ...formItemProps,
+    tooltip: props.fieldSchema?.inlineHelpText,
     className: `field type-${valueType} mode-${mode} field-${readonly ? 'readonly' : 'editable'}`,
   }
 
@@ -103,26 +104,29 @@ export const Field = observer((props: any) => {
         field_schema: fieldSchema,
         placeholder,
         depend_field_values: dependFieldValues,
+        min:fieldSchema?.min,
+        max:fieldSchema?.max,
+        precision:fieldSchema?.scale
       }),
       ...rest
     }
 
+    let defaultValue = fieldSchema?.defaultValue;
+    if (isFunction(defaultValue)) {
+      defaultValue = safeRunFunction(defaultValue, [], null, { name: fieldSchema.name });
+    }
+    if (fieldProps.value === undefined && !isNil(defaultValue)) {
+      let formValue = defaultValue;
+      setTimeout(() => {
+        // 不加setTimeout的话，onChange函数触发的表单的onValuesChange事件中第二个参数为空对象，会造成reCalcSchema函数执行公式表达式有问题
+        proFieldProps.fieldProps.onChange(formValue);
+      }, 100);
+      proFieldProps.fieldProps.defaultValue = formValue;
+    }
+
     // "formula", "summary"为readonly，强行进入编辑状态，以显示额外提示文字
     if ((!readonly || ["formula", "summary"].indexOf(fieldSchema.type) > -1) && mode === 'edit') {
-      let defaultValue = fieldSchema?.defaultValue;
-      if(isFunction(defaultValue)){
-        defaultValue = safeRunFunction(defaultValue,[], null, {name:fieldSchema.name});
-      }
-      if (fieldProps.value === undefined && !isNil(defaultValue)) {
-        let formValue = defaultValue;
-        setTimeout(()=>{
-          // 不加setTimeout的话，onChange函数触发的表单的onValuesChange事件中第二个参数为空对象，会造成reCalcSchema函数执行公式表达式有问题
-          proFieldProps.fieldProps.onChange(formValue);
-        }, 100);
-        proFieldProps.fieldProps.defaultValue = formValue;
-      }
       return <ProField mode='edit' {...proFieldProps} />
-
     }
 
     const onInlineEdit = () => {
@@ -152,6 +156,7 @@ export const Field = observer((props: any) => {
 
 
     const containerOptions = {
+      className: 'field-flex-container'
     }
 
     return (
@@ -160,7 +165,7 @@ export const Field = observer((props: any) => {
         role="group"
         onDoubleClick={() => { if (!readonly) onInlineEdit(); }}
       >
-        <Box flex="1"><ProField mode='read' {...proFieldProps} /></Box>
+        <Box flex="1" className='field-flex-box-content'><ProField mode='read' {...proFieldProps} /></Box>
         {showInlineIcon && (<Box width="16px">{inlineIcon}</Box>)}
       </Flex>
     )

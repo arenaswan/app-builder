@@ -11,19 +11,7 @@ export const QueryModel = types.model({
     const loadData = flow(function* loadData(queryId) {
         try {
             const results = yield API.client.doFetch(API.client.getUrl() + `/service/api/~packages-@steedos/service-charts/queries/${queryId}/results`, { method: 'post' });
-            let data = {
-                columns: [],
-                rows: results
-            }
-            let columns = [];
-            each(results, function(result){
-                columns = union(concat(columns, keys(result))); 
-            })
-
-            each(columns, function(column){
-                data.columns.push({type: '', name: column})
-            })
-            self.data = data
+            self.data = results
             self.isLoading = false
         } catch (error) {
             console.error("Failed to fetch apps/menus", error)

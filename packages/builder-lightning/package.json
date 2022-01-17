@@ -1,6 +1,6 @@
 {
-  "name": "@steedos/builder-lightning",
-  "version": "1.0.0",
+  "name": "@steedos-ui/builder-lightning",
+  "version": "1.0.20",
   "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -33,6 +33,10 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.13.8",
     "@salesforce-ux/design-system": "^2.14.3",
     "@salesforce/design-system-react": "^0.10.32"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
   },
   "repository": "https://github.com/steedos/app-builder/tree/master/packages/builder-lightning"
 }

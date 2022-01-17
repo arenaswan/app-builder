@@ -1,175 +1,120 @@
 <p align="center">
-  <a href="https://www.steedos.org">
+  <a href="https://www.steedos.cn">
     <img alt="Steedos" src="https://steedos.github.io/assets/logo.png" width="80" />
   </a>
 </p>
 <h1 align="center">
-  Steedos App Builder 
+  华炎魔方前端控件
 </h1>
 
 <p align="center">
-<a href="https://github.com/steedos/steedos-platform/">Steedos Platform</a>
-<a href="http://www.steedos.org/docs/overview"> · Docs</a>
-<a href="https://github.com/steedos/steedos-platform/issues/"> · Report a bug</a>
-<a href="https://github.com/steedos/steedos-platform/discussions"> · Discussions</a>
+<a href="https://github.com/steedos/steedos-platform/">华炎魔方</a>
+<a href="https://www.steedos.cn/"> · 文档</a>
+<a href="https://github.com/steedos/app-builder/issues"> · 报告错误</a>
+<a href="https://community.steedos.cn/"> · 社区</a>
 </p>
 
 <p align="center">
 
-Steedos Low-Code App Builder, an alternative to Salesforce App Builder. use metadata to define apps, including components, forms, tables, pages, layout and routes. 
-
-You can use [Builder.IO Fiddle](https://builder.io/fiddle) for visual page design.
+华炎魔方是Salesforce低代码平台的开源替代方案，华炎魔方将低代码技术与企业业务场景结合，助力企业在最短时间内开发数字化解决方案，包括数据建模、权限控制、流程审批、统计分析、应用集成，并可以编写“高代码”实现高级业务逻辑。
 
 <h3 align="center">
  🤖 🎨 🚀
 </h3>
 
+## 技术框架
 
-## Build In Components
+华炎魔方前端使用 React 开发表单、列表视图控件，并基于 [Meteor](https://www.meteor.com/) 实现完整界面。
 
-### Standard Components
+- [Ant Design ProForm](https://procomponents.ant.design/components/form): 基于 ProForm 开发表单控件，根据自定义对象动态创建表单、操作业务数据。
+- [Salesforce Lightning Design System](https://www.lightningdesignsystem.com/): Salesforce 开源的企业软件设计标准和样式库。[React 控件库](https://react.lightningdesignsystem.com/)
+- [Tailwind CSS](https://tailwindcss.com/): 直接用class表述样式，而无需编写和维护css文件。
+- [AG Grid](https://www.ag-grid.com/): 因为ProTable功能太弱，我们选择 AG Grid 构建列表视图控件。
+- [Redash](https://github.com/getredash/redash): 引入Redash部分前端源码，开发查询设计器、图表设计器、仪表盘设计器。
+- [Mobx React Lite](https://github.com/mobxjs/mobx-react-lite)：基于Mobx React Lite实现华炎魔方的React Store。
 
-Provide standard components to working on all projects, based on [Ant Design ProComponents](https://procomponents.ant.design/en-US) .
+## 源码目录索引
 
-- [Form](https://procomponents.ant.design/en-US/components/form) 
-- [FormField](https://procomponents.ant.design/en-US/components/field-set)
-- [Layout](https://procomponents.ant.design/en-US/components/layout)
-- [Editable DataTable](https://procomponents.ant.design/en-US/components/editable-table)
+- [Storybook](.storybook)：实现展示 [Storybook](https://storybook.js.org/) 示例。
+- [Apps/Charts-Design](apps/charts-design)：基于 [redash](https://github.com/getredash/redash) 的部分源码，实现了华炎魔方 [仪表盘](https://steedos.cn/docs/developer/dashboard) 的设计器。
+- [NPM Packages](packages)： 华炎魔方各种React组件包源码，其内每个子文件夹都是一个标准的NPM包。
 
-### Steedos Business Object Components
+组件源码在 [NPM Packages](packages) 文件夹内的各个NPM包中，要修改源码调式可以参考以下教程 [运行Storybook](#运行Storybook) 或 [运行WebApp]((#运行WebApp)) 来调式源码。
 
-Provide components to query [Steedos Objects](https://github.com/steedos/steedos-platform)
+## 运行Storybook
 
-- Object Form
-- Object DataTable
+在项目根目录按以下步骤指示可以运行一个 [Storybook](https://storybook.js.org/) 服务。
 
-## Design App with Builder.IO
+### 配置华炎魔方服务地址
 
-You can use [Builder.IO Fiddle](https://builder.io/fiddle) as an no-code editor to design you app.
+假设我们需要连接到的华炎魔方服务地址为`http://localhost:5000`。
 
-### Standard Components For Design
+请在根目录创建一个`.env.local`文件，输入以下内容把华炎魔方服务地址配置为环境变量。
 
-#### Form
-
-name: Steedos:Form
-props:
-
-- layout, horizontal | vertical | inline, defaultValue: horizontal
-- columns, number, defaultValue: 2
-- mode, read | edit | update, defaultValue: read
-- initialValues, object, a json
-- onValuesChange, text, a function string
-- onSubmit, text, a function string
-
-childrens: FormField
-
-#### FormField
-
-name: Steedos:FormField
-
-props:
-
-- name, the field name
-- label, the field label
-- valueType, the field value type, [ProFieldValueType](https://github.com/ant-design/pro-components/blob/2a99e27ea8f5d9d24b646f96ccd11967c059159e/packages/utils/src/typing.ts#L17) | [ProFieldValueObjectType](https://github.com/ant-design/pro-components/blob/2a99e27ea8f5d9d24b646f96ccd11967c059159e/packages/utils/src/typing.ts#L65), defaultValue: text
-- mode, read | edit | update, defaultValue: read
-- required, boolean, defaultValue: false
-- colSpan, number, defaultValue: 1
-- help, ReactNode
-- tooltip, ReactNode | [TooltipProps & { icon: ReactNode }](https://ant.design/components/tooltip-cn/#API)
-- valueEnum, {[key:string|number]:any}, only valid for the `select` valueType, see [ProFormSelect](https://procomponents.ant.design/components/field-set#proformselect) for detail.
-
-### Steedos Business Object Components For Design
-
-#### Object Form
-
-name: Steedos:ObjectForm
-
-#### Object DataTable
-
-name: Steedos:ObjectDataTable
-
-
-## Design App with json
-
-You can write json file to design your app.
-
-### Page Section
-
-```json
-{
-  "@type": "@steedos/builder-sdk:Section",
-  "blocks":[
-    {
-      "@type":"@builder.io/sdk:Element",
-      "component":{
-        "name":"Text",
-        "options":{"text":"Hello Steedos ..."}
-      },
-      "responsiveStyles":{
-        "large":{
-          "position":"relative"
-        }
-      }
-    }
-  ]
-}
+```shell
+REACT_APP_API_URL=http://localhost:5000
 ```
 
+### 安装依赖包
 
-### Page
+请打开命令行窗口并在根目录执行以下命令来安装项目依赖包。
 
-```json
-{
-  "@type": "@steedos/builder-sdk:Page",
-  "title": "Hello Steedos",
-  "description": "This page is generated by Steedos App Builder.",
-  "blocks":[
-    {
-      "@type":"@builder.io/sdk:Element",
-      "component":{
-        "name":"Text",
-        "options":{"text":"Hello Steedos ..."}
-      },
-      "responsiveStyles":{
-        "large":{
-          "position":"relative"
-        }
-      }
-    }
-  ]
-}
+```shell
+yarn
 ```
 
-### Layout
+### 运行项目
 
-```json
-{
-  "@type": "@steedos/builder-sdk:Layout",
-  "title": "Hello Steedos",
-  "logo": "https://www.steedos.com/img/logo_platform.png",
-  "description": "This page is generated by Steedos App Builder.",
-  "menuPosition": "top",
-  "menus":[{
-    "title": "Home",
-    "route": "/"
-  }]
-}
+接下来执行以下命令来运行项目。
+
+```shell
+yarn start
 ```
 
-### App
+等待几分钟，当服务成功跑起来后会自动打开浏览器访问服务地址： <http://localhost:6006/>。
 
-```json
-{
-  "@type": "@steedos/builder-sdk:App",
-  "title": "Hello Steedos",
-  "description": "This app is generated by Steedos App Builder.",
-  "routes": [
-  ],
-  "layouts": [
-  ],
-  "pages": [
-  ]
-}
+## 运行WebApp
+
+按以下步骤指示可以运行源码在`packages/react-webapp`目录中的React Web APP，这是一个包括登录界面在内的可独立运行的连接华炎魔方平台的React应用。
+
+### 配置WebApp连接的服务地址
+
+假设我们需要连接到的华炎魔方服务地址为`http://localhost:5000`。
+
+请在`packages/react-webapp`中创建一个`.env.local`文件，输入以下内容把华炎魔方服务地址配置为环境变量。
+
+```shell
+REACT_APP_API_URL=http://localhost:5000
 ```
-just for test...
+
+### 安装相关依赖包
+
+请打开命令行窗口并在根目录分别执行以下命令来安装项目依赖包。
+
+```shell
+yarn
+cd packages/react-webapp
+yarn
+```
+
+### 运行React WebApp
+
+接下来执行以下命令来运行React WebApp。
+
+```shell
+yarn start
+```
+
+等待几分钟，当服务成功跑起来后会自动打开浏览器访问服务地址： <http://localhost:3000/>。
+
+
+### 打包测试
+在根目录执行 `yarn build` 命令，复制packages/builder-community路径下的dist文件夹替换steedos-platform项目中creator/node_modules/@steedos-ui/builder-community路径下的dist文件夹，运行steedos-platform项目进行测试。
+
+### 发布新版本
+
+请将当前开发（目前是2.1）分支代码合并到 `publish-latest` 分支，合并代码后 [Git Actions](https://github.com/steedos/app-builder/actions) 会自动开始打包并发布。
+
+待 [Git Actions](https://github.com/steedos/app-builder/actions) 执行成功后把`publish-latest` 分支代码合并到当前开发分支。
+
+在 [steedos-platform](https://github.com/steedos/steedos-platform) 项目的 `creator/package.json` 文件中找到 ` @steedos-ui/builder-community ` 属性，修改为最新版本值，提交代码。

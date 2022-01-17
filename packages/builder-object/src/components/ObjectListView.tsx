@@ -1,13 +1,16 @@
 import React, { useContext, useRef, useEffect, useState } from "react"
-import { isFunction, forEach, isObject, filter, isString, each, includes, isBoolean, isArray } from 'lodash';
+import { Alert } from 'antd';
+import { isFunction, forEach, isObject, filter, isString, each, includes, isBoolean, isArray, isEmpty } from 'lodash';
 // import { ObjectExpandTable } from "./"
-import { ObjectGrid, ObjectTreeGrid } from '@steedos/builder-ag-grid';
+import { ObjectGrid, ObjectTreeGrid } from '@steedos-ui/builder-ag-grid';
+import { OrganizationsListView } from "./";
 import {
   ProColumnType
 } from "@ant-design/pro-table"
 import { observer } from "mobx-react-lite"
-import { Objects, API, Settings } from "@steedos/builder-store"
-import { getNameFieldColumnRender } from "@steedos/builder-form"
+import { Objects, API, Settings } from "@steedos-ui/builder-store"
+import { getNameFieldColumnRender } from "@steedos-ui/builder-form"
+import { translate } from '@steedos-ui/builder-sdk';
 
 export type ObjectListViewColumnProps = {
   fieldName: string
@@ -103,6 +106,14 @@ export const getListviewColumns = (objectSchema: any, listName: any) => {
   return listViewColumns;
 }
 
+export const getListviewNameFieldKey = (objectSchema: any) =>{
+  let nameFieldKey = objectSchema.NAME_FIELD_KEY;
+  if(objectSchema.name === "organizations"){
+    nameFieldKey = "name";
+  }
+  return nameFieldKey;
+}
+
 export const getListviewExtraColumns = (objectSchema: any, listName: any) => {
   let listView = API.client.listview.find(objectSchema.list_views, listName);
   let listViewColumns = listView && listView.extra_columns;
@@ -120,17 +131,22 @@ export const getListViewColumnFields = (listViewColumns: any, props: any, nameFi
   let { columnFields = [], master } = props;
   if (columnFields.length === 0) {
     forEach(listViewColumns, (column: any) => {
-      let fieldName: string, fieldWidth;
+      let fieldName: string = column;
+      let columnOption: any = {  };
       if(isObject(column)){
         fieldName = (column as any).field;
-        fieldWidth = (column as any).width;
+        columnOption = Object.assign({},{
+          fieldName
+        }, column)
       }
       else{
-        fieldName = column;
+        columnOption = {
+          fieldName
+        }
       }
-      let columnOption: any = { fieldName, width: fieldWidth };
+      delete columnOption.field;
       if(fieldName === nameFieldKey){
-        columnOption.render = getNameFieldColumnRender(props.objectApiName, linkTarget);
+        columnOption.render = getNameFieldColumnRender(props.objectApiName, linkTarget, nameFieldKey);
       }
       columnFields.push(columnOption)
     })
@@ -157,7 +173,7 @@ function getRowButtons(objectSchema) {
     let visible: any = false;
     if (isString(action._visible)) {
       try {
-        const visibleFunction = eval(`(${action._visible.replaceAll("_.", "window._.")})`);
+        const visibleFunction = eval(`(${action._visible.replace(/_\./g, "window._.")})`);
         visible = function(){ return visibleFunction.apply( this, arguments );};
       } catch (error) {
         console.error(error, action._visible)
@@ -173,7 +189,7 @@ function getRowButtons(objectSchema) {
     let todo = action._todo || action.todo;
     if (isString(todo) && todo.startsWith("function")) {
       try {
-        todo = eval(`(${todo.replaceAll("_.", "window._.")})`);
+        todo = eval(`(${todo.replace(/_\./g, "window._.")})`);
       } catch (error) {
         console.error(error, todo)
       }
@@ -181,6 +197,22 @@ function getRowButtons(objectSchema) {
     buttons.push(Object.assign({}, action, {label: action.label, todo: todo, visible: visible}));
   });
   return buttons
+}
+
+function getObjectName(schema){
+  // 附件上传新版本后，没有更新当前版本 #2138
+  // https://github.com/steedos/steedos-platform/issues/2138
+  return schema.name === "cfs_files_filerecord" ? "cfs.files.filerecord" : schema.name;
+}
+
+function getListView(schema, listName){
+  const Creator = (window as any).Creator;
+  if(Creator && Creator.getListView){
+    return Creator.getListView(getObjectName(schema), listName, true)
+  }
+  else{
+    return API.client.listview.find(schema.list_views, listName);
+  }
 }
 
 export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
@@ -197,23 +229,34 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
   const object = Objects.getObject(objectApiName);
   if (object.isLoading) return (<div>Loading object ...</div>)
   const schema = object.schema;
+  if(isEmpty(schema) || (schema.permissions && schema.permissions.allowRead !== true) ){
+    const errorWarning = isEmpty(schema) ? translate('creator_odata_collection_query_fail') : translate('creator_odata_user_access_fail');
+    return (<Alert message={errorWarning} type="warning" showIcon style={{padding: '4px 15px'}}/>)
+  }
+  const suppressClickEdit = schema.enable_inline_edit === false ? true : false;
   let TableComponent = ObjectGrid;
   if(schema.enable_tree){
-    TableComponent = ObjectTreeGrid;
+    if(objectApiName === "organizations"){
+      TableComponent = OrganizationsListView;
+    }
+    else{
+      TableComponent = ObjectTreeGrid;
+    }
   }
-  let listView = listSchema ? listSchema : API.client.listview.find(schema.list_views, listName);
-  const listViewColumns = listSchema && listSchema.columns ? listSchema.columns : getListviewColumns(schema, listName);
+  let listView = listSchema ? listSchema : getListView(schema, listName);
+  const listViewColumns = listView && listView.columns ? listView.columns : getListviewColumns(schema, listName);
   const listViewExtraColumns = listSchema && listSchema.extra_columns ? listSchema.extra_columns : getListviewExtraColumns(schema, listName);
-  const nameFieldKey = schema.NAME_FIELD_KEY;
+  const nameFieldKey = getListviewNameFieldKey(schema);
+  const isBlank = Settings.hrefPopup ? '_blank' : '';
   if(!columnFields || columnFields.length==0){
-    columnFields = getListViewColumnFields(listViewColumns, props, nameFieldKey);
+    columnFields = getListViewColumnFields(listViewColumns, props, nameFieldKey, isBlank);
   }
   else{
     columnFields = columnFields.map((item: any)=>{
       if(item.fieldName === nameFieldKey && !item.render){
         // name字段默认应该显示为链接
         return Object.assign({}, item, {
-          render: getNameFieldColumnRender(props.objectApiName)
+          render: getNameFieldColumnRender(props.objectApiName, isBlank, nameFieldKey)
         });
       }
       else{
@@ -262,6 +305,7 @@ export const ObjectListView = observer((props: ObjectListViewProps<any>) => {
       sort={_sort}
       rowButtons={rowButtons}
       pagination={pagination}
+      suppressClickEdit={suppressClickEdit}
       // className={["object-listview", rest.className].join(" ")}
       {...rest}
     />

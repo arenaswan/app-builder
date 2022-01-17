@@ -1,5 +1,5 @@
 export const configProFormUploadButton = {
-  name: '@steedos/builder-form:UploadButton',
+  name: '@steedos-ui/builder-form:UploadButton',
   inputs: [
     { name: 'name', type: 'text', defaultValue: 'upload', required: true},
     { name: 'label', type: 'text', defaultValue: 'Upload Button', required: true},
@@ -21,7 +21,7 @@ export const configProFormUploadButton = {
   requiresParent: {
     message: 'This block must be inside a "Form" or "FormSection" or "FormList" or "Table" block',
     query: {
-      'component.name': { $in: ['@steedos/builder-form:Form', '@steedos/builder-form:FormSection', '@steedos/builder-form:FormList', '@steedos/builder-form:Table'] }
+      'component.name': { $in: ['@steedos-ui/builder-form:Form', '@steedos-ui/builder-form:FormSection', '@steedos-ui/builder-form:FormList', '@steedos-ui/builder-form:Table'] }
     }
   }
 };

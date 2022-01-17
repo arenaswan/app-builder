@@ -1,6 +1,6 @@
 
-import { ObjectForm, ObjectField, ObjectTable, ObjectTree, ObjectExpandTable } from "@steedos/builder-object";
-import { FieldSection } from "@steedos/builder-form";
+import { ObjectForm, ObjectField, ObjectTable, ObjectTree, ObjectExpandTable } from "@steedos-ui/builder-object";
+import { FieldSection } from "@steedos-ui/builder-form";
 import * as React from "react"
 
 import { Modal, TreeSelect, Select, Input, Button } from "antd"

@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import * as _ from 'lodash';
 import { observer } from "mobx-react-lite";
 import { useHistory } from "react-router-dom";
-import { API, Settings, User } from '@steedos/builder-store';
+import { API, Settings, User } from '@steedos-ui/builder-store';
 
 
 export const Login = observer((props: any) => {
@@ -26,7 +26,7 @@ export const Login = observer((props: any) => {
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <img
                     className="mx-auto h-12 w-auto"
-                    src="https://www.steedos.com/img/logo_platform.png"
+                    src="https://developer.steedos.com/img/logo_platform.png"
                     alt="Workflow"
                 />
             </div>

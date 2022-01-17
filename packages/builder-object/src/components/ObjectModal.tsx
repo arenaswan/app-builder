@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo, useRef } from "react"
-import { Modal, ConfigProvider } from "antd"
-import { Tables } from '@steedos/builder-store';
+import { Modal, ConfigProvider , Button, Spin} from "antd"
+import { Objects, Tables } from '@steedos-ui/builder-store';
 import { 
   ObjectProTable, ObjectProTableProps, 
   ObjectExpandTable, ObjectExpandTableProps, 
@@ -8,6 +8,7 @@ import {
   ObjectListView, ObjectTable, ObjectListViewProps, 
   Organizations, OrganizationsProps,
   SpaceUsers, SpaceUsersProps,
+  ObjectForm
 } from ".."
 import { createPortal } from 'react-dom';
 import { omit, isArray, forEach } from "lodash"
@@ -38,12 +39,15 @@ export const ObjectModal = ({
   onVisibleChange,
   modalProps,
   title,
+  showCreateButton,
+  objectApiName,
   width,
   onChange,
   contentComponent: ContentComponent,
   multiple,
   value,
   tableMode = "ag-grid",//ag-grid, ant-pro-table
+  filters,
   ...rest
 }: ObjectModalProps) => {
   const selectedValue = (value && value.length && (isArray(value) ? value : [value])) || []
@@ -136,11 +140,13 @@ export const ObjectModal = ({
       <ContentComponent
       {...contentComponentProps}
       {...omit(rest, ['visible', 'title', 'onChange'])}
+      objectApiName={objectApiName}
+      filters={filters}
       onChange={handleOnChange}
       gridRef={gridRef}
     />
     )
-  }, [visible]);
+  }, [visible, filters]);
 
   // 关闭弹出框 清空store中的值。
   const gridRefApi = gridRef && gridRef.current && gridRef.current.api;
@@ -150,10 +156,84 @@ export const ObjectModal = ({
       Tables.deleteById(rest.name || 'default')
     }
   }
+  let buttonNewRecord: any;
+  if(showCreateButton && objectApiName){
+    const object = Objects.getObject(objectApiName);
+    if (object.isLoading) return (<div><Spin/></div>);
+    const objectLabel = object.schema?.label;
+
+    buttonNewRecord = (<ObjectForm
+      // initialValues={initialValues} 
+      key="standard_new" 
+      title={`新建 ${objectLabel}`} 
+      mode="edit" 
+      isModalForm={true} 
+      objectApiName={objectApiName} 
+      // TODO: name 还应该带个随机数
+      name={`modal-create-${objectApiName}`}
+      submitter={false}
+      trigger={ <span>新建</span> }
+      afterInsert={async (values)=>{
+          const rowModel = gridRef.current.api.rowModel.getType();
+          if(rowModel === "serverSide"){
+            gridRef.current.api.refreshServerSideStore();
+          }
+          else{
+            gridRef.current.api.rowModel.reset()
+          }
+          return true;
+      }}
+    />)
+  }
+  const onCancel = (e)=>{
+    setVisible(false);
+    modalProps?.onCancel?.(e);
+  }
+  const onOk=async (e) => {
+    if (!onFinish) {
+      setVisible(false);
+      modalProps?.onOk?.(e);
+      return;
+    }
+    let success;
+    const gridRefApi = gridRef && gridRef.current && gridRef.current.api;
+    if(gridRefApi){
+      // TODO: rest.name || 'default' 后期需要优化。
+      const table = Tables.getById(rest.name || 'default');
+      // 因为通过gridRefApi获取的选中值可能会缺失，例如：当默认值不在已打开过的显示页中，gridRefApi获取的值中会缺失 默认值， 所以通过store获取所有的选中值。
+      if(table){
+        const gridSelectedRows=table.getSelectedRows();
+        let gridSelectedKeys=[];
+        forEach(gridSelectedRows,(item)=>{
+          gridSelectedKeys.push(item[rest.rowKey || '_id'])
+        })
+        success = await onFinish(gridSelectedKeys,gridSelectedRows);
+      }
+    }
+    else{
+      success = await onFinish(selectedRowKeys, selectedRows);
+    }
+    if (success !== false) {
+      setVisible(false);
+      modalProps?.onOk?.(e);
+    }
+  }
+
+  const baseFooterButton = [
+    <Button key="cancel" className='btn-cancel' onClick={onCancel}>取消</Button>,
+    <Button key="ok" className='btn-ok' type="primary" onClick={onOk} >确认</Button>
+  ];
+  const addFooterButton = [ <Button key='create' className='float-left'>{buttonNewRecord}</Button> ];
+  let footer=baseFooterButton;
+  if(showCreateButton){
+    footer = addFooterButton.concat(baseFooterButton);
+  }
+  Object.assign(restModalProps, {footer})
+
   return (
     <>
       {createPortal(
-        <div className={`object-modal ${!visible && 'hidden'}`} onClick={(e) => e.stopPropagation()}
+        <div className={`object-modal ${visible ? '' : 'hidden'}`} onClick={(e) => e.stopPropagation()}
           style={{
             position: "absolute",
             top: 0,
@@ -172,37 +252,8 @@ export const ObjectModal = ({
             // getContainer={false}
             destroyOnClose={true}
             visible={visible}
-            onCancel={(e) => {
-              setVisible(false);
-              modalProps?.onCancel?.(e);
-            }}
-            onOk={async (e) => {
-              if (!onFinish) {
-                setVisible(false);
-                modalProps?.onOk?.(e);
-                return;
-              }
-              let success;
-              const gridRefApi = gridRef && gridRef.current && gridRef.current.api;
-              if(gridRefApi){
-                // TODO: rest.name || 'default' 后期需要优化。
-                const table = Tables.getById(rest.name || 'default');
-                // 因为通过gridRefApi获取的选中值可能会缺失，例如：当默认值不在已打开过的显示页中，gridRefApi获取的值中会缺失 默认值， 所以通过store获取所有的选中值。
-                const gridSelectedRows=table.getSelectedRows();
-                let gridSelectedKeys=[];
-                forEach(gridSelectedRows,(item)=>{
-                  gridSelectedKeys.push(item[rest.rowKey || '_id'])
-                })
-                success = await onFinish(gridSelectedKeys,gridSelectedRows);
-              }
-              else{
-                success = await onFinish(selectedRowKeys, selectedRows);
-              }
-              if (success !== false) {
-                setVisible(false);
-                modalProps?.onOk?.(e);
-              }
-            }}
+            onCancel={onCancel}
+            onOk={onOk}
             maskClosable={false}
           >
             {contentDom}

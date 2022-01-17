@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Renderer } from "@redash/viz";
+import { Renderer, updateVisualizationsSettings } from "@steedos-ui/builder-viz-lib";
 import { observer } from "mobx-react-lite";
-import { Queries, Objects } from "@steedos/builder-store";
+import { Queries, Objects } from "@steedos-ui/builder-store";
+import './chart.less'
 
 const CHART_OBJECT_APINAME = 'charts';
 
@@ -9,6 +10,18 @@ export type ChartProps = {
     chartId: string
 }
 
+function wrapComponentWithSettings(WrappedComponent) {
+    return function VisualizationComponent(props) {
+      updateVisualizationsSettings({
+        dateFormat: "YYYY/MM/DD",
+        booleanValues: ["False", "True"],
+        displayModeBar: 'hover',
+      });
+  
+      return <WrappedComponent {...props} />;
+    };
+  }
+export const ConfiguredRenderer = wrapComponentWithSettings(Renderer);
 export const Chart = observer((props: ChartProps) => {
     const { chartId } = props;
     const object: any = Objects.getObject(CHART_OBJECT_APINAME);
@@ -16,8 +29,8 @@ export const Chart = observer((props: ChartProps) => {
     const recordCache = object.getRecord(chartId, [])
     if (recordCache.isLoading) return (<div>Loading record ...</div>)
     let record: any = null;
-    if(recordCache.data && recordCache.data.value && recordCache.data.value.length > 0){
-        record = recordCache.data.value[0];
+    if(recordCache.data){
+        record = recordCache.data;
     }
     if(!record){
         return (<div>Loading record ...</div>)
@@ -46,6 +59,6 @@ export const Chart = observer((props: ChartProps) => {
         }
     }
     return (
-        <Renderer type={record.type} options={Object.assign({}, defOptions, record.options)} data={data} />
+        <ConfiguredRenderer type={record.type} options={Object.assign({}, defOptions, record.options)} data={data} />
     );
 })

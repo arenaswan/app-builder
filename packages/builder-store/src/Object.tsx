@@ -32,6 +32,7 @@ export const RecordCache = types.model({
       self.permissions = yield API.requestRecordPermissions(self.objectApiName, self.id);
       self.isLoading = false
     } catch (err) {
+      self.isLoading = false
       console.error(`Failed to load record ${self.id} `, err)
     }
   });
@@ -76,6 +77,7 @@ export const RecordListCache = types.model({
       self.recordsJson = JSON.stringify(json)
       self.isLoading = false
     } catch (err) {
+      self.isLoading = false;
       console.error(`Failed to load record ${self.id} `, err)
     }
   })
@@ -98,10 +100,12 @@ export const ObjectModel = types.model({
     try {
       self.schema = yield API.requestObject(self.id)
       self.isLoading = false
+      // TODO: 可能会有隐藏的bug。
       const Creator = window.Creator;
-      Creator.Objects[self.id] = self.schema
+      Creator.Objects[self.id] = self.schema;
       return self
     } catch (err) {
+      self.isLoading = false
       console.error(`Failed to load object ${self.id} `, err)
     }
   })
@@ -167,12 +171,23 @@ export const ObjectModel = types.model({
     return newRecordList
   }
 
+  const getPermissions = ()=>{
+    const Creator = window.Creator;
+    if(Creator && Creator.getPermissions){
+      return Creator.getPermissions(self.id);
+    }
+    else{
+      return self.schema?.permissions;
+    }
+  }
+
   return {
     loadObject,
     getRecord,
     reloadRecord,
     deleteRecord,
-    getRecordList
+    getRecordList,
+    getPermissions
   }
 })
 
@@ -196,7 +211,14 @@ export const Objects = types.model({
     newObject.loadObject();
     return newObject
   }
+  const reloadObject = (objectApiName: string)=>{
+    const object = getObject(objectApiName);
+    if(object){
+      object.loadObject();
+    }
+  }
   return {
     getObject,
+    reloadObject
   }
 }).create()

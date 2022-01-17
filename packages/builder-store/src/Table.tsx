@@ -1,6 +1,6 @@
 import { types, flow } from "mobx-state-tree";
-import { pullAllBy, differenceBy, remove, isObject, clone, map, isArray } from "lodash";
-import { concatFilters } from '@steedos/builder-sdk';
+import { pullAllBy, differenceBy, remove, isObject, clone, map, isArray, uniq } from "lodash";
+import { concatFilters } from '@steedos-ui/builder-sdk';
 import { API } from './API';
 
 export const TableModel = types.model({
@@ -48,7 +48,8 @@ export const TableModel = types.model({
         console.error(`loadSelectedRows failed, miss objectApiName for this table ${self.id}, you can set it by the function 'setObjectApiName' or give it's value while load the table by the function 'loadById'.`);
       }
       self.isLoading = true;
-      let filters:any = [getRowKey(), "=", keys]
+      const rowKey = getRowKey();
+      let filters:any = [rowKey, "=", keys];
       if(defaultFilters && defaultFilters.length){
         filters = concatFilters(filters, defaultFilters);
       }
@@ -58,6 +59,8 @@ export const TableModel = types.model({
           return item.fieldName;
         });
       }
+      columnsFields.push(rowKey)
+      columnsFields = uniq(columnsFields);
       const result = yield API.requestRecords(self.objectApiName, filters, columnsFields);
       const rows = result && result.value;
       if(rows?.length){

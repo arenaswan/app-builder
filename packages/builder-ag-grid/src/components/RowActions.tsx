@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { filter } from 'lodash';
-import { API } from "@steedos/builder-store"
+import { API } from "@steedos-ui/builder-store"
 import Dropdown from '@salesforce/design-system-react/components/menu-dropdown'; 
 
 export const AgGridRowActions = (props: any) => {

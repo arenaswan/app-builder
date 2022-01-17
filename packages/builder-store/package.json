@@ -1,6 +1,6 @@
 {
-  "name": "@steedos/builder-store",
-  "version": "1.0.0",
+  "name": "@steedos-ui/builder-store",
+  "version": "1.0.20",
   "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -30,10 +30,14 @@
     "lint:types": "tsc --noEmit"
   },
   "dependencies": {
-    "@steedos/builder-sdk": "^1.0.0",
+    "@steedos-ui/builder-sdk": "1.0.20",
     "mobx": "^6.1.8",
     "mobx-react-lite": "^3.2.0",
     "mobx-state-tree": "^5.0.1"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
   },
   "repository": "https://github.com/steedos/app-builder/tree/master/packages/builder-store"
 }

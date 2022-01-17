@@ -29,7 +29,7 @@
               "@version": 2,
               "id": "builder-f0e4f99ad48743a29f35400fdb955a2f",
               "component": {
-                  "name": "@steedos/builder-form:Table",
+                  "name": "@steedos-ui/builder-form:Table",
                   "options": {
                       "size": "default",
                       "bordered": true,

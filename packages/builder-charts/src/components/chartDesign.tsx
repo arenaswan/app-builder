@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Renderer, Editor } from "@redash/viz";
+import React, { useState, useEffect } from "react";
+import { Renderer, Editor } from "@steedos-ui/builder-viz-lib";
 import { Select } from 'antd';
 import { observer } from "mobx-react-lite";
-import { Queries } from "@steedos/builder-store";
+import { Queries } from "@steedos-ui/builder-store";
 import { Row, Col, Form, Input } from 'antd';
-import { Objects } from '@steedos/builder-store';
+import { Objects } from '@steedos-ui/builder-store';
 
 const { Option } = Select;
 export const CHART_OBJECT_APINAME = 'charts';
@@ -18,17 +18,6 @@ export type ChartDesignProps = {
 export const ChartDesign = observer((props: ChartDesignProps) => {
     const { chartId, form, onEditOptionsChange } = props;
     const object: any = Objects.getObject(CHART_OBJECT_APINAME);
-    if (object.isLoading) return (<div>Loading object ...</div>);
-    const recordCache = object.getRecord(chartId, [])
-    if (recordCache.isLoading) return (<div>Loading record ...</div>)
-    let record: any = null;
-    if(recordCache.data && recordCache.data.value && recordCache.data.value.length > 0){
-        record = recordCache.data.value[0];
-    }
-    if(!record){
-        return (<div>Loading record ...</div>)
-    }
-
     const defOptions = {
         stepCol: {},
         valueCol: {},
@@ -49,9 +38,28 @@ export const ChartDesign = observer((props: ChartDesignProps) => {
             
         }
     }
-    
-    const [options, setOptions] = useState(Object.assign({}, defOptions, record.options));
-    const [type, setType] = useState(record.type);
+    let record: any = null;
+    const recordCache = object.getRecord(chartId, [])
+    if(recordCache.data){
+        record = recordCache.data;
+    }
+    const [options, setOptions] = useState(Object.assign({}, defOptions, record?.options));
+    const [type, setType] = useState(record?.type);
+    useEffect(() => {
+        setOptions(Object.assign({}, defOptions, record?.options))
+        setType(record?.type)
+    }, [JSON.stringify(record)]);
+
+    if (object.isLoading) return (<div>Loading object ...</div>);
+    if (recordCache.isLoading) return (<div>Loading record ...</div>)
+    if(!record){
+        return (<div>Loading record ...</div>)
+    }
+
+    const query: any = Queries.getData(record.query);
+    if (query.isLoading) return (<div>Loading Query Results...</div>)
+
+    const data = query.data?.query_result?.data
     const onOptionsChange = function (data) {
         setOptions(data)
         if(onEditOptionsChange){
@@ -66,10 +74,7 @@ export const ChartDesign = observer((props: ChartDesignProps) => {
     const handleChange = function (value) {
         setType(value);
     }
-    const query: any = Queries.getData(record.query);
-    if (query.isLoading) return (<div>Loading Query Results...</div>)
-    const data = query.data
-
+    
     const onValuesChange = function (values) {
         console.log(`onFormLayoutChange3333`, values)
         console.log(`options`, options)

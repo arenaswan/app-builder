@@ -1,6 +1,8 @@
 import React from 'react'
 import FieldCode from '@ant-design/pro-field/es/components/Code';
 
+import "./code.less"
+
 export const code = {
   render: (text: any, props: any) => {
     return (<FieldCode {...props} mode="read" />)

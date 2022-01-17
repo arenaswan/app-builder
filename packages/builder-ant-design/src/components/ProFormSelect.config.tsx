@@ -1,5 +1,5 @@
 export const configProFormSelect = {
-  name: '@steedos/builder-form:Select',
+  name: '@steedos-ui/builder-form:Select',
   inputs: [
     { name: 'name', type: 'string', defaultValue: 'select', required: true },
     { name: 'label', type: 'string', defaultValue: 'Select Field', required: true },
@@ -44,7 +44,7 @@ export const configProFormSelect = {
   requiresParent: {
     message: 'This block must be inside a "Form" or "FormSection" or "FormList" or "Table" block',
     query: {
-      'component.name': { $in: ['@steedos/builder-form:Form', '@steedos/builder-form:FormSection', '@steedos/builder-form:FormList', '@steedos/builder-form:Table'] }
+      'component.name': { $in: ['@steedos-ui/builder-form:Form', '@steedos-ui/builder-form:FormSection', '@steedos-ui/builder-form:FormList', '@steedos-ui/builder-form:Table'] }
     }
   }
 };

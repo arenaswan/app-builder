@@ -1,22 +1,27 @@
 import React, { useState , useRef, useEffect} from "react";
 import { formatFiltersToODataQuery } from '@steedos/filters';
-import { Select, Spin } from 'antd';
+import { Select, Spin, Alert } from 'antd';
 import "antd/es/tree-select/style/index.css";
-import { isFunction, isArray, isObject, uniq, filter, map, forEach, isString, isEmpty, concat } from 'lodash';
-import { concatFilters } from '@steedos/builder-sdk';
-import { Objects, API, Settings } from '@steedos/builder-store';
+import { isFunction, isArray, isObject, uniq, filter, map, forEach, isString, isEmpty, concat, isBoolean, find, isNil } from 'lodash';
+import { concatFilters } from '@steedos-ui/builder-sdk';
+import { Objects, API, Settings } from '@steedos-ui/builder-store';
 import { observer } from "mobx-react-lite";
 import FieldSelect from '@ant-design/pro-field/es/components/Select';
-import { getObjectRecordUrl , Link } from "@steedos/builder-form"
-import { SteedosIcon } from '@steedos/builder-lightning';
+import { getObjectRecordUrl , Link } from "@steedos-ui/builder-form"
+import { SteedosIcon } from '@steedos-ui/builder-lightning';
 import "./lookup.less"
 import { PlusOutlined } from "@ant-design/icons";
-import { safeRunFunction } from '@steedos/builder-sdk';
+import { safeRunFunction } from '@steedos-ui/builder-sdk';
 import { ObjectForm, ObjectTable, ObjectExpandTable,ObjectListView, 
     ObjectModal, ObjectTableModal, SpaceUsersModal, OrganizationsModal, ObjectFieldTreeSelect } from "../components";
 import { BAD_FILTERS } from '../utils';
 
 const { Option } = Select;
+
+const getObjectEnhancedLookup=(objectSchema)=>{
+    const enable_enhanced_lookup = objectSchema.enable_enhanced_lookup;
+    return isBoolean(enable_enhanced_lookup) ? enable_enhanced_lookup : true;
+}
 // 相关表类型字段
 // 通过下拉框显示相关表中的数据，可以搜索
 // 参数 props.reference_to:
@@ -24,8 +29,8 @@ export const LookupField = observer((props:any) => {
     const [params, setParams] = useState({open: false,openTag: null});
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { valueType, mode, fieldProps, request, form, ...rest } = props;
-    const { field_schema: fieldSchema = {},onChange, _grid_row_id, depend_field_values: dependFieldValues={} } = fieldProps;
-    const { reference_to, reference_sort,reference_limit, showIcon, multiple, reference_to_field = "_id", filters: fieldFilters = [],filtersFunction, create = false, modal_mode, table_schema, link_target, modalClassName } = fieldSchema;
+    const { field_schema: fieldSchema = {},onChange, _grid_row_id, depend_field_values: dependFieldValues={}, allValues = {} } = fieldProps;
+    const { reference_to, reference_sort,reference_limit, showIcon = true, multiple, reference_to_field = "_id", filters: fieldFilters = [],filtersFunction, create = true, modal_mode, table_schema, link_target, modalClassName } = fieldSchema;
     // TODO: 添加 fieldProps.defaultValue 修复lookup字段默认值显示value 而不显示label的bug。 select字段一直是正常了，lookup字段一开始是正常的，后面就出问题了。
     let fieldValue = fieldProps.defaultValue || fieldProps.value || props.text;//ProTable那边fieldProps.value没有值，只能用text
     let [ fieldsValue ,setFieldsValue ] = useState({});
@@ -46,7 +51,7 @@ export const LookupField = observer((props:any) => {
     //     setFieldsValue(form?.getFieldsValue());
     //     setParams({ open: params.open, openTag: new Date() });
     // }, [dependFieldValues])
-    const fieldsValues = Object.assign({}, form?.getFieldsValue() , dependFieldValues);
+    const fieldsValues = Object.assign({},allValues, form?.getFieldsValue() , dependFieldValues);
     let optionsFunctionValues:any = Object.assign({}, fieldsValues || {}, {
         _grid_row_id: _grid_row_id,
         space: Settings.tenantId,
@@ -61,8 +66,10 @@ export const LookupField = observer((props:any) => {
         }else{
             defaultReferenceTo = referenceTos[0];
         }
+    }else{
+        defaultReferenceTo = referenceTos;
     }
-    let [referenceTo, setReferenceTo] = useState(isArray(referenceTos) ? defaultReferenceTo : referenceTos);
+    let [referenceTo, setReferenceTo] = useState(defaultReferenceTo);
     // selectedValue 只有在reference_to 是数组的才用到， 值的格式为(value:xx, label:xx)
     const [selectedValue, setSelectedValue] = useState();
     // optionsFunction优先options
@@ -72,11 +79,27 @@ export const LookupField = observer((props:any) => {
             fieldValue=fieldValue['ids'];
         }
     //}
-    let referenceToObject,referenceToObjectSchema,referenceToLableField, referenceToObjectIcon, referenceParentField;
+    let referenceToObject,referenceToObjectSchema,referenceToLableField, referenceToObjectIcon, referenceParentField, isAllowCreate;
     if(referenceTo){
         referenceToObject = Objects.getObject(referenceTo);
-        if (referenceToObject.isLoading) return (<div><Spin/></div>);
+        if (referenceToObject.isLoading && !isEmpty(referenceToObject.schema)) return (<div><Spin/></div>);
+        // 如果对象被删除，则schema为空。  ||  无权限查看
+        if(!isArray(referenceTos) && (isEmpty(referenceToObject.schema) || referenceToObject.schema.permissions?.allowRead !== true)){
+            if(fieldValue && fieldValue.length){
+                const tagsValue = isArray(fieldValue) ? fieldValue : [fieldValue];
+                return (<React.Fragment>{tagsValue.map((v, index)=>{return (
+                    <React.Fragment key={v}>
+                        {index > 0 && ', '}
+                        <Link target='_blank' to={getObjectRecordUrl(referenceTo, v)} className="text-blue-600 hover:text-blue-500 hover:underline">[无此记录]</Link>
+                    </React.Fragment>
+                )})}</React.Fragment>)
+            }else{
+                return null;
+            }
+            // return (<Alert message="未找到引用的对象" type="warning" showIcon style={{padding: '4px 15px'}}/>)
+        }
         referenceToObjectSchema = referenceToObject.schema;
+        isAllowCreate = referenceToObject.getPermissions()?.allowCreate;
         referenceToLableField = referenceToObjectSchema["NAME_FIELD_KEY"] ? referenceToObjectSchema["NAME_FIELD_KEY"] : "name";
         // TODO: organizations.object.yml 文件里后续也要添加一个类似enable_tree属性 parent_field。
         referenceParentField = referenceToObjectSchema.parent_field || "parent"
@@ -104,9 +127,9 @@ export const LookupField = observer((props:any) => {
                     referenceTofilters = concatFilters(referenceTofilters,filters);
                 }
 
-                const recordList = referenceToObject.getRecordList(referenceTofilters, fields);
-                if (recordList.isLoading) return (<div><Spin/></div>);
-                recordListData = recordList.data;
+                const recordList =  !isEmpty(referenceToObjectSchema) && referenceToObject?.getRecordList(referenceTofilters, fields);
+                if (recordList?.isLoading) return (<div><Spin/></div>);
+                recordListData = recordList?.data;
                 if (recordListData && recordListData.value && recordListData.value.length > 0) {
                     let tagsValueField = reference_to_field;
                     if(reference_to_field && reference_to_field !== "_id"){
@@ -116,9 +139,6 @@ export const LookupField = observer((props:any) => {
                     selectItem = recordListData.value.map((recordItem: any) => { 
                         return { value: recordItem[tagsValueField], label: recordItem[referenceToLableField] } 
                     });
-                    if (multiple && fieldValue && fieldValue.length > 1) {
-                        selectItem.sort((m,n)=>{return fieldValue.indexOf(m.value) - fieldValue.indexOf(n.value)})
-                    }
                 }
                 tags = selectItem;
             }else{
@@ -128,11 +148,37 @@ export const LookupField = observer((props:any) => {
                     return multiple ? fieldValue.indexOf(optionItem.value) > -1 : optionItem.value === fieldValue;
                 })
             }
+            if (multiple && fieldValue.length > 1) {
+                tags.sort((m,n)=>{return fieldValue.indexOf(m.value) - fieldValue.indexOf(n.value)})
+            }
+        }
+        if(multiple){
+            if(isArray(fieldValue) && fieldValue.length != tags.length){
+                tags = map(fieldValue,(val)=>{
+                    const filterValue = find(tags,{value: val});
+                    if(filterValue){
+                        return filterValue
+                    }else{
+                        return { value: val , label: '[无此记录]'}
+                    }
+                })
+            }
+        }else if(tags.length == 0){
+            if(!isNil(fieldValue) && !(isArray(fieldValue) && fieldValue.length === 0)){
+                // fieldValue不为空就显示[无此记录]，0/false值不是空值，要显示[无此记录]
+                // fieldValue在reference_to为数组时，无论单选多选，network返回的是{o: "accounts", ids: []}这种格式，fieldValue值是其ids属性值，如果为空数组才表示值为空
+                tags = [{value: fieldValue, label: '[无此记录]'}];
+            }
+        }
+        let linkProps: any = {};
+        const targetValue = link_target ? link_target : (Settings.hrefPopup ? '_blank' : '');
+        if(targetValue){
+            linkProps.target = targetValue;
         }
         return (<React.Fragment>{tags.map((tagItem, index)=>{return (
             <React.Fragment key={tagItem.value}>
                 {index > 0 && ', '}
-                { referenceTo ? (<Link target={link_target} to={getObjectRecordUrl(referenceTo, tagItem.value)} className="text-blue-600 hover:text-blue-500 hover:underline">{tagItem.label}</Link>) : (tagItem.label) }
+                { referenceTo ? (<Link to={getObjectRecordUrl(referenceTo, tagItem.value)} {...linkProps} className="text-blue-600 hover:text-blue-500 hover:underline">{tagItem.label}</Link>) : (tagItem.label) }
             </React.Fragment>
         )})}</React.Fragment>)
     }else{
@@ -254,10 +300,10 @@ export const LookupField = observer((props:any) => {
             labelInValue=true;
             let defaultReferenceToValue:any = [];
             if(fieldValue){
-                const recordList = referenceToObject.getRecordList(referenceTofilters, fields);
+                const recordList = referenceToObject?.getRecordList(referenceTofilters, fields);
                 // 下拉框选中某个选项，获取其对应的lable。因为如果加下面的isloading判断，就会在重新选择其它选项时会有isLoading状态的效果， 所以不需要下面这行isloading判断。
                 // if (recordList.isLoading) return (<div><Spin/></div>);
-                recordListData = recordList.data;
+                recordListData = recordList?.data;
                 if (recordListData && recordListData.value && recordListData.value.length > 0) {
                     forEach(recordListData.value, (recordItem: any) => {
                         let valueLabel = { value: recordItem[reference_to_field], label: recordItem[referenceToLableField] };
@@ -273,15 +319,17 @@ export const LookupField = observer((props:any) => {
                 value: selectedValue ? selectedValue : defaultReferenceToValue,
                 onChange:(values: any, option: any)=>{
                     let tempSelectedValue:any = undefined;
-                    if (multiple) {
-                        tempSelectedValue=[];
-                        forEach(values, (item) => {
-                            idsValue.push(item.value);
-                            tempSelectedValue.push({value: item.value, label: item.label})
-                        })
-                    } else {
-                        if(values.value){ idsValue = [values.value]; }
-                        tempSelectedValue = {value: values.value, label:values.label};
+                    if(!isEmpty(values)){
+                        if (multiple) {
+                            tempSelectedValue=[];
+                            forEach(values, (item) => {
+                                idsValue.push(item.value);
+                                tempSelectedValue.push({value: item.value, label: item.label})
+                            })
+                        } else {
+                            if(values.value){ idsValue = [values.value]; }
+                            tempSelectedValue = {value: values.value, label:values.label};
+                        }
                     }
                     setSelectedValue(tempSelectedValue)
                     onChange({o: referenceTo, ids: idsValue })
@@ -289,19 +337,22 @@ export const LookupField = observer((props:any) => {
             })
         }
         let optionItemRender;
-        if(showIcon && referenceToObjectIcon){
+        if(showIcon){
             optionItemRender = (item) => {
                 return (
-                    <React.Fragment>
-                        <span role="img" aria-label="smile" className="anticon anticon-smile"><SteedosIcon name={referenceToObjectIcon} size="x-small"/></span>
+                    referenceToObjectIcon || item.icon ?
+                    (<React.Fragment>
+                        <span role="img" aria-label="smile" className="anticon anticon-smile"><SteedosIcon name={item.icon || referenceToObjectIcon} size="x-small"/></span>
                         <span>{item.label}</span>
-                    </React.Fragment>
-                    )
+                    </React.Fragment>)
+                    : item.label
+                )
             }
         }
         let proFieldProps: any;
         let dropdownRender;
-        if(create && referenceTo){
+        // TODO: 下拉框新建按钮有bug, 解决后再放开。 其create默认值也要再思考下。
+        if(isAllowCreate && create && false){
             const createObjectName = referenceToObjectSchema.label;
             dropdownRender = (menu)=>{
             return (
@@ -314,7 +365,7 @@ export const LookupField = observer((props:any) => {
                         mode="edit" 
                         isModalForm={true} 
                         objectApiName={referenceTo} 
-                        name={`form-new-${referenceTo}`} 
+                        name={`lookup-create-${objectApiName}-${props.name}-${referenceTo}`}
                         submitter={false}
                         trigger={
                             <a className="add_button text-blue-600 hover:text-blue-500 hover:underlin"  onClick={()=>{
@@ -346,7 +397,7 @@ export const LookupField = observer((props:any) => {
             )
             }
         }
-        let showModal = ["dialog", "drawer"].indexOf(modal_mode) > -1 || (referenceToObjectSchema &&  referenceToObjectSchema.enable_enhanced_lookup)
+        let showModal = ["dialog", "drawer"].indexOf(modal_mode) > -1 || (referenceToObjectSchema &&  getObjectEnhancedLookup(referenceToObjectSchema))
         if(options){
             showModal = false;
         }
@@ -402,16 +453,21 @@ export const LookupField = observer((props:any) => {
                     onBlur: null, 
                     onSelect: null
                 }
+                const referenceToObjectLabel = referenceToObjectSchema.label;
                 modalDom = (trigger: any)=>{
                     let ModalComponent = ObjectModal;
                     let modalPorps:any = {
-                        title: `选择 ${referenceToObjectSchema.label}`,
+                        title: `选择 ${referenceToObjectLabel || referenceTo}`,
                         modalProps: { className: modalClassName},
                         objectApiName: referenceTo,
                         multiple,
+                        // TODO: 有可能后续带上recordId ? recordId : 'new'
+                        name: `lookup-${objectApiName}-${props.name}-${referenceTo}`,
+                        showCreateButton: isAllowCreate && create,
                         value: fieldValue,
                         // 弹出框会返回rowKey对应的字段值，默认为_id，比如space_users要求返回user字段值
                         rowKey: reference_to_field,
+                        extraColumnFields: [reference_to_field],
                         // filtersFunction执行后可能返回空，如果返回空表示加载所有数据
                         filters: filtersFunction ? safeRunFunction(filtersFunction,[fieldFilters, optionsFunctionValues],BAD_FILTERS,optionsFunctionThis) : fieldFilters,
                         trigger,
@@ -428,11 +484,16 @@ export const LookupField = observer((props:any) => {
                     if(referenceTo === "space_users"){
                         ModalComponent = SpaceUsersModal;
                         Object.assign(modalPorps, {
+                            showCreateButton: false,
                             columnFields: undefined //使用SpaceUsersModal默认定义的columnFields
                         })
                     }
                     else if(referenceTo === "organizations"){
                         ModalComponent = OrganizationsModal;
+                        // TODO: 暂时不允许新建 organizations; 放开后 新建完能保存，但是点击保存后窗口没关闭。
+                        Object.assign(modalPorps, {
+                            showCreateButton: false
+                        })
                     }
                     return (
                         <ModalComponent {...modalPorps}/>
@@ -478,12 +539,20 @@ export const LookupField = observer((props:any) => {
                     referenceToObjectLeftIcon = referenceToObjectSchema.icon;
                 }
                 if (!referenceToObject.isLoading){
+                    let referenceTosLeftLabel = referenceToObjectSchema.label;
+                    if(referenceToObjectSchema.permissions?.allowRead !== true){
+                        referenceTosLeftLabel = '[无此记录]';
+                    }
                     if(referenceToObjectLeftIcon){
-                        referenceToOptions.push({label:referenceToObjectSchema.label,value:val,icon:referenceToObjectLeftIcon})
+                        referenceToOptions.push({label:referenceTosLeftLabel,value:val,icon:referenceToObjectLeftIcon})
                     }else{
-                        referenceToOptions.push({label:referenceToObjectSchema.label,value:val})
-                    }   
+                        referenceToOptions.push({label:referenceTosLeftLabel,value:val})
+                    }    
+                    
                 }
+                /* else{
+                    return (<div><Spin/></div>)
+                } */
             })
             isLoadingReferenceTosObject = referenceToOptions.length !== referenceTos.length;
         }
@@ -503,10 +572,10 @@ export const LookupField = observer((props:any) => {
             setParams({ open:false, openTag: new Date() });
         }
         return (
-            <React.Fragment>
+            <div className="lookup-field-container">
                 {
                     needReferenceToSelect && 
-                    (<Select   {...referenceToSelectProps} className="left_label_menu">
+                    (<Select   {...referenceToSelectProps} className="lookup-field-left-select">
                     {
                         map(referenceToOptions,(item)=>{
                             return (
@@ -519,7 +588,7 @@ export const LookupField = observer((props:any) => {
                     </Select>)
                 }
                 {showModal ? modalDom(lookupInput) : lookupInput}
-            </React.Fragment>
+            </div>
         )
     }
 });

@@ -1,5 +1,5 @@
 import React,{ useState, useMemo, useRef, useEffect } from "react"
-import { Form,Field } from '@steedos/builder-form';
+import { Form,Field } from '@steedos-ui/builder-form';
 import { formatFiltersToODataQuery } from '@steedos/filters';
 import { SpaceUsers, SpaceUsersProps, ObjectModal, ObjectModalProps, Organizations } from ".."
 import { omit, isArray } from "lodash"
@@ -50,11 +50,9 @@ export const SpaceUsersModal = ({
   if(!props.columnFields){
     props.columnFields = [{
       fieldName: "name",
-      hideInSearch: isMobile ? true : false,
       sorter: true,
     },{
       fieldName: "email",
-      hideInSearch: isMobile ? true : false,
     },{
       fieldName: "user",
       hideInSearch: true,
@@ -62,11 +60,10 @@ export const SpaceUsersModal = ({
     },{
       fieldName: "organizations_parents",
       hideInTable: true,
-      hideInSearch: true,
+      hideInSearch: isMobile ? false : true,
       ...expandProps,
     },{
       fieldName: "mobile",
-      hideInSearch: isMobile ? true : false,
     }]
   }
 
@@ -122,7 +119,7 @@ export const SpaceUsersModal = ({
       toolbar={toolbar}
       contentComponent={SpaceUsers}
       {...props}
-      {...omit(rest, ['objectApiName', 'contentComponent'])}
+      {...omit(rest, ['contentComponent'])}
     />
   )
 }

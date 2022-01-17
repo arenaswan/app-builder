@@ -1,0 +1,56 @@
+body{
+    #block-menu-container,.sc-gsTCUz{
+        z-index: 1100;
+    }
+}
+
+.type-html{
+    .ant-form-item-control{
+        .ant-form-item-control-input-content{
+            .field-flex-container{
+                .field-flex-box-content{
+                    overflow: auto;
+                }
+            }
+            .rich-markdown-editor{
+                pre code{
+                    white-space: pre;
+                }
+            }
+            li{
+                list-style: auto;
+            }
+            ul{
+                li{
+                    list-style: disc;
+                }
+            }
+            h1{ font-size: 2em; }
+            h2{ font-size: 1.5em; }
+            h3{ font-size: 1.25em; }
+            .notice-block{
+                font-size: 16px;
+                .content{
+                    overflow: auto;
+                    min-height: auto;
+                    margin: 0;
+                    padding: 0;
+                    line-height: 1.7em;
+                }
+            }
+        }
+    }
+}
+
+.type-html.mode-edit.field-editable{
+    .rich-markdown-editor{
+        border: 1px solid #d9d9d9;
+        border-radius: 2px;
+        padding: 10px 23px;
+
+    }
+    // TODO: 没有rows属性，故定为8行,后期需要用代码实现rows属性功能效果。
+    .rich-markdown-editor > div{
+        min-height: 13em;
+    }
+}

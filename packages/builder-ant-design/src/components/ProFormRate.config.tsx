@@ -1,5 +1,5 @@
 export const configProFormRate = {
-  name: '@steedos/builder-form:Rate',
+  name: '@steedos-ui/builder-form:Rate',
   inputs: [
     { name: 'name', type: 'text', defaultValue: 'rate', required: true},
     { name: 'label', type: 'text', defaultValue: 'Rate', required: true},
@@ -19,7 +19,7 @@ export const configProFormRate = {
   requiresParent: {
     message: 'This block must be inside a "Form" or "FormSection" or "FormList" or "Table" block',
     query: {
-      'component.name': { $in: ['@steedos/builder-form:Form', '@steedos/builder-form:FormSection', '@steedos/builder-form:FormList', '@steedos/builder-form:Table'] }
+      'component.name': { $in: ['@steedos-ui/builder-form:Form', '@steedos-ui/builder-form:FormSection', '@steedos-ui/builder-form:FormList', '@steedos-ui/builder-form:Table'] }
     }
   }
 };

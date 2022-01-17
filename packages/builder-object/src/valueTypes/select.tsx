@@ -1,15 +1,78 @@
 import React, { useState ,useEffect } from 'react'
 import { isFunction, filter } from 'lodash';
 import FieldSelect from '@ant-design/pro-field/es/components/Select';
-import { safeRunFunction } from '@steedos/builder-sdk';
+import { safeRunFunction } from '@steedos-ui/builder-sdk';
 import { observer } from "mobx-react-lite";
+import { SteedosIcon } from '@steedos-ui/builder-lightning';
+import styled from 'styled-components'
+import "./select.less"
+
+const hexToRgb = (hex)=>{
+  hex = hex.slice(1);
+  if (hex.length === 3) {
+    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+  }
+  return {
+    r: Number.parseInt(hex.slice(0, 2), 16),
+    g: Number.parseInt(hex.slice(2, 4), 16),
+    b: Number.parseInt(hex.slice(4, 6), 16)
+  };
+};
+
+const _pickTextColorBasedOnBgColorAdvanced = (bgColor, lightColor, darkColor)=>{
+  const rgb = hexToRgb(bgColor);
+  const {r,g,b} = rgb
+  const uicolors = [r / 255, g / 255, b / 255];
+  const c = uicolors.map((col)=>{
+    if (col <= 0.03928) {
+      return col / 12.92;
+    }
+    return Math.pow((col + 0.055) / 1.055, 2.4);
+  });
+  const L = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  if (L > 0.179) {
+    return darkColor;
+  } else {
+    return lightColor;
+  }
+};
+
+let ColorSpan = styled.span`
+  &.select-color{
+    border-radius: 10px;
+    padding: 2px 6px;
+    border: 1px;
+  }
+  &.select-multiple{
+      margin-right:1px;
+      @media (max-width: 767px) {
+        margin-right:4px;
+      }
+  }
+`;
 
 export const SelectField = observer((props: any) => {
   const { valueType, mode, fieldProps = {}, form, ...rest } = props;
   const [params, setParams] = useState({ open: false, openTag: null });
-  const { field_schema: fieldSchema = {}, depend_field_values: dependFieldValues = {} } = fieldProps;
+  const { field_schema: fieldSchema = {}, depend_field_values: dependFieldValues = {} , allValues = {} } = fieldProps;
   const { multiple , optionsFunction } = fieldSchema;
   let options = optionsFunction ? optionsFunction : fieldSchema.options;
+  const data_type = fieldSchema.data_type;
+  if (!isFunction(options) && data_type && data_type !== "text") {
+    // 零代码界面配置options选项值只支持字符串，所以当data_type为数值或boolean时，只能强行把选项值先转换为对应的类型
+    options.forEach((optionItem: any)=>{
+      if(typeof optionItem.value !== "string"){
+        return;
+      }
+      if(["number", "currency", "percent"].indexOf(data_type) > -1){
+        optionItem.value = Number(optionItem.value);
+      }
+      else if(data_type === "boolean"){
+        // 只有为true才为真
+        optionItem.value = optionItem.value === "true";
+      }
+    });
+  }
   const value = fieldProps.value || props.text;//ProTable那边fieldProps.value没有值，只能用text
   let [ fieldsValue ,setFieldsValue ] = useState({});
   // 按原来lookup控件的设计，this.template.data._value为原来数据库中返回的选项值，this.template.data.value为当前用户选中的选项
@@ -27,7 +90,7 @@ export const SelectField = observer((props: any) => {
   //   setFieldsValue(form?.getFieldsValue());
   //   setParams({ open: params.open, openTag: new Date() });
   // }, [dependFieldValues])
-  const fieldsValues = Object.assign({}, form?.getFieldsValue() , dependFieldValues);
+  const fieldsValues = Object.assign({}, allValues, form?.getFieldsValue() , dependFieldValues);
   let optionsFunctionValues:any = Object.assign({}, fieldsValues || {}, {
     // space: Settings.tenantId,
     _object_name: objectApiName
@@ -43,20 +106,23 @@ export const SelectField = observer((props: any) => {
       tags.sort((m,n)=>{return value.indexOf(m.value) - value.indexOf(n.value)})
     }
     const tagsDom = tags.map((tagItem, index) => {
-      let colorStyle: any = {
-        borderRadius: '10px',
-        padding: '1px 6px',
-        border: '1px',
-      }
+      let selectClassNames: string[] = ["select-container"];
+      let colorStyle: any={};
       if (tagItem.color && tagItem.color.length) {
         colorStyle.background = '#' + tagItem.color;
+        const fontColor = _pickTextColorBasedOnBgColorAdvanced(tagItem.color, '#fff', '#333')
+        colorStyle.color = fontColor;
+        selectClassNames.push('select-color');
+      }
+      if(multiple){
+        selectClassNames.push("select-multiple");
       }
       return (
         <React.Fragment key={tagItem.value}>
           {index > 0 && ' '}
-          <span style={{ ...colorStyle }} >
+          <ColorSpan style={{ ...colorStyle }} className={selectClassNames.join(" ")} >
             {tagItem.label}
-          </span>
+          </ColorSpan>
         </React.Fragment>
       )
     });
@@ -84,18 +150,32 @@ export const SelectField = observer((props: any) => {
       proFieldProps = {
         request,
         params,
-        onDropdownVisibleChange,
+        onDropdownVisibleChange
       }
     } else if (options) {
       //options为空时不能直接覆盖fieldProps.options中的值，因为要允许直接给控件fieldProps.options赋值
       props.fieldProps.options = options;
     }
+    let optionItemRender;
+    optionItemRender = (item: any) => {
+      return (
+        item.icon ? (
+          <React.Fragment>
+            <span role="img" aria-label="smile" className="anticon anticon-smile"><SteedosIcon name={item.icon} size="x-small" /></span>
+            <span>{item.label}</span>
+          </React.Fragment>
+        ) : item.label
+      )
+    }
+    proFieldProps.optionItemRender = optionItemRender;
     proFieldProps.showSearch = true;
     proFieldProps.showArrow = true;
     proFieldProps.optionFilterProp = 'label';
     // TODO: multiple：如果是true, 后期 需要 支持对已选中项进行拖动排序
     return (
-      <FieldSelect mode='edit' {...props} {...proFieldProps} />
+      <div className="select-field-container">
+        <FieldSelect mode='edit' {...props} {...proFieldProps} />
+      </div>
     )
   }
 })

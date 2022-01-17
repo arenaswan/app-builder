@@ -102,3 +102,6 @@ yarn-error.log
 report.*
 yarn.lock
 build
+
+!packages/builder-viz-lib/dist
+!packages/builder-viz-lib/lib

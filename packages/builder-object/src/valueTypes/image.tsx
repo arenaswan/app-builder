@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Upload, Button, message } from 'antd';
 import { Image } from "antd";
-import { Settings , API} from '@steedos/builder-store';
+import { Settings , API} from '@steedos-ui/builder-store';
 import FieldImage from '@ant-design/pro-field/es/components/Image';
 import { observer } from "mobx-react-lite";
 import { forEach, isArray } from 'lodash';
+import { getFileResponseErrorMessage } from '../utils/utils';
 
 import "./image.less"
 
@@ -89,6 +90,12 @@ export const ImageField = observer((props: any) => {
             const imgWindow = window.open(src);
             imgWindow.document.write(image.outerHTML);
         };
+        /* // TODO: 获取不了图片对象
+        const onRemove = (file) => {
+            const id = file.response?._id;
+            console.log('onRemove==>',file, id)
+            API.deleteRecord('cfs_images_filerecord', id)
+        }; */
         const propsOther = {
             // http://127.0.0.1:5080/s3/images
             action: Settings.rootUrl + '/s3/'+fileType,
@@ -98,7 +105,7 @@ export const ImageField = observer((props: any) => {
             multiple,
             type: 'file',
             method: 'post',
-            accept: 'image/png, image/jpeg, image/jpg, image/gif',
+            accept: 'image/*',
             // maxCount: '1',
             data: {
                 space: Settings.tenantId,
@@ -110,20 +117,31 @@ export const ImageField = observer((props: any) => {
             },
             onChange: (options: any) => {
                 const { file, fileList: newFileList } = options;
-                setFileList(newFileList);
+                if (file.status === "error") {
+                    message.error(getFileResponseErrorMessage(file));
+                }
                 let fileIds:any = [];
+                let isUploading = false;
                 forEach(newFileList,(item)=>{
-                    if (item.status === "done") {
+                    if(item.status === "uploading"){
+                        isUploading = true;
+                    }
+                    else if (item.status === "done") {
                         fileIds.push(item.response._id)
                     }
-                })
-                if (newFileList.length == fileIds.length) {
+                    else if (item.status === "error") {
+                        item.response = getFileResponseErrorMessage(item);
+                    }
+                });
+                setFileList(newFileList);
+                if (!isUploading) {
                     if(!multiple){
                         fileIds= fileIds.length ? fileIds[0] : '';
                     }
                     onChange(fileIds)
                 }
-            }
+            },
+            // onRemove,
         }
         return (
             <Upload {...proProps} {...propsOther}>

@@ -1,20 +1,20 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import * as PropTypes from 'prop-types';
-import { forEach, defaults, groupBy, filter, map, defaultsDeep, isObject, isEmpty, clone, isNil, compact, uniq} from 'lodash';
+import { forEach, defaults, groupBy, filter, map, defaultsDeep, isObject, isEmpty, clone, isNil, compact, uniq, pick, isArray, keys} from 'lodash';
 import { useQuery } from 'react-query'
 // import { FooterToolbar } from '@ant-design/pro-layout';
-import { Form } from '@steedos/builder-form';
+import { Form } from '@steedos-ui/builder-form';
 import { Form as ProForm } from 'antd';
 import { BaseFormProps } from "@ant-design/pro-form/es/BaseForm";
 import { ModalFormProps } from "@ant-design/pro-form";
 import { observer } from "mobx-react-lite"
-import stores, { Objects, Forms, API, Settings } from '@steedos/builder-store';
+import stores, { Objects, Forms, API, Settings } from '@steedos-ui/builder-store';
 import { Spin } from 'antd';
 import moment from 'moment';
 import { ObjectFormSections } from './ObjectFormSections';
 import { message } from 'antd';
-import { translate, BASE_FIELDNAMES_FOR_PERMISSIONS } from '@steedos/builder-sdk';
+import { translate, getObjectBaseFieldNames } from '@steedos-ui/builder-sdk';
 
 import './ObjectForm.less'
 
@@ -43,6 +43,26 @@ export type ObjectFormProps = {
   form?: any
   // showFooterToolbar?: boolean
 } & FormProps
+
+const dealWithMultipleFieldValue = (filedValue: any, fieldSchema: any)=>{
+  const isFieldMultiple = fieldSchema?.multiple;
+  const isInTypes = ["lookup", "master_detail", "select", "image", "file"];
+  if(isInTypes.indexOf(fieldSchema.type) < 0){
+    return filedValue;
+  }
+  if(isFieldMultiple && !isArray(filedValue)){
+    // 单选字段有值后 将其改为多选
+    if(filedValue){
+      return [filedValue];
+    }
+  }else if(!isFieldMultiple && isArray(filedValue)){
+    // 多选字段有值后 将其改为单选 默认取第一个保存。
+    if(filedValue.length){
+      return filedValue[0];
+    }
+  }
+  return filedValue;
+}
 
 export const ObjectForm = observer((props:ObjectFormProps) => {
   const {
@@ -83,6 +103,7 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
   if (object && object.isLoading) return (<div><Spin/></div>)
 
   const mergedSchema = object? defaultsDeep({}, object.schema, objectSchema): objectSchema;
+  const schemaFields = mergedSchema.fields;
   fieldSchemaArray.length = 0
   forEach(mergedSchema.fields, (field, fieldName) => {
     if (!field.group || field.group == 'null' || field.group == '-')
@@ -92,12 +113,12 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
       // field.group = field.label
       field.is_wide = true;
     }
-    // // 新建记录时，把autonumber、formula、summary类型字段视为omit字段不显示
-    // let isOmitField = isModalForm && ["autonumber", "formula", "summary"].indexOf(field.type) > -1;
+    // 新建记录时，把autonumber、formula、summary类型字段视为omit字段不显示
+    let isOmitField = !recordId && ["autonumber", "formula", "summary"].indexOf(field.type) > -1;
     let isValid = !fields || !fields.length || fields.indexOf(fieldName) > -1
     // if (!field.hidden && !isObjectField && !isOmitField && isValid){
     // 这里不可以直接把hidden的字段排除，因为hidden的字段需要加载但不显示，见：表单字段omit,hidden规则变更 #138
-    if (!isObjectField && isValid){
+    if (!isObjectField && !isOmitField && isValid){
       fieldSchemaArray.push(defaults({name: fieldName}, field))
     }
   })
@@ -106,14 +127,17 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
   })
   let record: any;
   if (object && recordId) {
-    const fieldsForFetch = uniq(compact(fieldNames.concat(BASE_FIELDNAMES_FOR_PERMISSIONS)));
+    const baseExtraFields = getObjectBaseFieldNames(mergedSchema);
+    const fieldsForFetch = uniq(compact(fieldNames.concat(baseExtraFields)));
     const recordCache = object.getRecord(recordId, fieldsForFetch)
     if (recordCache.isLoading)
       return (<div><Spin/></div>)
     if(recordCache.data){
       record = recordCache.data;
+      const formFields = mergedSchema.fields
       forEach(fieldNames, (fieldName:any)=>{
         let filedValue = record[fieldName];
+        filedValue = dealWithMultipleFieldValue(filedValue, formFields[fieldName]);
         // 字段值为null等也传过去, null表示往数据库存空值。
         if (filedValue !== undefined ){
           defaultValues[fieldName] = filedValue;
@@ -130,7 +154,16 @@ export const ObjectForm = observer((props:ObjectFormProps) => {
     let result; 
     if(!recordId){
       try {
-        result = await API.insertRecord(objectApiName,values);
+        const fieldsKeys = keys(schemaFields);
+        let filtersInitialValues = {};
+        forEach(initialValues, (val, key) => {
+          if (fieldsKeys.indexOf(key) > -1 && schemaFields[key].omit !== true) {
+            filtersInitialValues[key] = val;
+          }
+        })
+        let objectValues = Object.assign({},filtersInitialValues,values);
+        objectValues = pick(objectValues,fieldNames)
+        result = await API.insertRecord(objectApiName,objectValues);
         if(afterInsert){
           return afterInsert(result);
         }else{
