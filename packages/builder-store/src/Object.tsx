@@ -213,7 +213,7 @@ export const Objects = types.model({
   }
 
   /**
-   * TODO 此函数不可直接发送请求，只给uiSchema上添加过期标记，每次getObject时 ，如果已标记为过期，则重新获取，获取后清理过期标记。用于解决db中的对象发生变化时的请求过多问题，也可解决编辑对象record时，如果对象变化编辑窗口重新渲染导致数据丢失问题。
+   * TODO 此函数不可直接发送请求，只给object上添加过期标记，每次getObject时 ，如果已标记为过期，则重新获取，获取后清理过期标记。用于解决db中的对象发生变化时的请求过多问题，也可解决编辑对象record时，如果对象变化编辑窗口重新渲染导致数据丢失问题。
    * @param objectApiName 
    */
   const reloadObject = (objectApiName: string)=>{
