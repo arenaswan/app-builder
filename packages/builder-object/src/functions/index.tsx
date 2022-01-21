@@ -15,8 +15,7 @@ const SteedosUI = Object.assign({}, modal, render, {
     Objects.getObject(objectApiName).reloadRecord(id)
   },
   reloadObject(objectApiName: string){
-    const object = Objects.getObject(objectApiName);
-    object && object.loadObject()
+    Objects.reloadObject(objectApiName)
   },
 });
 
