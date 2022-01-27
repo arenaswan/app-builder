@@ -1,6 +1,6 @@
 {
   "name": "@steedos-ui/builder-viz-lib",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "Redash visualizations",
   "main": "dist/redash-visualizations.js",
   "scripts": {},
