@@ -92,7 +92,11 @@ export const ObjectList = observer((props: ObjectListProps) => {
       }
     }
     setSelectedData(tmpSelectedData)
-    onChange && onChange(tmpSelectedData)
+    let keys = [];
+    _.each(tmpSelectedData, (item,index)=>{
+      keys.push(item._id)
+    })
+    onChange && onChange(keys,tmpSelectedData)
   }
 
   return (
