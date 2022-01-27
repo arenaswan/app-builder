@@ -112,7 +112,7 @@ yarn start
 
 ### 打包测试
 
-在根目录执行 `yarn build` 命令，复制packages/builder-community路径下的dist文件夹替换steedos-platform项目中creator/node_modules/@steedos-ui/builder-community路径下的dist文件夹，运行steedos-platform项目进行测试。
+在根目录执行 `yarn build` 命令，复制packages/builder-community路径下的dist文件夹替换steedos-platform项目中creator/node_modules/@steedos-ui/builder-community路径下的dist文件夹，运行steedos-platform中的creator项目进行测试。
 
 ### 发布新版本
 
