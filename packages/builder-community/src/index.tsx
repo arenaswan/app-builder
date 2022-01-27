@@ -1,6 +1,6 @@
 import { ComponentRegistry } from '@steedos-ui/builder-store';
 import { ObjectTable, ObjectProTable,
-    ObjectForm, ObjectListView,
+    ObjectForm, ObjectList, ObjectListView,
     SpaceUsers, SpaceUsersModal,
     Organizations, OrganizationsModal,
     ObjectTree, ObjectExpandTable, ObjectModal
@@ -11,14 +11,14 @@ import { isExpression, parseSingleExpression } from '@steedos-ui/builder-object'
 
 Object.assign(ComponentRegistry.components,{ 
     ObjectTable, ObjectProTable,
-    ObjectForm, ObjectListView,
+    ObjectForm, ObjectList,ObjectListView,
     SpaceUsers, SpaceUsersModal,
     Organizations, OrganizationsModal,
     ObjectTree, ObjectExpandTable, ObjectModal,
     Page, PublicPage, QuerySource, ChartDesignModal
 });
 
-export { ObjectTable, ObjectForm, API, SteedosProvider, SteedosRouter, Forms, ObjectListView} from '@steedos-ui/builder-object';
+export { ObjectTable, ObjectForm, API, SteedosProvider, SteedosRouter, Forms, ObjectList, ObjectListView} from '@steedos-ui/builder-object';
 export { ObjectGrid } from '@steedos-ui/builder-ag-grid';
 export { ComponentRegistry }
 export { Page, PublicPage, QuerySource } from '@steedos-ui/builder-page';

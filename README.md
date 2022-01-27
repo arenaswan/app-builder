@@ -70,7 +70,7 @@ yarn
 接下来执行以下命令来运行项目。
 
 ```shell
-yarn start
+yarn start-storybook
 ```
 
 等待几分钟，当服务成功跑起来后会自动打开浏览器访问服务地址： <http://localhost:6006/>。
@@ -111,7 +111,8 @@ yarn start
 
 
 ### 打包测试
-在根目录执行 `yarn build` 命令，复制packages/builder-community路径下的dist文件夹替换steedos-platform项目中creator/node_modules/@steedos-ui/builder-community路径下的dist文件夹，运行steedos-platform项目进行测试。
+
+在根目录执行 `yarn build` 命令，复制packages/builder-community路径下的dist文件夹替换steedos-platform项目中creator/node_modules/@steedos-ui/builder-community路径下的dist文件夹，运行steedos-platform中的creator项目进行测试。
 
 ### 发布新版本
 
