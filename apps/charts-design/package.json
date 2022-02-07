@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "cross-env node --max_old_space_size=4096 scripts/start.js",
-    "build": "cross-env NODE_ENV=production SKIP_PREFLIGHT_CHECK=true PUBLIC_URL=. node --max_old_space_size=4096 scripts/build.js",
+    "build": "cross-env NODE_ENV=production SKIP_PREFLIGHT_CHECK=true GENERATE_SOURCEMAP=false PUBLIC_URL=. node --max_old_space_size=4096 scripts/build.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
