@@ -22,6 +22,11 @@ export const getNameFieldColumnRender = (objectApiName: string, linkTarget?: str
 }
 
 export function getObjectRecordUrl(objectApiName: string, redordId: any) {
-    const hrefPrefix = `/app/${Apps.currentAppId || "-"}/${objectApiName}/view/`;
-    return `${hrefPrefix}${redordId}`;
+    const Creator = (window as any).Creator;
+    if(Creator && Creator.getObjectUrl){
+        return Creator.getObjectUrl(objectApiName, redordId, "-")
+    }else{
+        const hrefPrefix = `/app/${Apps.currentAppId || "-"}/${objectApiName}/view/`;
+        return `${hrefPrefix}${redordId}`;
+    }
 }
