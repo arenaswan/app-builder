@@ -109,11 +109,16 @@ export const ObjectFieldGrid = (props) => {
     // 把 fieldName（字段名） 存到该对象（字段）值中去。
     forEach(sub_fields,(field, fieldName) => {
       sub_fields[fieldName]._key = fieldName;
+      if (field.omit) {
+        // 表单字段omit,hidden规则变更 #138
+        sub_fields[fieldName].readonly = true;
+      }
     });
     // sortBy(sub_fields, "sort_no") 根据sort_no对列字段进行排序。（字段属性sort_no值越小当前列越靠近左边）
     forEach(sortBy(sub_fields, "sort_no"), (field)=>{
       columns.push({
         field: field._key,
+        hide: field.hidden,
         headerName: field.label ? field.label : field._key,
         width: field.is_wide? 300: 150,
         minWidth: field.is_wide? 300: 150,
