@@ -22,7 +22,11 @@
  🤖 🎨 🚀
 </h3>
 
-本项目在 https://gitlab.steedos.cn/steedos/app-builder 维护，所有代码同步到 Github。
+## 基于元数据
+
+元数据是华炎魔方技术架构的核心。华炎魔方使用元数据定义对象，字段，配置，代码，逻辑和页面布局，并基于这些元数据自动生成系统的数据结构以及Steedos应用程序的用户界面和自动化逻辑。
+
+![Steedos Packages Overview](https://raw.githubusercontent.com/steedos/steedos-platform/master/docs/diagrams/Steedos%20Metadata.drawio.svg)
 
 ## 技术框架
 
